@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Registration or Sign Up</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <h2>Trade App Create MPIN</h2>
+        <form [formGroup]="userForm" (keydown.enter)="$event.preventDefault()">
+            <div class="input-box">
+                <label for="">Create MPIN</label>
+                <input type="text" class="otp-input" formControlName="MPIN"
+                placeholder="Enter 6 digit MPIN" required>
+                <ng-container *ngIf="userForm.controls?.MPIN?.errors">
+                    <ng-container *ngIf="userForm.controls?.MPIN?.errors?.range">
+                        Your MPIN cannot exceed 6 digit.
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="input-box">
+                <label for="">Confirm MPIN</label>
+                <input type="text" class="otp-input" formControlName="ConfirmMPIN"
+                placeholder="Enter 6 digit MPIN" required>
+                <ng-container *ngIf="userForm.controls?.ConfirmMPIN?.errors">
+                    <ng-container *ngIf="userForm.controls?.ConfirmMPIN?.errors?.range">
+                        Your Confirm MPIN cannot exceed 6 digit.
+                    </ng-container>
+                    <ng-container *ngIf="userForm.controls.ConfirmMPIN?.errors?.confirmedValidator">
+                        {{userForm.controls.ConfirmMPIN.errors?.confirmedValidator}}
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="input-box-row">
+                <a routerLink="/ResetPassword">Reset Password</a>
+                <a class="singup-a" routerLink="/Login">Sign In</a>
+            </div>
+            <div class="input-box button">
+                <button type="Submit" class="btn btn-primary p-2 m-auto Submit-btn" (click)="onFormSubmit()">Create MPIN</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+<app-home>
+    <custom-mat-stepper>
+        <custom-mat-step MATSTEP_LABEL="Contact Us" errorMessage="Please select Inward Remittance" [NextTrue]="true">
+            <div class="col-12">
+                <div class="wrapper-1">
+                    <h2>Contact us</h2>
+                    <div id="error_message">
+                    </div>
+                    <form [formGroup]="userForm">
+                        <div class="input_field">
+                            <input type="text" placeholder="Subject" formControlName="Subject" id="subject">
+                        </div>
+                        <div class="input_field">
+                            <textarea placeholder="Message" id="message" formControlName="Message">
+                            </textarea>
+                        </div>
+                        <div class="btn">
+                            <button (click)="validate()" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </custom-mat-step>
+    </custom-mat-stepper>
+</app-home>

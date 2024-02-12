@@ -1,0 +1,58 @@
+<app-home>
+    <custom-mat-stepper>
+        <custom-mat-step MATSTEP_LABEL="Inward" [NextTrue]="true">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Currency</th>
+                            <th scope="col">Trigger rate</th>
+                            <th scope="col">FX Live(Bid)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of this.apiUser.FX_MARGIN_DATA_OUTWARD;let i=index">
+                            <td scope="row">{{item?.key}}</td>
+                            <td><input type="number" [(ngModel)]="item.TriggerRate">
+                                <p *ngIf="item.TriggerRate<item.LiveRate && item.TriggerRate!=0">Kindly input value more
+                                    than live rate</p>
+                            </td>
+                            <td><input type="number" disabled="true" [(ngModel)]="item.LiveRate"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="button" *ngIf="this.apiUser.CHECK_LENGTH==false" type="button"
+                    (click)="MarginUpdate(this.apiUser.FX_MARGIN_DATA_OUTWARD,'Outward')">Modify</button>
+                <button class="button" *ngIf="this.apiUser.CHECK_LENGTH==true" type="button"
+                    (click)="CreateMargin(this.apiUser.FX_MARGIN_DATA_OUTWARD,'Outward')">Add</button>
+            </div>
+        </custom-mat-step>
+        <custom-mat-step MATSTEP_LABEL="Outward" [NextTrue]="true">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Currency</th>
+                            <th scope="col">Trigger rate</th>
+                            <th scope="col">FX Live(Ask)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of this.apiUser.FX_MARGIN_DATA_INWARD;let i=index">
+                            <td scope="row">{{item?.key}}</td>
+                            <td><input type="number" [(ngModel)]="item.TriggerRate">
+                                <p *ngIf="item.TriggerRate>item.LiveRate && item.TriggerRate!=0">Kindly input value below
+                                    than live rate</p>
+                            </td>
+                            <td><input type="number" disabled="true" [(ngModel)]="item.LiveRate"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="button" *ngIf="this.apiUser.CHECK_LENGTH==false" type="button"
+                    (click)="MarginUpdate(this.apiUser.FX_MARGIN_DATA_INWARD,'Inward')">Modify</button>
+                <button class="button" *ngIf="this.apiUser.CHECK_LENGTH==true" type="button"
+                    (click)="CreateMargin(this.apiUser.FX_MARGIN_DATA_INWARD,'Inward')">Add</button>
+            </div>
+        </custom-mat-step>
+    </custom-mat-stepper>
+</app-home>

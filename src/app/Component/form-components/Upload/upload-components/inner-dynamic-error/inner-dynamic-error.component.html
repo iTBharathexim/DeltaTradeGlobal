@@ -1,0 +1,33 @@
+<div *ngIf="formName?.controls[fieldName]?.invalid && (formName?.controls[fieldName]?.dirty || formName?.controls[fieldName]?.touched || this.SUBMIT_ERROR==true)"
+    class="alert alert-danger">
+    <p *ngIf="formName?.controls[fieldName]?.errors?.['required']">
+        Please enter the details.
+    </p>
+    <p *ngIf="formName?.controls[fieldName]?.errors?.['matched']!=undefined">
+        {{formName?.controls[fieldName]?.errors?.['matched']}}
+    </p>
+    <p *ngIf="formName?.controls[fieldName]?.errors?.['range']!=undefined">
+        Your Confirm MPIN cannot exceed 6 digit.
+    </p>
+    <p *ngIf="formName?.controls[fieldName]?.errors?.['confirmedValidator']!=undefined">
+        {{formName?.controls[fieldName]?.errors?.['confirmedValidator']}}
+    </p>
+    <p *ngIf="formName?.controls[fieldName]?.errors?.['alphaNumericError']!=undefined">
+        {{formName?.controls[fieldName]?.errors?.['alphaNumericError']}}
+    </p>
+    <p *ngIf="formName?.controls[fieldName]?.errors?.['alphaError']!=undefined">
+        {{formName?.controls[fieldName]?.errors?.['alphaError']}}
+    </p>
+    <p *ngIf="formName?.controls[fieldName]?.errors?.['emailError']!=undefined">
+        {{formName?.controls[fieldName]?.errors?.['emailError']}}
+    </p>
+    <p *ngIf="formName?.controls[fieldName]?.errors?.['minlength']">
+        {{fieldName}} must be at least {{formName?.controls[fieldName]?.errors?.['minlength']?.requiredLength}} characters long.
+    </p>
+    <p *ngIf="formName?.controls[fieldName]?.errors?.['maxlength']">
+        {{fieldName}} must be at least {{formName?.controls[fieldName]?.errors?.['maxlength']?.requiredLength}} characters long.
+    </p>
+    <p *ngIf="formName?.controls[fieldName]?.errors?.['forbiddenName']">
+        {{fieldName}} cannot be Bob.
+    </p>
+</div>

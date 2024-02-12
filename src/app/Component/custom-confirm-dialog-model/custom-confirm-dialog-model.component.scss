@@ -1,0 +1,139 @@
+.YesNoDialogModel-group {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 0 2px 2px #afa5a5;
+  height: 190px;
+  width: 300px;
+  flex-direction: column;
+  border-radius: 10px;
+  margin: auto;
+  padding-top: 10px;
+  color: black;
+  position: relative;
+}
+
+.YesNoDialogModel {
+  background-color: #2828286e;
+  width: 100vw;
+  height: 100vh;
+  margin: auto;
+  align-items: center;
+  z-index: 9999999;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.YesDialogModel {
+  background-color: #2828286e;
+  width: 100vw;
+  height: 100vh;
+  margin: auto;
+  align-items: center;
+  z-index: 9999999;
+}
+
+.Custom_Model {
+  background-color: #2828286e;
+  width: 100vw;
+  height: 100vh;
+  margin: auto;
+  align-items: center;
+  z-index: 9999999;
+}
+
+.YesNoDialogModel-btn {
+  margin: auto;
+  background: transparent;
+  border: none;
+  outline: none;
+  margin-right: 0px;
+  margin-top: 0;
+  cursor: pointer;
+}
+
+.YesNoDialogModel-group .column {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 10px;
+  margin-top: 0;
+  position: absolute;
+}
+
+.iframe-group {
+  overflow: auto;
+  width: 100%;
+  padding: 10px;
+}
+
+.DropDownInputConfirmDialog {
+  z-index: 99999999;
+}
+
+.modal-dialog {
+  max-width: 60vw !important;
+}
+
+.Notification_DialogModel {
+  position: absolute;
+  width: 100vw;
+  right: 0;
+  top: 0;
+  height: auto;
+  padding: 20px;
+  color: red;
+  z-index: 9999999999;
+  background: rgba(0, 0, 0, .1803921569);
+  align-items: center;
+  justify-content: center;
+}
+
+.YesDialogModel-group {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 0 2px 2px #afa5a5;
+  height: 190px;
+  width: 300px;
+  flex-direction: column;
+  border-radius: 10px;
+  margin: auto;
+  padding-top: 10px;
+  color: #000;
+  position: relative;
+}
+
+.Notification_DialogModel .modal-dialog {
+  max-width: 100% !important;
+}
+
+.header-yes-no {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  padding: 10px;
+}
+
+.YesNoDialogModel-group .column button {
+  background: #2448ac;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 900;
+  color: white;
+  width: 50px;
+  height: 30px;
+  margin-right: 15px;
+  cursor: pointer;
+}

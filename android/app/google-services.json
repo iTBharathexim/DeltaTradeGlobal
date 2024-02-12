@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "905190605918",
+    "project_id": "deltatrade-3ac72",
+    "storage_bucket": "deltatrade-3ac72.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905190605918:android:a4e082341a9931ee82a0cf",
+        "android_client_info": {
+          "package_name": "forex.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCtRZWXmNEhSXtQNsZuwPhKSd4V6bi3PE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

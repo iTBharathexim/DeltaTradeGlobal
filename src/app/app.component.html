@@ -1,0 +1,13 @@
+<div class="div">
+    <div class="timeOutWarningOverlay" *ngIf="this.userService.SHOW_SESSION==true">
+        <div class="session-logout"> 
+            <div>
+                <b>Your session is about to expire. Please click button below to continue the session.</b>
+                <b><span style="background-color:yellow;">00:</span><span id="time" style="background-color:yellow;">{{this.userService.counter}}</span></b>
+            </div>
+            <a id="keep">Keep Me Logged In</a>
+        </div>
+    </div> 
+    <router-outlet></router-outlet>
+    <confirm-dialog-model></confirm-dialog-model>
+</div>

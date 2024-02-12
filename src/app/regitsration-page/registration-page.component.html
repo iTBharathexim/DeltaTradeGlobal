@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Role Registration or Sign Up</title>
+</head>
+
+<body>
+        <div class="cookieCard" style="--src:url('../../assets/images/logo_transparent.png')">
+                <div class="wrapper">
+                        <h2>Forex App Registration</h2>
+                        <div class="step-main" label="Verify email & mobile number"
+                                *ngIf="this.MOBILE_EMAIL_VALIDATION==false">
+                                <form [formGroup]="userForm" (keydown.enter)="$event.preventDefault()">
+                                        <div class="input-box" *ngIf="this.EMAIL_VALIDATION==false">
+                                                <label for="">Verify Email</label>
+                                                <div class="input-box-button">
+                                                        <input type="text" EmailValidator class="input-radius"
+                                                                formControlName="emailId" placeholder="Enter your email"
+                                                                required>
+                                                        <button class="btn btn-primary otp-btn"
+                                                                [disabled]="userForm.controls?.emailId?.errors==null?false:true"
+                                                                [ngClass]="{'disabled':userForm.controls?.emailId?.errors==null?false:true}"
+                                                                (click)="SendOtpEmail()">Get OTP</button>
+                                                </div>
+                                                <div class="input-box-button" *ngIf="this.SEND_OTP_EMAIL==true"
+                                                        [ngClass]="{'disabled':this.VERIFY_OTP_EMAIL==true}">
+                                                        <input type="text" class="input-radius"
+                                                                formControlName="emailIdVerified"
+                                                                placeholder="Enter your email 6 digit otp" required>
+                                                        <button class="btn btn-primary otp-btn"
+                                                                [disabled]="userForm.controls?.emailIdVerified?.errors==null?false:true"
+                                                                [ngClass]="{'disabled':userForm.controls?.emailIdVerified?.errors==null?false:true}"
+                                                                (click)="VerifyOtpEmail()">Verify</button>
+                                                </div>
+                                                <p *ngIf="this.VERIFY_OTP_EMAIL==true"
+                                                        style="color: rgb(3, 67, 32);margin-left: 10px;">Email OTP
+                                                        verified...</p>
+                                        </div>
+                                        <div class="input-box" *ngIf="this.MOBILE_VALIDATION==true">
+                                                <label for="">Mobile No.</label>
+                                                <div class="input-box-button">
+                                                        <input type="text" class="input-radius"
+                                                                formControlName="mobileNo"
+                                                                placeholder="Enter your Mobile No.">
+                                                        <button class="btn btn-primary otp-btn"
+                                                                [disabled]="userForm.controls?.mobileNo?.errors==null?false:true"
+                                                                [ngClass]="{'disabled':userForm.controls?.mobileNo?.errors==null?false:true}"
+                                                                (click)="SendOtpMOBILE()">Get OTP</button>
+                                                </div>
+                                                <div class="input-box-button" *ngIf="this.SEND_OTP_MOBILE==true">
+                                                        <input type="text" formControlName="MobileOTPVerified"
+                                                                placeholder="Enter your 6 digit mobile OTP">
+                                                        <button class="btn btn-primary otp-btn"
+                                                                [disabled]="userForm.controls?.MobileOTPVerified?.errors==null?false:true"
+                                                                [ngClass]="{'disabled':userForm.controls?.MobileOTPVerified?.errors==null?false:true}"
+                                                                (click)="VerifyOtpMobile()">Verify</button>
+                                                </div>
+                                                <p *ngIf="this.VERIFY_OTP_MOBILE==true"
+                                                        style="color: rgb(3, 67, 32);margin-left: 10px;">Mobile OTP
+                                                        verified...</p>
+                                                <ng-container *ngIf="userForm.controls?.mobileNo?.errors">
+                                                        <ng-container
+                                                                *ngIf="userForm.controls?.mobileNo?.errors?.range">
+                                                                Your mobile no. cannot exceed 10 digit.
+                                                        </ng-container>
+                                                </ng-container>
+                                        </div>
+                                        <div class="input-box" style="flex-direction: row;">
+                                                <a class="a" routerLink="/ResetPassword">Reset Password</a>
+                                                <a class="singup-a" routerLink="/Login">Sign In</a>
+                                        </div>
+                                        <div class="input-box button">
+                                                <div class="row-flex" style="display: flex;
+                        align-items: baseline;
+                        padding-top: 10px;">
+                                                        <input type="checkbox" style="width: 20px;"
+                                                                formControlName="termscondition" required>
+                                                        <p style="font-size: 10px;color: black;margin: auto;
+                            margin-top: 0;" class="text-muted mb-4 bottom-text ml-2">
+                                                                By continuing, you agree to DocMachine
+                                                                <a class="hover-a-tag"
+                                                                        (click)="OpenPopup(TermsofService_PANEL)">Terms
+                                                                        of Service</a> we
+                                                                will
+                                                                manage
+                                                                information as described in our
+                                                                <a>Privacy Policy Agreement</a>
+                                                        </p>
+                                                </div>
+                                                <ng-container *ngIf="userForm.controls?.termscondition?.errors">
+                                                        <ng-container
+                                                                *ngIf="userForm.controls?.termscondition?.errors?.required">
+                                                                is required....
+                                                        </ng-container>
+                                                </ng-container>
+                                                <button type="Submit" class="btn btn-primary p-2 m-auto remove-btn-bg"
+                                                        [ngClass]="{'disabled':userForm.controls?.termscondition?.errors?.required!=undefined?true:false}"
+                                                        (click)="onFormEmailValidation()"
+                                                        [disabled]="userForm.controls?.termscondition?.errors?.required!=undefined?true:false">Next</button>
+                                        </div>
+                                </form>
+                        </div>
+                        <div class="step-main" label="Create MPIN" *ngIf="this.MPIN_SHOW && this.USER_DETAILS==false">
+                                <form [formGroup]="userForm2" (keydown.enter)="$event.preventDefault()">
+                                        <div class="input-box">
+                                                <label for="">Create MPIN</label>
+                                                <input type="text" class="otp-input input-box-shadow"
+                                                        formControlName="MPIN" placeholder="Enter 6 digit MPIN"
+                                                        required>
+                                                <ng-container *ngIf="userForm2.controls?.MPIN?.errors">
+                                                        <ng-container *ngIf="userForm2.controls?.MPIN?.errors?.range">
+                                                                Your MPIN cannot exceed 6 digit.
+                                                        </ng-container>
+                                                </ng-container>
+                                        </div>
+                                        <div class="input-box">
+                                                <label for="">Confirm MPIN</label>
+                                                <input type="text" class="otp-input input-box-shadow"
+                                                        formControlName="ConfirmMPIN" placeholder="Enter 6 digit MPIN"
+                                                        required>
+                                                <ng-container *ngIf="userForm2.controls?.ConfirmMPIN?.errors">
+                                                        <ng-container
+                                                                *ngIf="userForm2.controls?.ConfirmMPIN?.errors?.range">
+                                                                Your Confirm MPIN cannot exceed 6 digit.
+                                                        </ng-container>
+                                                        <ng-container
+                                                                *ngIf="userForm2.controls.ConfirmMPIN?.errors?.confirmedValidator">
+                                                                {{userForm2.controls.ConfirmMPIN.errors?.confirmedValidator}}
+                                                        </ng-container>
+                                                </ng-container>
+                                        </div>
+                                        <div class="input-box button flex-row-input-box">
+                                                <button type="Submit"
+                                                        class="btn btn-primary p-2 m-auto remove-btn-bg left-button"
+                                                        (click)="this.MPIN_SHOW=false; this.MOBILE_EMAIL_VALIDATION = false;this.VERIFY_OTP_EMAIL= true; this.VERIFY_OTP_MOBILE=true">Back</button>
+                                                <button type="Submit" class="btn btn-primary p-2 m-auto remove-btn-bg"
+                                                        (click)="onFormMPINValidation()">Next</button>
+                                        </div>
+                                </form>
+                        </div>
+                        <div class="step-main" label="Enter Details"
+                                *ngIf="this.USER_DETAILS==true && this.CouponCodeValidation==false">
+                                <form [formGroup]="userForm3" (keydown.enter)="$event.preventDefault()">
+                                        <div class="input-box">
+                                                <label for="">Company Name</label>
+                                                <input type="text" formControlName="companyName"
+                                                        class="input-box-shadow" placeholder="Enter your Company Name"
+                                                        required>
+                                        </div>
+                                        <div class="input-box">
+                                                <label for="">User Name</label>
+                                                <input type="text" formControlName="firstName" class="input-box-shadow"
+                                                        placeholder="Enter your User Name" required>
+                                        </div>
+                                        <div class="input-box button flex-row-input-box">
+                                                <button type="Submit"
+                                                        class="btn btn-primary p-2 m-auto remove-btn-bg left-button"
+                                                        (click)="this.USER_DETAILS=false">Back</button>
+                                                <button type="Submit" class="btn btn-primary p-2 m-auto remove-btn-bg"
+                                                        (click)="onFormUpdateUserdeatils()">Next</button>
+                                        </div>
+                                </form>
+                        </div>
+                        <div class="step-main" label="Coupon Code" *ngIf="this.CouponCodeValidation==true">
+                                <form [formGroup]="userForm4" (keydown.enter)="$event.preventDefault()">
+                                        <div class="input-box">
+                                                <label for="">Coupon Code</label>
+                                                <div class="input-box-button">
+                                                        <input type="text" formControlName="couponCodeName"
+                                                                class="input-radius"
+                                                                placeholder="Enter your Coupon Code" required>
+                                                        <button class="btn btn-primary otp-btn"
+                                                                [disabled]="userForm4.controls?.couponCodeName?.errors==null?false:true"
+                                                                [ngClass]="{'disabled':userForm4.controls?.couponCodeName?.errors==null?false:true}"
+                                                                (click)="onFormCouponCodeValidation()">Verify</button>
+                                                </div>
+                                                <button type="Submit"
+                                                                class="btn btn-primary p-2 m-auto remove-btn-bg left-button" (click)="SUBSCRIPTION_PANEL?.displayShow;addToken()">Subscribe</button>
+                                                <p *ngIf="CouponData?.notfound==true"
+                                                        style="color: red;margin-left: 10px;">Coupon code not
+                                                        valid..</p>
+                                                <p *ngIf="CouponData?.status==false"
+                                                        style="color: red;margin-left: 10px;">Coupon code expired..
+                                                </p>
+                                                <p *ngIf="CouponData?.status==true"
+                                                        style="color: rgb(3, 67, 32);margin-left: 10px;">Coupon code
+                                                        verified</p>
+                                                <p *ngIf="CouponData?.status==true"
+                                                style="color: rgb(3, 67, 32);margin-left: 10px;">Validity is <span style="font-weight: bold;">{{CouponData?.data[0]?.TrailDays}} days</span>.</p>
+                                        </div>
+                                        <div class="input-box button flex-row-input-box" *ngIf="CouponData?.status==true">
+                                                <!-- <button type="Submit"
+                                                        class="btn btn-primary p-2 m-auto remove-btn-bg left-button"
+                                                        (click)="this.CouponCodeValidation=false">Back</button> -->
+                                                <button type="Submit" class="btn btn-primary p-2 m-auto remove-btn-bg" routerLink="/Login">Login</button>
+                                        </div>
+                                </form>
+                        </div>
+                </div>
+        </div>
+</body>
+
+</html>
+
+<custom-model [customstyle]="{'max-width':'400px !important','font-size':'12px'}" class="p-2" height="65vh"
+        id="TermsofService" modalbodyheight="65vh" ModalTitleStyle="font-size: 15px;
+    font-weight: bold;" name="SOFTWARE LICENSE AGREEMENT" #TermsofService_PANEL>
+        <div class="col-12 mt-2 mb-2">
+                <terms-condition-template></terms-condition-template>
+                <button type="button" class="btn btn-primary" (click)="TermsofService_PANEL?.displayHidden">Ok</button>
+        </div>
+</custom-model>
+
+<custom-model [customstyle]="{'max-width':'400px !important','font-size':'12px'}" class="p-2" height="65vh"
+        id="SUBSCRIPTION" modalbodyheight="65vh" ModalTitleStyle="font-size: 15px;
+    font-weight: bold;" name="Subscription Plan" #SUBSCRIPTION_PANEL>
+        <div class="col-12 mt-2 mb-2" *ngIf="this.VIEW_SBSCRIPTION_PANEL==true">
+                <subscription-child [POPUP_PANEL]="[SUBSCRIPTION_PANEL,TermsofService_PANEL]"></subscription-child>
+                <button type="button" class="btn btn-primary" (click)="SUBSCRIPTION_PANEL?.displayHidden">Ok</button>
+        </div>
+</custom-model>

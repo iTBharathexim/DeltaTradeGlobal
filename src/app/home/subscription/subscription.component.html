@@ -1,0 +1,47 @@
+<app-home (ModeChanges)="this.DISPLAY_MODE=$event" (SUBSCRIPTION_CHECK)="this.SUBSCRIPTION_CHECK=$event">
+  <p class="Subscribe-text" *ngIf="this.SUBSCRIPTION_CHECK==true">Your Subscription has expired...  <a style="color: blue;
+    text-align: left;
+    display: flex;" *ngIf="this.SUBSCRIPTION_CHECK==true && this.CONTACT_US==false" (click)="sendMessage()">contact us
+      <br>
+    </a></p>
+ 
+  <span style="color: #4cce17;
+   text-align: left;
+   display: flex;" class="Subscribe-text" *ngIf="this.CONTACT_US==true">
+    Thank you for contacting us, we will get back to you shortly.
+  </span>
+  <div class="col-12 mt-2 mb-2 card-subscription" *ngIf="this.SUBSCRIPTION_CHECK==false"
+    [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
+    <p class="p-tag-style">Company Name : <span>{{this.apiservice.UserData?.companyName}}</span></p>
+    <p class="p-tag-style">User Name : <span>{{this.apiservice.UserData?.firstName}}</span></p>
+    <p class="p-tag-style">Email Id : <span>{{this.apiservice.UserData?.emailId}}</span></p>
+    <p class="p-tag-style">Mobile No. : <span>{{this.apiservice.UserData?.mobileNo}}</span></p>
+    <p class="p-tag-style">Plan Name : <span>{{this.apiservice.UserData?.PlanDetails?.PlanName}}</span></p>
+    <p class="p-tag-style">Plan Amount : <span>{{this.apiservice.UserData?.PlanDetails?.Currency}}
+        {{this.apiservice.UserData?.PlanDetails?.Amount}}</span></p>
+    <p class="p-tag-style">Plan Start Date : <span>{{this.apiservice.UserData?.FreeTrailPeroidStratDate}}</span></p>
+    <p class="p-tag-style">Plan Expiry Date : <span>{{this.apiservice.UserData?.FreeTrailPeroidEndDate}}</span></p>
+  </div>
+  <div class="columns" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
+    *ngFor="let item of this.RazorpaySubscriptionAllData;let i=index">
+    <ul class="price" *ngIf="item?.HidePlan=='show'">
+      <li class="grey">{{item?.PlanName}}</li>
+      <li>{{item?.Currency}} {{item?.Amount}}</li>
+      <li class="grey-bottom Subscribe-text" *ngIf="item?.StatusPayment!='paid'"><a
+          (click)="payNow(item);">Subscribe</a> </li>
+      <li class="grey-bottom Subscribe-text" *ngIf="item?.StatusPayment=='paid'">Already subscribe plan</li>
+    </ul>
+  </div>
+</app-home>
+
+<custom-model [customstyle]="{'width':'330px !important','font-size':'12px'}" class="p-2" id="TermsofService"
+  ModalTitleStyle="font-size: 15px;
+    font-weight: bold;" name="Your SUBSCRIPTION DETAILS" #SUBSCRIPTION_DETAILS_PANEL>
+  <div class="col-12 mt-2 mb-2 card-subscription">
+    <p class="p-tag-style">Plan Name : <span>{{this.SUBSCRIPTION_DETAILS?.PlanDetails?.PlanName}}</span></p>
+    <p class="p-tag-style">Plan Amount : <span>{{this.SUBSCRIPTION_DETAILS?.PlanDetails?.Currency}}
+        {{this.SUBSCRIPTION_DETAILS?.PlanDetails?.Amount}}</span></p>
+    <p class="p-tag-style">Plan Start Date : <span>{{this.SUBSCRIPTION_DETAILS?.FreeTrailPeroidStratDate}}</span></p>
+    <p class="p-tag-style">Plan Expired Date : <span>{{this.SUBSCRIPTION_DETAILS?.FreeTrailPeroidEndDate}}</span></p>
+  </div>
+</custom-model>

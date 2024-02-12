@@ -1,0 +1,49 @@
+<app-home (ModeChanges)="this.DISPLAY_MODE=$event">
+    <div class="col-12" style="display: flex;flex-direction: column;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Currency</th>
+                    <th scope="col">Outward Margin (Paise)</th>
+                    <th scope="col">Inward Margin (Paise)</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="this.FX_MARGIN_INWARD_DATA?.length!=0">
+                <tr *ngFor="let item of this.FX_MARGIN_OUTWARD_DATA;let i=index">
+                    <th scope="row" *ngIf="item?.key!='INR'">{{item?.key}}</th>
+                    <td *ngIf="item?.key!='INR'"><input type="number" [(ngModel)]="item.value"></td>
+                    <td *ngIf="item?.key!='INR'"><input type="number" [(ngModel)]="this.FX_MARGIN_INWARD_DATA[i].value"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="button" *ngIf="this.CHECK_LENGTH==false" type="button"
+            (click)="MarginUpdate(this.FX_MARGIN_OUTWARD_DATA,this.FX_MARGIN_INWARD_DATA,'outward')">Modify</button>
+        <button class="button" *ngIf="this.CHECK_LENGTH==true" type="button"
+            (click)="CreateMargin(this.FX_MARGIN_OUTWARD_DATA,this.FX_MARGIN_INWARD_DATA,'outward')">Add</button>
+    </div>
+    <!-- <custom-mat-stepper (TabEvent)="onTabChanged($event);" [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
+        <custom-mat-step MATSTEP_LABEL="Outward (Imports) | Inward (Exports)" errorMessage="Please select Inward Remittance"
+            [NextTrue]="true">
+         
+        </custom-mat-step>
+        <custom-mat-step MATSTEP_LABEL="Inward (Exports)" errorMessage="Please select Inward Remittance"
+            [NextTrue]="true">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Currency</th>
+                        <th scope="col">Margin (Paise)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of this.FX_MARGIN_DATA;let i=index">
+                        <th scope="row">{{item?.key}}</th>
+                        <td><input type="number" [(ngModel)]="item.value"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="button" *ngIf="this.CHECK_LENGTH==false" type="button" (click)="MarginUpdate(this.FX_MARGIN_DATA,'inward')">Update</button>
+            <button class="button" *ngIf="this.CHECK_LENGTH==true" type="button" (click)="CreateMargin(this.FX_MARGIN_DATA,'inward')">Create</button>
+        </custom-mat-step>
+    </custom-mat-stepper>  -->
+</app-home>

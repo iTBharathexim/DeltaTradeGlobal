@@ -1,0 +1,282 @@
+a {
+    text-decoration: none;
+}
+
+.product-card {
+    width: 100%;
+    position: relative;
+    box-shadow: 0 2px 7px #dfdfdf;
+    margin: auto;
+    background: #fafafa;
+}
+
+.badge {
+    position: absolute;
+    left: 0;
+    top: 20px;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 700;
+    background: red;
+    color: #fff;
+    padding: 3px 10px;
+}
+
+.product-tumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    padding: 50px;
+    background: #f0f0f0;
+}
+
+.product-tumb img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.product-details {
+    padding: 30px;
+}
+
+.product-catagory {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #ccc;
+    margin-bottom: 18px;
+}
+
+.product-details h4 a {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    color: #363636;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.product-details h4 a:hover {
+    color: #fbb72c;
+}
+
+.product-details p {
+    font-size: 15px;
+    line-height: 22px;
+    margin-bottom: 18px;
+    color: #999;
+}
+
+.product-bottom-details {
+    overflow: hidden;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.product-bottom-details div {
+    float: left;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-price {
+    font-size: 18px;
+    color: #fbb72c;
+    font-weight: 600;
+}
+
+.product-price small {
+    font-size: 80%;
+    font-weight: 400;
+    text-decoration: line-through;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.product-links {
+    text-align: right;
+}
+
+.product-links a {
+    display: inline-block;
+    margin-left: 5px;
+    color: #e1e1e1;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+.product-links a:hover {
+    color: #fbb72c;
+}
+
+svg.svelte-ekc7fv.svelte-ekc7fv {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 9px 11px;
+}
+
+.razorpay-payment-button.svelte-ohbfj8 {
+    position: relative;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: black;
+    margin: auto;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.PaymentButton--rzpTheme.svelte-ekc7fv .PaymentButton-contents.svelte-ekc7fv {
+    padding-left: 60px;
+}
+
+.PaymentButton-contents.svelte-ekc7fv.svelte-ekc7fv {
+    padding: 4px 28px 4px 44px;
+    margin: 1px 0;
+}
+
+.PaymentButton-text.svelte-ekc7fv.svelte-ekc7fv {
+    display: block;
+    min-height: 18px;
+    line-height: 18px;
+    font-size: 14px;
+    font-weight: 800;
+    opacity: 1;
+    text-transform: initial;
+}
+
+.PaymentButton-securedBy.svelte-ekc7fv.svelte-ekc7fv {
+    font-size: 8px;
+    line-height: 10px;
+    text-transform: initial;
+    margin-top: 0;
+    opacity: .6;
+}
+
+.razorpay-payment-button.svelte-ohbfj8::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 0;
+    width: 46px;
+    height: 100%;
+    background: #1e40a0;
+    border-radius: 2px 0 0 2px;
+    transform: skew(-15deg, 0);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.razorpay-payment-button.svelte-ohbfj8 {
+    background: #072654;
+    border-color: #072654;
+}
+
+
+.columns {
+    float: left;
+    width: 33.3%;
+    padding: 8px;
+}
+
+.price {
+    list-style-type: none;
+    border: 1px solid #eee;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    border-radius: 10px;
+}
+
+.price:hover {
+    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2)
+}
+
+.price .header {
+    background-color: #111;
+    color: white;
+    font-size: 25px;
+}
+
+.price li {
+    border-bottom: 1px solid #eee;
+    padding: 20px;
+    text-align: center;
+    color: black;
+}
+
+.price .grey {
+    background-color: cadetblue;
+    font-size: 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    color: white;
+}
+
+.price .grey-bottom {
+    background-color: cadetblue;
+    font-size: 20px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: white;
+}
+
+.button {
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+@media only screen and (max-width: 600px) {
+    .columns {
+        width: 100%;
+    }
+}
+
+::ng-deep .razorpay-subscription-button {
+    padding: 0 !important;
+    min-width: 300px !important;
+}
+
+.Subscribe-text {
+    color: black;
+    font-weight: 500;
+    margin: auto;
+    padding: 20px;
+}
+
+.Subscribe-text a {
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.Subscribe-text a:hover {
+    color: #bac3bf;
+}
+
+.card-subscription {
+    border-radius: 0;
+    padding: 10px;
+    box-shadow: inset 0px 0px 8px 4px #c2c2c2;
+}
+
+.p-tag-style {
+    padding: 10px;
+    border-radius: 0;
+    font-size: 11px;
+    font-weight: 500;
+    border-bottom: 2px solid #8a8787;
+    color: black;
+}

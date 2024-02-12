@@ -1,0 +1,51 @@
+.custom {
+    width: 300px;
+}
+
+.custom ::ng-deep .ng-select-container {
+    color: #333;
+    background-color: #fff;
+    border-radius: 0;
+    border: 1px solid #ccc;
+    min-height: 36px;
+    align-items: center;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.filter_right_new .upload-button {
+    border-radius: 0 !important;
+    height: 36px !important;
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}
+
+.filter_right_new.padding_new_top {
+    gap: 0px !important;
+}
+
+.upload-panel {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    padding: 10px;
+    gap: 10px;
+    margin-right: 10px;
+    position: absolute !important;
+    width: 100% !important;
+    top: 35px !important;
+}
+
+.form-container-fluid {
+    width: 100%;
+    padding: 10px;
+    overflow: auto;
+    max-height: 89vh !important;
+    border-radius: 10px;
+    margin: auto;
+}
+
+.filter_section_top .row {
+    display: grid !important;
+    grid-template-columns: 60% 40% !important;
+}
+

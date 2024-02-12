@@ -1,0 +1,506 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+<div class="form-container-fluid" [style]="MainStyle" *ngIf="this.validator.dynamicFormGroup!=undefined"
+    [hidden]="this.validator.dynamicFormGroup[this.id]!=undefined?false:true">
+    <label for="" class="title-name" *ngIf="this.Title!=''">{{this.Title}}</label>
+    <form class="col-12" [formGroup]="this.validator.dynamicFormGroup[this.id]" onsubmit="return false;"
+        [ngClass]="{'division-panel':this.HIDE_BACKGROUND==true}" [style]="this.FormStyle"
+        (keyup.enter)="this.KEY_ENTER_ENABLED==true?onSubmit($event,this.validator.dynamicFormGroup[this.id]):''">
+        <label *ngIf="label!=undefined && label!=''" [style]="labelStyle">{{label}}</label>
+        <ng-content *ngIf="morecontent==true" select="more-content"></ng-content>
+        <div class="col-12 p-2" [ngClass]="{'hidden':field?.disabled==true,'hidden':field?.divhide==true}"
+            *ngFor="let field of this.validator?.FIELDS_DATA[this.id];let fieldIndex=index">
+            <ng-container [ngSwitch]="field.type">
+                <div class="form-group mb-0" *ngIf="field?.visible==true || field?.visible==undefined">
+                    <div class="form-group mb-0" *ngSwitchCase="'text'">
+                        <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span
+                                style="color: red;" *ngIf="field?.rules?.required==true">*</span></label>
+                        <input [(ngModel)]="field.value" [disabled]="field?.Inputdisabled"
+                            (keypress)="this.validator.max_length_validator(this.id,field.fieldName);dumpFunc({value:$event?.target,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.callback)"
+                            [type]="field.type" [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                            class="form-control" [style]="field?.InputStyle" />
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngIf="field?.visible==true || field?.visible==undefined"
+                    [style]="field?.style">
+                    <div class="form-group mb-0" *ngSwitchCase="'button'">
+                        <button type="button" [style]="field?.ButtonStyle" class="btn btn-primary"
+                            (click)="this.AddButton?.emit({text:field?.text})">{{field?.text}}</button>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngIf="field?.visible==true || field?.visible==undefined"
+                    [style]="field?.style">
+                    <div class="form-group mb-0" *ngSwitchCase="'CallbackButton'">
+                        <button type="button" class="btn btn-primary" [style]="field?.ButtonStyle"
+                            [disabled]="field?.ButtonDisabled"
+                            (click)="this.field?.Callback({text:field?.text,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]})">{{field?.text}}</button>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngIf="field?.visible==true || field?.visible==undefined">
+                    <div class="form-group mb-0" *ngSwitchCase="'TextValiadtion'">
+                        <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span
+                                style="color: red;" *ngIf="field?.rules?.required==true">*</span></label>
+                        <input [(ngModel)]="field.value" [disabled]="field?.Inputdisabled"
+                            (keypress)="this.validator.max_length_validator(this.id,field.fieldName);"
+                            [type]="field.type" [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                            class="form-control" [style]="field?.InputStyle" />
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngIf="field?.visible==true || field?.visible==undefined">
+                    <div class="form-group mb-0" *ngSwitchCase="'SelectOption'">
+                        <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span
+                                style="color: red;" *ngIf="field?.rules?.required==true">*</span></label>
+                        <select class="form-select" [name]="field?.fieldName" [(ngModel)]="field.value"
+                            aria-label="Default select example" [disabled]="field?.Inputdisabled"
+                            (change)="dumpFunc({value:$event,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.callback)">
+                            <option [value]="item" *ngFor="let item of field?.items;let i=index">
+                                {{item}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngIf="field?.visible==true || field?.visible==undefined">
+                    <div class="form-group mb-0" *ngSwitchCase="'TextGreaterValiadtion'">
+                        <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span
+                                style="color: red;" *ngIf="field?.rules?.required==true">*</span></label>
+                        <input [(ngModel)]="field.value" [disabled]="field?.Inputdisabled"
+                            (keypress)="this.validator.max_length_validator(this.id,field.fieldName);"
+                            [type]="field.type" [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                            class="form-control" [style]="field?.InputStyle" />
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngIf="field?.visible==true || field?.visible==undefined">
+                    <div class="form-group mb-0" *ngSwitchCase="'LabelShow'">
+                        <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span
+                                style="color: red;" *ngIf="field?.rules?.required==true">*</span></label>
+                        <label for="" class="form-label-control" [innerHTML]="field?.value"></label>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngIf="field?.visible==true || field?.visible==undefined">
+                    <div class="form-group mb-0" *ngSwitchCase="'OnlyLabelShow'">
+                        <label style="background: #18dc42;
+                        padding: 10px;
+                        border-radius: 5px;
+                        margin-left: 10px;
+                        color: white;
+                        width: calc(100% - 20px);"
+                            *ngIf="field.label!=undefined && field.label!=''">{{field.label}}</label>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'number'">
+                    <div class="form-group mb-0" *ngIf="field.visible==true || field.visible==undefined">
+                        <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span
+                                style="color: red;" *ngIf="field?.rules?.required==true">*</span></label>
+                        <input [(ngModel)]="field.value" [disabled]="field?.Inputdisabled"
+                            (keypress)="this.validator.max_length_validator(this.id,field.fieldName);dumpFunc({value:$event?.target,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.callback)"
+                            [type]="field.type" [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                            class="form-control" [style]="field?.InputStyle" />
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'textarea'">
+                    <div class="form-group mb-0" *ngIf="field.visible==true || field.visible==undefined">
+                        <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span
+                                style="color: red;" *ngIf="field?.rules?.required==true">*</span></label>
+                        <textarea [(ngModel)]="field.value" [disabled]="field?.Inputdisabled"
+                            (keypress)="this.validator.max_length_validator(this.id,field.fieldName);dumpFunc({value:$event?.target,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.callback)"
+                            [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                            class="form-control" [style]="field?.style"></textarea>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'email'">
+                    <div class="col-12 p-0">
+                        <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span
+                                style="color: red;" *ngIf="field?.rules?.required==true">*</span></label>
+                        <div class="email-input-icon">
+                            <input [(ngModel)]="field.value" EmailValidator
+                                (keypress)="this.validator.max_length_validator(this.id,field.fieldName);dumpFunc({value:$event?.target,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.callback)"
+                                [type]="field.type" [name]="field.fieldName"
+                                [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                                class="form-control email-password-padding" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'checkbox'">
+                    <div class="col-12 p-0 ml-3">
+                        <mat-checkbox [(ngModel)]="field.value" [disabled]="field?.CheckboxDisabled" [type]="field.type"
+                            [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''">{{field.label}}
+                            <span style="color: red;" *ngIf="field?.rules?.required==true">*</span></mat-checkbox>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'yesnocheckbox'">
+                    <div class="col-12 p-0 d-flex" style="align-items: center;">
+                        <label style="margin: auto;margin-left: 0;"
+                            *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                                *ngIf="field?.rules?.required==true">*</span></label>
+                        <div class="d-flex" [ngClass]="field?.class" [style]="field?.style"
+                            *ngIf="field?.CoveringLetter==false || field?.CoveringLetter==undefined">
+                            <button [name]="field.fieldName" class="btn-primary yes-btn btn remove-no-button"
+                                (click)="field.YesNo='true';YesNoFunction({bool:true,text:field?.text1,id:field.fieldName,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field.fieldName,field?.callback);ShowInputCheckBox(true,field?.YesButton)"
+                                [ngClass]="{'yes-button':field?.YesNo=='true','remove-no-button-1':field?.YesNo=='false'}">{{field?.text1!=undefined?field?.text1:'Yes'}}</button>
+                            <button [name]="field.fieldName" class="btn-primary btn no-btn remove-no-button"
+                                (click)="field.YesNo='false';YesNoFunction({bool:false,text:field?.text2,id:field.fieldName,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field.fieldName,field?.callback);HideInputCheckBox(false,field?.NoButton)"
+                                [ngClass]="{'no-button':field?.YesNo=='false','remove-no-button-2':field?.YesNo=='true'}">{{field?.text2!=undefined?field?.text2:'No'}}</button>
+                        </div>
+                        <custom-ng-content-header *ngIf="field?.CoveringLetter==true">
+                            <div class="d-flex">
+                                <button [name]="field.fieldName" class="btn-primary yes-btn btn remove-no-button"
+                                    (click)="field.YesNo='true';YesNoFunction({bool:true,text:field?.text1,id:field.fieldName,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field.fieldName,field?.callback);ShowInputCheckBox(true,field?.YesButton)"
+                                    [ngClass]="{'yes-button':field?.YesNo=='true','remove-no-button-1':field?.YesNo=='false'}">{{field?.text1!=undefined?field?.text1:'Yes'}}</button>
+                                <button [name]="field.fieldName" class="btn-primary btn no-btn remove-no-button"
+                                    (click)="field.YesNo='false';YesNoFunction({bool:false,text:field?.text2,id:field.fieldName,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field.fieldName,field?.callback);HideInputCheckBox(false,field?.NoButton)"
+                                    [ngClass]="{'no-button':field?.YesNo=='false','remove-no-button-2':field?.YesNo=='true'}">{{field?.text2!=undefined?field?.text2:'No'}}</button>
+                            </div>
+                        </custom-ng-content-header>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'InputButton'">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <div class="grid" [style]="field?.DivStyle">
+                        <input [(ngModel)]="field.value" [disabled]="field?.Inputdisabled"
+                            (keypress)="this.validator.max_length_validator(this.id,field.fieldName);"
+                            [type]="field.InputType" [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                            class="form-control" [style]="field?.InputStyle" />
+                        <button [style]="field?.buttonStyle" class="btn btn-primary"
+                            [disabled]="this.validator.dynamicFormGroup[this.id]?.controls[field.fieldName]?.errors == null?false:true"
+                            (click)="dumpFunc({value:field.value,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.callback)">{{field?.ButtonText}}</button>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'EmailButton'">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <div class="grid" [style]="field?.DivStyle">
+                        <input [(ngModel)]="field.value" [disabled]="field?.Inputdisabled" EmailValidator
+                            (keypress)="this.validator.max_length_validator(this.id,field.fieldName);"
+                            [type]="field.InputType" [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                            class="form-control" [style]="field?.InputStyle"
+                            (keydown)="dumpFunc({value:field.value,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.KeyPressCallBack)" />
+                        <button [style]="field?.buttonStyle" class="btn btn-primary" [disabled]="field?.buttondisabled"
+                            [disabled]="this.validator.dynamicFormGroup[this.id]?.controls[field.fieldName]?.errors == null?false:true"
+                            (click)="dumpFunc({value:field.value,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.callback)">{{field?.ButtonText}}</button>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'hrefLink'">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <div class="grid" [style]="field?.DivStyle" *ngIf="field?.hrefLinkList!='' && field?.hrefLinkList!=undefined && field?.hrefLinkList!=null">
+                        <a style="font-size: 16px;
+                        color: #3498db;
+                        text-decoration: none;cursor: pointer;" (click)="onhrefLink(item?.link)" *ngFor="let item of field?.hrefLinkList">{{item?.name}}</a>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'NumberButton'">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <div class="grid" [style]="field?.DivStyle">
+                        <input [(ngModel)]="field.value" [disabled]="field?.Inputdisabled" MaxMinValidation
+                            (keypress)="this.validator.max_length_validator(this.id,field.fieldName);"
+                            [type]="field?.InputType" [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                            class="form-control" [style]="field?.InputStyle"
+                            (keydown)="dumpFunc({value:field.value,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.KeyPressCallBack)" />
+                        <button [style]="field?.buttonStyle" class="btn btn-primary" [disabled]="field?.buttondisabled"
+                            [disabled]="this.validator.dynamicFormGroup[this.id]?.controls[field.fieldName]?.errors == null?false:true"
+                            (click)="dumpFunc({value:field.value,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.callback)">{{field?.ButtonText}}</button>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'ArrayList_Object'">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <ng-custom-dropdown [items]="field?.item" [bindLabel]="field?.bindLabel" [multiple]="false"
+                        [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                        [name]="field?.fieldName" [selectedItems]="field?.value"
+                        (modelObjectChanges)="setValue($event,field?.fieldName);field?.callback!=undefined?field?.callback({item:$event,form:this.validator.dynamicFormGroup[this.id]}):''"
+                        ngModel></ng-custom-dropdown>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'password'">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <div class="col-12 p-0">
+                        <i class="fa fa-lock lock-icon" aria-hidden="true"></i>
+                        <input [(ngModel)]="field.value" PasswordValidation
+                            (keypress)="this.validator.max_length_validator(this.id,field.fieldName);"
+                            [type]="field.showhide==true?'text':field.type" [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                            class="form-control email-password-padding" />
+                        <i class="fa fa-eye eye-open-close-icon" (click)="field.showhide=!field.showhide"
+                            aria-hidden="true" *ngIf="field.showhide"></i>
+                        <i class="fa fa-eye-slash eye-open-close-icon" aria-hidden="true"
+                            (click)="field.showhide=!field.showhide" *ngIf="!field.showhide"></i>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'MPIN'">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <div class="col-12 p-0">
+                        <input [(ngModel)]="field.value"
+                            (keypress)="this.validator.max_length_validator(this.id,field.fieldName);"
+                            [type]="field?.InputType" [name]="field.fieldName"
+                            [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''"
+                            class="form-control email-password-padding" />
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'date'">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <input [(ngModel)]="field.value" [disabled]="field?.Inputdisabled"
+                        (change)="dumpFunc({value:$event?.target,field:this.validator?.FIELDS_DATA[this.id],form:this.validator.dynamicFormGroup[this.id]},field?.callback)"
+                        [placeholder]="field?.placeholderText!=undefined?field.placeholderText:''" [type]="field.type"
+                        [name]="field.fieldName" class="form-control" [style]="field?.style" />
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'MultiCheckBox'">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <custom-checkbox [items]="field?.checkboxlabel" [name]="field.fieldName" [value]="field.value"
+                        [(ngModel)]="field.value"
+                        (event)="HideShowInput($event,field?.HideShowInput);onLabelNameChange($event,field?.LabelNameChange)">
+                    </custom-checkbox>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'CheckboxMultiple'">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <custom-checkbox [items]="field?.checkboxlabel" [name]="field.fieldName" [value]="field.value"
+                        [(ngModel)]="field.value">
+                    </custom-checkbox>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'OptionMultiCheckBox'"
+                    [ngClass]="{'hidden': field?.disabled==true}" [formArrayName]="field.fieldName">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <custom-checkbox [items]="field?.checkboxlabel" [value]="field.value" [name]="field.fieldName"
+                        (event)="field.value=$event">
+                    </custom-checkbox>
+                    <div class="col-12 p-0" *ngIf="field?.value==field?.Yes">
+                        <div class="col-12 p-0" *ngFor="let Optionfield of field?.NewOption;let OptionfieldIndex=index"
+                            [formGroupName]="OptionfieldIndex">
+                            <div class="col-12 p-0"
+                                *ngFor="let FormOptionfield of Optionfield | keyvalue;let FormOptionfieldIndex=index">
+                                <ng-container [ngSwitch]="FormOptionfield?.value?.type">
+                                    <div class="form-group mb-0" *ngSwitchCase="'text'">
+                                        <label
+                                            *ngIf="FormOptionfield?.value?.label!=undefined && FormOptionfield?.value?.label!=''">{{FormOptionfield?.value?.label}}
+                                            <span style="color: red;"
+                                                *ngIf="FormOptionfield?.value?.rules?.required==true">*</span></label>
+                                        <input
+                                            [(ngModel)]="this.validator.dynamicFormGroup[this.id].controls[field.fieldName].value[OptionfieldIndex][FormOptionfield?.value?.fieldName]"
+                                            [type]="FormOptionfield?.value?.type"
+                                            [name]="FormOptionfield?.value?.fieldName"
+                                            [placeholder]="FormOptionfield?.value?.placeholderText!=undefined?FormOptionfield?.value?.placeholderText:''"
+                                            class="form-control" [style]="FormOptionfield?.value?.style" />
+                                    </div>
+                                    <div class="form-group mb-0" *ngSwitchCase="'number'">
+                                        <div class="form-group mb-0"
+                                            *ngIf="FormOptionfield?.value?.visible==true || FormOptionfield?.value?.visible==undefined">
+                                            <label
+                                                *ngIf="FormOptionfield?.value?.label!=undefined && FormOptionfield?.value?.label!=''">{{FormOptionfield?.value?.label}}
+                                                <span style="color: red;"
+                                                    *ngIf="FormOptionfield?.value?.rules?.required==true">*</span></label>
+                                            <input
+                                                [(ngModel)]="this.validator.dynamicFormGroup[this.id].controls[field.fieldName].value[OptionfieldIndex][FormOptionfield?.value?.fieldName]"
+                                                [type]="FormOptionfield?.value?.type"
+                                                [name]="FormOptionfield?.value?.fieldName"
+                                                [placeholder]="FormOptionfield?.value?.placeholderText!=undefined?FormOptionfield?.value?.placeholderText:''"
+                                                class="form-control" [style]="FormOptionfield?.value?.InputStyle" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-0" *ngSwitchCase="'checkbox'">
+                                        <div class="col-12 p-0 ml-3">
+                                            <mat-checkbox
+                                                [(ngModel)]="this.validator.dynamicFormGroup[this.id].controls[field.fieldName].value[OptionfieldIndex][FormOptionfield?.value?.fieldName]"
+                                                [name]="FormOptionfield?.value?.fieldName"
+                                                [placeholder]="FormOptionfield?.value?.placeholderText!=undefined?FormOptionfield?.value?.placeholderText:''"
+                                                class="form-control"
+                                                [style]="FormOptionfield?.value?.style">{{FormOptionfield?.value?.label}}
+                                                <span style="color: red;"
+                                                    *ngIf="FormOptionfield?.value?.rules?.required==true">*</span></mat-checkbox>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <inner-dynamic-error [SUBMIT_ERROR]="this.SUBMIT_ERROR"
+                                    [formName]="this.validator.dynamicFormGroup[this.id]?.controls[field.fieldName]?.controls[OptionfieldIndex]"
+                                    [fieldName]="FormOptionfield?.value?.fieldName"></inner-dynamic-error>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 p-0" *ngIf="field?.value==field?.No && field?.No!=undefined">
+                        <div class="col-12 p-0" *ngFor="let Optionfield of field?.NewOption1;let OptionfieldIndex=index"
+                            [formGroupName]="OptionfieldIndex+1">
+                            <div class="col-12 p-0"
+                                *ngFor="let FormOptionfield of Optionfield | keyvalue;let FormOptionfieldIndex=index">
+                                <ng-container [ngSwitch]="FormOptionfield?.value?.type">
+                                    <div class="form-group mb-0" *ngSwitchCase="'text'">
+                                        <label
+                                            *ngIf="FormOptionfield?.value?.label!=undefined && FormOptionfield?.value?.label!=''">{{FormOptionfield?.value?.label}}
+                                            <span style="color: red;"
+                                                *ngIf="field?.rules?.required==true">*</span></label>
+                                        <input
+                                            [(ngModel)]="this.validator.dynamicFormGroup[this.id].controls[field.fieldName].value[OptionfieldIndex+1][FormOptionfield?.value?.fieldName]"
+                                            [type]="FormOptionfield?.value?.type"
+                                            [name]="FormOptionfield?.value?.fieldName"
+                                            [placeholder]="FormOptionfield?.value?.placeholderText!=undefined?FormOptionfield?.value?.placeholderText:''"
+                                            class="form-control" [style]="FormOptionfield?.value?.InputStyle" />
+                                    </div>
+                                    <div class="form-group mb-0" *ngSwitchCase="'number'">
+                                        <div class="form-group mb-0"
+                                            *ngIf="FormOptionfield?.value?.visible==true || FormOptionfield?.value?.visible==undefined">
+                                            <label
+                                                *ngIf="FormOptionfield?.value?.label!=undefined && FormOptionfield?.value?.label!=''">{{FormOptionfield?.value?.label}}
+                                                <span style="color: red;"
+                                                    *ngIf="FormOptionfield?.value?.rules?.required==true">*</span></label>
+                                            <input
+                                                [(ngModel)]="this.validator.dynamicFormGroup[this.id].controls[field.fieldName].value[OptionfieldIndex+1][FormOptionfield?.value?.fieldName]"
+                                                [type]="FormOptionfield?.value?.type"
+                                                [name]="FormOptionfield?.value?.fieldName"
+                                                [placeholder]="FormOptionfield?.value?.placeholderText!=undefined?FormOptionfield?.value?.placeholderText:''"
+                                                class="form-control" [style]="FormOptionfield?.value?.InputStyle" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-0" *ngSwitchCase="'checkbox'">
+                                        <div class="col-12 p-0 ml-3">
+                                            <mat-checkbox
+                                                [(ngModel)]="this.validator.dynamicFormGroup[this.id].controls[field.fieldName].value[OptionfieldIndex+1][FormOptionfield?.value?.fieldName]"
+                                                [name]="FormOptionfield?.value?.fieldName"
+                                                [placeholder]="FormOptionfield?.value?.placeholderText!=undefined?FormOptionfield?.value?.placeholderText:''"
+                                                class="form-control"
+                                                [style]="FormOptionfield?.value?.InputStyle">{{FormOptionfield?.value?.label}}
+                                                <span style="color: red;"
+                                                    *ngIf="FormOptionfield?.value?.rules?.required==true">*</span></mat-checkbox>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <inner-dynamic-error [SUBMIT_ERROR]="this.SUBMIT_ERROR"
+                                    [formName]="this.validator.dynamicFormGroup[this.id]?.controls[field.fieldName]?.controls[OptionfieldIndex+1]"
+                                    [fieldName]="FormOptionfield?.value?.fieldName"></inner-dynamic-error>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-0" *ngSwitchCase="'formGroup'" [formArrayName]="field.fieldName">
+                    <label *ngIf="field.label!=undefined && field.label!=''">{{field.label}} <span style="color: red;"
+                            *ngIf="field?.rules?.required==true">*</span></label>
+                    <div class="col-12 p-0">
+                        <div class="col-12 formGroup-division-panel" [style]="field?.Style"
+                            *ngFor="let Optionfield of field?.NewformArray;let OptionfieldIndex=index">
+                            <label>{{field?.GroupLabel[OptionfieldIndex]}}</label>
+                            <div class="col-12 row m-0 add-btn-panel p-0" *ngIf="field?.AddNewRequried==true">
+                                <button type="button" class="btn btn-primary"
+                                    *ngIf="(field?.NewformArray?.length-1)==OptionfieldIndex"
+                                    (click)="this.validator.addNewFormArray(this.id,fieldIndex,field.fieldName)"><i
+                                        class='fa fa-plus'></i></button>
+                                <button type="button" class="btn btn-primary" *ngIf="OptionfieldIndex!=0"
+                                    (click)="this.validator.removeNewFormArray(this.id,fieldIndex,field.fieldName,OptionfieldIndex)"><i
+                                        class="fa fa-minus"></i></button>
+                            </div>
+
+                            <div class="col-12 p-0"
+                                *ngFor="let FormOptionfield of field?.OrderKey[OptionfieldIndex];let FormOptionfieldIndex=index"
+                                [formGroupName]="OptionfieldIndex">
+                                <ng-container [ngSwitch]="Optionfield[FormOptionfield]?.type">
+                                    <div class="form-group mb-0" *ngSwitchCase="'text'">
+                                        <ng-input [item]="Optionfield[FormOptionfield]"
+                                            [required]="Optionfield[FormOptionfield]?.rules?.required"
+                                            [name]="Optionfield[FormOptionfield]?.name"
+                                            [disabled]="Optionfield[FormOptionfield]?.disabled"
+                                            (event)="this.validator.setValueFromArray(this.id,this.validator.dynamicFormGroup[this.id],field.fieldName,OptionfieldIndex,Optionfield[FormOptionfield]?.fieldName,$event)"
+                                            [(ngModel)]="Optionfield[FormOptionfield].value"></ng-input>
+                                    </div>
+                                    <div class="form-group mb-0" *ngSwitchCase="'CheckboxMultiple'">
+                                        <label
+                                            *ngIf="Optionfield[FormOptionfield]?.label!=undefined && Optionfield[FormOptionfield]?.label!=''">{{Optionfield[FormOptionfield]?.label}}
+                                            <span style="color: red;"
+                                                *ngIf="Optionfield[FormOptionfield]?.rules?.required==true">*</span></label>
+                                        <mat-checkbox [name]="Optionfield[FormOptionfield]?.fieldName"
+                                            [checked]="Optionfield[FormOptionfield].value"
+                                            (change)="this.validator.setValueFromArray(this.id,this.validator.dynamicFormGroup[this.id],field.fieldName,OptionfieldIndex,Optionfield[FormOptionfield]?.fieldName,$event?.checked,Optionfield[FormOptionfield]?.callback)"
+                                            [(ngModel)]="Optionfield[FormOptionfield].value">{{Optionfield[FormOptionfield]?.checkboxlabel}}</mat-checkbox>
+                                    </div>
+                                    <div class="form-group mb-0" *ngSwitchCase="'number'">
+                                        <div class="form-group mb-0"
+                                            *ngIf="Optionfield[FormOptionfield]?.visible==true || Optionfield[FormOptionfield]?.visible==undefined">
+                                            <ng-input [item]="Optionfield[FormOptionfield]"
+                                                [required]="Optionfield[FormOptionfield]?.rules?.required"
+                                                [name]="Optionfield[FormOptionfield]?.name"
+                                                [disabled]="Optionfield[FormOptionfield]?.disabled"
+                                                (event)="this.validator.setValueFromArray(this.id,this.validator.dynamicFormGroup[this.id],field.fieldName,OptionfieldIndex,Optionfield[FormOptionfield]?.fieldName,$event)"
+                                                [(ngModel)]="Optionfield[FormOptionfield].value"></ng-input>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-0" *ngSwitchCase="'date'">
+                                        <ng-input [item]="Optionfield[FormOptionfield]"
+                                            [name]="Optionfield[FormOptionfield]?.name"
+                                            [disabled]="Optionfield[FormOptionfield]?.disabled"
+                                            (event)="this.validator.setValueFromArray(this.id,this.validator.dynamicFormGroup[this.id],field.fieldName,OptionfieldIndex,Optionfield[FormOptionfield]?.fieldName,$event)"
+                                            [(ngModel)]="Optionfield[FormOptionfield].value"></ng-input>
+                                    </div>
+                                    <div class="form-group mb-0"
+                                        *ngIf="Optionfield[FormOptionfield]?.visible==true || Optionfield[FormOptionfield]?.visible==undefined">
+                                        <div class="form-group mb-0" *ngSwitchCase="'TextValiadtion'">
+                                            <label
+                                                *ngIf="Optionfield[FormOptionfield].label!=undefined && Optionfield[FormOptionfield].label!=''">{{Optionfield[FormOptionfield].label}}
+                                                <span style="color: red;"
+                                                    *ngIf="Optionfield[FormOptionfield]?.rules?.required==true">*</span></label>
+                                            <ng-input [item]="{value:Optionfield[FormOptionfield]?.value,type:'text'}"
+                                                [required]="Optionfield[FormOptionfield]?.rules?.required"
+                                                [name]="Optionfield[FormOptionfield]?.name"
+                                                [disabled]="Optionfield[FormOptionfield]?.disabled"
+                                                (event)="this.validator.setValueFromArray(this.id,this.validator.dynamicFormGroup[this.id],field.fieldName,OptionfieldIndex,Optionfield[FormOptionfield]?.fieldName,$event)"
+                                                [(ngModel)]="Optionfield[FormOptionfield].value"></ng-input>
+                                        </div>
+                                        <div class="form-group mb-0" *ngSwitchCase="'TextGreaterValiadtion'">
+                                            <label
+                                                *ngIf="Optionfield[FormOptionfield].label!=undefined && Optionfield[FormOptionfield].label!=''">{{Optionfield[FormOptionfield].label}}
+                                                <span style="color: red;"
+                                                    *ngIf="Optionfield[FormOptionfield]?.rules?.required==true">*</span></label>
+                                            <ng-input [item]="{value:Optionfield[FormOptionfield]?.value,type:'text'}"
+                                                [required]="Optionfield[FormOptionfield]?.rules?.required"
+                                                [name]="Optionfield[FormOptionfield]?.name"
+                                                [disabled]="Optionfield[FormOptionfield]?.disabled"
+                                                (event)="this.validator.setValueFromArray(this.id,this.validator.dynamicFormGroup[this.id],field.fieldName,OptionfieldIndex,Optionfield[FormOptionfield]?.fieldName,$event)"
+                                                [(ngModel)]="Optionfield[FormOptionfield].value"></ng-input>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <inner-dynamic-error [SUBMIT_ERROR]="this.SUBMIT_ERROR"
+                                    [formName]="this.validator.dynamicFormGroup[this.id]?.controls[field.fieldName]?.controls[OptionfieldIndex]"
+                                    [fieldName]="Optionfield[FormOptionfield]?.fieldName"></inner-dynamic-error>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <inner-dynamic-error [SUBMIT_ERROR]="this.SUBMIT_ERROR"
+                [formName]="this.validator.dynamicFormGroup[this.id]"
+                [fieldName]="field.fieldName"></inner-dynamic-error>
+        </div>
+    </form>
+    <div [ngClass]="{'more-button-panel':BUTTON_PANEL_SHOW==true}"
+        [style]="this.BUTTON_PANEL_HIDE==true?'display:block;':'display:none'" [style]="ButtonPanelStyle">
+        <ng-content></ng-content>
+        <button *ngIf="BUTTON_PANEL_SHOW==true" type="button" class="btn btn-primary submit-button" [id]="this.id"
+            [style]="this.HIDE_SUBMIT_BUTTON==true?'display:block;':'display:none'" [style]="SubmitButtonStyle"
+            [disabled]="this.validator.dynamicFormGroup[this.id]?.status=='INVALID'?true:false"
+            (click)="onSubmit($event,this.validator.dynamicFormGroup[this.id]);">{{SubmitName}}</button>
+        <button *ngIf="BUTTON_PANEL_SHOW==false" type="button" class="btn btn-primary submit-button" [id]="this.id"
+            [ngClass]="{'button-show':this.HIDE_SUBMIT_BUTTON==true,'button-hide':this.HIDE_SUBMIT_BUTTON==false}"
+            [style]="SubmitButtonStyle"
+            [disabled]="this.validator.dynamicFormGroup[this.id]?.status=='INVALID'?true:false"
+            (click)="onSubmit($event,this.validator.dynamicFormGroup[this.id]);">{{SubmitName}}</button>
+    </div>
+</div>

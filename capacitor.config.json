@@ -1,0 +1,38 @@
+{
+    "plugins": {
+        "PushNotifications": {
+            "presentationOptions": [
+                "badge",
+                "sound",
+                "alert"
+            ]
+        },
+        "GoogleAuth": {
+            "scopes": [
+                "profile",
+                "email"
+            ],
+            "serverClientId": "",
+            "forceCodeForRefreshToken": false
+        }
+    },
+    "appId": "forex.app",
+  "appName": "forexapp App",
+  "webDir": "dist/forex-app",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": ["*"],
+    "cleartext": true
+  },
+    "cordova": {
+        "preferences": {
+            "ScrollEnabled": false,
+            "BackupWebStorage": "none",
+            "SplashMaintainAspectRatio": true,
+            "FadeSplashScreenDuration": 300,
+            "SplashShowOnlyFirstTime": false,
+            "SplashScreen": "screen",
+            "SplashScreenDelay": 3000
+        }
+    }
+}

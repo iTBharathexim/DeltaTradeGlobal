@@ -1,0 +1,25 @@
+<app-home (ModeChanges)="this.DISPLAY_MODE=$event">
+    <label [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}" class="label" for="">RBI REFERENCE RATE</label>
+    <div class="table-controller" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" class="width-110">As on Date</th>
+                    <th scope="col" class="width-100">USD</th>
+                    <th scope="col" class="width-100">GBP</th>
+                    <th scope="col" class="width-100">EUR</th>
+                    <th scope="col" class="width-100">JPY</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of this.RBI_REF_DATA;let i=index">
+                    <td class="width-110">{{item?.asdate}}</td>
+                    <td class="width-100">{{item?.USD}}</td>
+                    <td class="width-100">{{item?.GBP}}</td>
+                    <td class="width-100">{{item?.EUR}}</td>
+                    <td class="width-100">{{item?.JPY}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</app-home>

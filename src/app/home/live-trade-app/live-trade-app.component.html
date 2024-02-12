@@ -1,0 +1,126 @@
+<app-home (ModeChanges)="this.DISPLAY_MODE=$event">
+  <custom-mat-stepper (TabEvent)="onTabChanged($event);"
+    [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
+    <custom-mat-step MATSTEP_LABEL="FX LIVE" errorMessage="Please select Inward Remittance" [NextTrue]="true">
+      <custom-mat-accordion [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
+        *ngFor="let item of this.apiservice.LIST_OF_DATA[0]?.quotes;let i=index">
+        <custom-mat-expansion-panel>
+          <div class="row-flex">
+            <div class="currecny">
+              <img [src]="'../../assets/CountryFlag/'+item?.base_currency+'.png'" [alt]="item?.base_currency" srcset="">
+              <p style="display: flex;align-items: center;gap: 3px;font-weight: 100;font-size: 13px;">
+                {{item?.base_currency}}<span class="left-border"></span>{{item?.quote_currency}}</p>
+            </div>
+            <label for="" class="lable-Request-Time">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="font-weight: 100;" class="width-tr">Sell</th>
+                    <th style="font-weight: 100;" class="width-tr">Buy</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="tr-controller">
+                    <td [ngClass]="item?.bidclassName" class="width-tr">{{this.setFloatFixed(item?.bid)}}</td>
+                    <td [ngClass]="item?.askclassName" class="width-tr">{{this.setFloatFixed(item?.ask)}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </label>
+          </div>
+        </custom-mat-expansion-panel>
+        <custom-mat-panel-description>
+          <div class="controller-panel-description">
+            <!-- <div class="left-arrow" (click)="item.Next=false"><i class="fa fa-chevron-left"></i></div> -->
+            <div class="col-12 card-parent" *ngIf="item?.Next==false">
+              <div class="col-12 card">
+                <label for=""><span class="position-absolute-left">Open</span> <span
+                    class="position-absolute-right">{{this.setFloatFixed(item?.open)}}</span></label>
+                <label for=""><span class="position-absolute-left">Close</span> <span
+                    class="position-absolute-right">{{this.setFloatFixed(item?.close)}}</span></label>
+              </div>
+              <div class="col-12 card">
+                <label for=""><span class="position-absolute-left">High</span> <span
+                    class="position-absolute-right">{{this.setFloatFixed(item?.high)}}</span></label>
+                <label for=""><span class="position-absolute-left">Low</span> <span
+                    class="position-absolute-right">{{this.setFloatFixed(item?.low)}}</span></label>
+              </div>
+            </div>
+            <div class="col-12 card-parent-2" *ngIf="item?.Next==true">
+              <table class="table" style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th>Inward</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Spot</th>
+                    <td>{{this.setFloatFixed(item?.bid)}}</td>
+                  </tr>
+                  <tr>
+                    <th>Cash spot</th>
+                    <td>0</td>
+                  </tr>
+                  <tr>
+                    <th>Margin</th>
+                    <td>{{this.setFloatFixed(item?.InwardMargin)}}</td>
+                  </tr>
+                  <tr>
+                    <th>Net Rate</th>
+                    <td>{{this.NetInwardRate(this.setFloatFixed(item?.bid),0,this.setFloatFixed(item?.InwardMargin))}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table" style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th>Outward</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Spot</th>
+                    <td>{{this.setFloatFixed(item?.ask)}}</td>
+                  </tr>
+                  <tr>
+                    <th>Cash spot</th>
+                    <td>0</td>
+                  </tr>
+                  <tr>
+                    <th>Margin</th>
+                    <td>{{this.setFloatFixed(item?.OuwardMargin)}}</td>
+                  </tr>
+                  <tr>
+                    <th>Net Rate</th>
+                    <td>{{this.NetOutwardRate(this.setFloatFixed(item?.ask),0,this.setFloatFixed(item?.OuwardMargin))}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="right-arrow" *ngIf="item.Next!=true" (click)="item.Next=true"><i class="fa fa-angle-double-down"
+                aria-hidden="true"></i>
+            </div>
+            <div class="right-arrow" *ngIf="item.Next==true" (click)="item.Next=false"><i class="fa fa-angle-double-up"
+                aria-hidden="true"></i>
+            </div>
+          </div>
+        </custom-mat-panel-description>
+      </custom-mat-accordion>
+    </custom-mat-step>
+    <custom-mat-step MATSTEP_LABEL="NEWS" errorMessage="Please select Inward Remittance" [NextTrue]="true">
+      <div class="card-new-market" *ngFor="let item of this.apiservice.MARKET_NEWS_DATA">
+        <h3 for="" class="market-news-title">{{item?.title}}</h3>
+        <div class="description-card">
+          <div class="description-img">
+            <img [src]="item?.image_url">
+            <p><span class="bold-text">Description : </span>{{item?.description}}</p>
+          </div>
+          <p class="snippet"><span class="bold-text">Snippet : </span>{{item?.snippet}}</p>
+        </div>
+      </div>
+    </custom-mat-step>
+  </custom-mat-stepper>
+</app-home>

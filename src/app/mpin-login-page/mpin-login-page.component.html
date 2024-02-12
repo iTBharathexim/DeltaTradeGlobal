@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Role Login or Sign In</title>
+</head>
+
+<body>
+        <div class="content">
+                <div class="text">
+                        <img src="../../assets/images/logo2.png" alt="" srcset="">
+                        <p>Forex App Login</p>
+                        <!-- <p style="position: absolute;
+                        top: 65px;
+                        right: 10px;
+                        font-size: 20px;" class="btn btn-primary" title="App Exit" (click)="CloseApp()"><i
+                                class="fa fa-window-close"></i></p> -->
+                </div>
+                <form [formGroup]="userForm">
+                        <div class="field">
+                                <input type="text" EmailValidator formControlName="email" required>
+                                <label>Email or Phone</label>
+                        </div>
+                        <div class="field">
+                                <input type="password" formControlName="MPIN" required>
+                                <label>MPIN</label>
+                        </div>
+                        <div class="forgot-pass">
+                                <a routerLink="/ResetPassword">Forgot Password?</a>
+                        </div>
+                        <p class="text-muted mb-4 bottom-text ml-2" style="font-size: 10px;color: black;">
+                                By continuing, you agree to DocMachine
+                                <a class="hover-a-tag" (click)="OpenPopup(TermsofService_PANEL)">Terms of Service</a> we
+                                will
+                                manage
+                                information as described in our
+                                <a>Privacy Policy Agreement</a>
+                        </p>
+                        <button (click)="onFormSubmit()">Sign in</button>
+                        <div class="sign-up">
+                                Not a member?
+                                <a routerLink="/Registration">signup now</a>
+                        </div>
+
+                </form>
+        </div>
+</body>
+
+</html>
+
+<custom-model [customstyle]="{'max-width':'400px !important','font-size':'12px'}" class="p-2" height="65vh"
+        id="TermsofService" modalbodyheight="65vh" ModalTitleStyle="font-size: 15px;
+    font-weight: bold;" name="SOFTWARE LICENSE AGREEMENT" #TermsofService_PANEL>
+        <div class="col-12 mt-2 mb-2">
+                <terms-condition-template></terms-condition-template>
+                <button type="button" class="btn btn-primary" (click)="TermsofService_PANEL?.displayHidden">Ok</button>
+        </div>
+</custom-model>

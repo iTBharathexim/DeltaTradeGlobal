@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Registration or Sign Up</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <h2>Trade App Otp Validation</h2>
+        <form [formGroup]="userForm" (keydown.enter)="$event.preventDefault()">
+            <div class="input-box">
+                <label for="">Email Otp</label>
+                <div class="input-box-row">
+                    <input type="text" class="otp-input" formControlName="emailIdVerified"
+                        placeholder="Enter 6 digit otp" required>
+                    <button class="btn btn-primary otp-btn" [disabled]="userForm.controls?.emailIdVerified?.errors==null?true:false" (click)="SendOtpEmail()">Send Otp</button>
+                </div>
+                <ng-container *ngIf="userForm.controls?.emailIdVerified?.errors">
+                    <ng-container *ngIf="userForm.controls?.emailIdVerified?.errors?.range">
+                        Your Email otp cannot exceed 6 digit.
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="input-box">
+                <label for="">Mobile Otp</label>
+                <div class="input-box-row">
+                    <input type="text" class="otp-input" formControlName="MobileOTPVerified"
+                        placeholder="Enter 6 digit otp" required>
+                    <button class="btn btn-primary otp-btn" [disabled]="userForm.controls?.MobileOTPVerified?.errors==null?true:false">Send Otp</button>
+                </div>
+                <ng-container *ngIf="userForm.controls?.MobileOTPVerified?.errors">
+                    <ng-container *ngIf="userForm.controls?.MobileOTPVerified?.errors?.range">
+                        Your mobile otp cannot exceed 6 digit.
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="input-box-row">
+                <a routerLink="/ResetPassword">Reset Password</a>
+                <a class="singup-a" routerLink="/Login">Sign In</a>
+            </div>
+            <div class="input-box button">
+                <button type="Submit" class="btn btn-primary p-2 m-auto Submit-btn" (click)="onFormSubmit()">Validate</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

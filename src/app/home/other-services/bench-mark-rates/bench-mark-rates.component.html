@@ -1,0 +1,30 @@
+<app-home (ModeChanges)="this.DISPLAY_MODE=$event">
+    <label [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}" class="label"
+        for="">BenchMark Rates</label>
+    <div class="table-controller" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" class="width-110">TBILL</th>
+                    <th scope="col" class="width-110">As on Date</th>
+                    <th scope="col" class="width-100">RATE</th>
+                    <th scope="col" class="width-100">1M</th>
+                    <th scope="col" class="width-100">3M</th>
+                    <th scope="col" class="width-100">6M</th>
+                    <th scope="col" class="width-100">12M</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of this.FORM_CREATE;let i=index">
+                    <td class="width-110">{{item?.TBILL}}</td>
+                    <td class="width-110">{{item?.asdate}}</td>
+                    <td class="width-100">{{item?.rate!==''?item?.rate:'-'}}</td>
+                    <td class="width-100">{{item['1M']!=''?item['1M']:'-'}}</td>
+                    <td class="width-100">{{item['3M']!=''?item['3M']:'-'}}</td>
+                    <td class="width-100">{{item['6M']!=''?item['6M']:'-'}}</td>
+                    <td class="width-100">{{item['12M']!=''?item['12M']:'-'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</app-home>

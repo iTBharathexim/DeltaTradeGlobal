@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Login or Sign In</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <h2>Trade App Login</h2>
+        <form [formGroup]="userForm">
+            <div class="input-box">
+                <input type="text" formControlName="email" placeholder="Enter your email" required>
+            </div>
+            <div class="input-box">
+                <input type="password" formControlName="password" placeholder="Enter password" required>
+            </div>
+            <div class="input-box">
+                <a routerLink="/ResetPassword">Reset Password</a>
+                <a class="singup-a" routerLink="/Registration">Sign Up</a>
+                <a class="singup-a" routerLink="/MPIN-Login">Login with MPIN</a>
+            </div>
+            <div class="input-box button">
+                <button type="Submit" class="btn btn-primary p-2 m-auto" (click)="onFormSubmit()">Login</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

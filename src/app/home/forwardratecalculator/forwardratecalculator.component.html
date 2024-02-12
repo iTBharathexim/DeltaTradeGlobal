@@ -1,0 +1,104 @@
+<app-home (ModeChanges)="this.DISPLAY_MODE=$event">
+    <div class="parent">
+        <div class="card">
+            <div class="header"><label for="">FORWARD RATE CALCULATOR</label></div>
+            <div class="card-body">
+                <p class="current-date">{{this.CURREENT_DATE}}</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Currency pair</td>
+                            <td>
+                                <Select>
+                                    <option [value]="item" *ngFor="let item of apiUser.CURRENCY_INR_LIST;let i=index">
+                                        {{item}}</option>
+                                </Select>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- <table>
+                    <tbody>
+                        <tr>
+                            <td>Notation</td>
+                            <td>
+                                <Select>
+                                    <option [value]="item" *ngFor="let item of apiUser.CURRENCY_LIST;let i=index">
+                                        {{item}}</option>
+                                </Select>
+                            </td>
+                            <td><input type="text" style="width: 80px;"></td>
+                        </tr>
+                    </tbody>
+                </table> -->
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Start Date</td>
+                            <td>End Date</td>
+                        </tr>
+                        <tr>
+                            <td><input type="date" name="" id=""></td>
+                            <td><input type="date" name="" id=""></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="col-12 card-parent-2">
+                    <table class="table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Inward</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Spot</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Forward Premium</th>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <th>outright</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Premium %</th>
+                                <td>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Outward</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Spot</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Forward Premium</th>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <th>outright</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Premium %</th>
+                                <td>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-home>

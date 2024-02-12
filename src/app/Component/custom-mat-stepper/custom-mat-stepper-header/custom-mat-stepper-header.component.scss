@@ -1,0 +1,51 @@
+.header-panel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all .5s ease-in-out;
+    margin: 0 auto auto;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.custom-mat-step-label {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    font-family: Roboto,sans-serif;
+    font-size: 10px;
+    color: #0000008a;
+    margin: auto auto auto 0;
+    font-weight: 600;
+}
+
+.number-icon-custom-mat {
+    background-color: #3f51b5;
+    display: flex;
+    padding: 5px;
+    border-radius: 50%;
+    height: 18px;
+    width: 18px;
+    flex-shrink: 0;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border: 1px solid #3f51b5;
+}
+
+.header-panel.ActiveClass {
+    background-color: darkseagreen;
+}
+
+.header-panel.ActiveClass .custom-mat-step-label {
+    color: white;
+}
+
+.header-panel.DisabledClass {
+    opacity: .6;
+}

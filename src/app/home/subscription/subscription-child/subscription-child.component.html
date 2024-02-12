@@ -1,0 +1,22 @@
+<div class="col-12">
+    <div class="col-12 mt-2 mb-2 card-subscription" *ngIf="this.SUBSCRIPTION_CHECK==false">
+        <p class="p-tag-style">Company Name : <span>{{this.apiservice.UserData?.companyName}}</span></p>
+        <p class="p-tag-style">User Name : <span>{{this.apiservice.UserData?.firstName}}</span></p>
+        <p class="p-tag-style">Email Id : <span>{{this.apiservice.UserData?.emailId}}</span></p>
+        <p class="p-tag-style">Mobile No. : <span>{{this.apiservice.UserData?.mobileNo}}</span></p>
+        <p class="p-tag-style">Plan Name : <span>{{this.apiservice.UserData?.PlanDetails?.PlanName}}</span></p>
+        <p class="p-tag-style">Plan Amount : <span>{{this.apiservice.UserData?.PlanDetails?.Currency}}
+                {{this.apiservice.UserData?.PlanDetails?.Amount}}</span></p>
+        <p class="p-tag-style">Plan Start Date : <span>{{this.apiservice.UserData?.FreeTrailPeroidStratDate}}</span></p>
+        <p class="p-tag-style">Plan Expired Date : <span>{{this.apiservice.UserData?.FreeTrailPeroidEndDate}}</span></p>
+    </div>
+    <div class="columns" *ngFor="let item of this.RazorpaySubscriptionAllData;let i=index">
+        <ul class="price" *ngIf="item?.HidePlan=='show'">
+            <li class="grey">{{item?.PlanName}}</li>
+            <li>{{item?.Currency}} {{item?.Amount}}</li>
+            <li class="grey-bottom Subscribe-text" *ngIf="item?.StatusPayment!='paid'"><a
+                    (click)="payNow(item);">Subscribe</a> </li>
+            <li class="grey-bottom Subscribe-text" *ngIf="item?.StatusPayment=='paid'">Already subscribe plan</li>
+        </ul>
+    </div>
+</div>

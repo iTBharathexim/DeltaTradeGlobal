@@ -1,0 +1,6 @@
+<div class="col-12 p-0 m-0">
+    <div class="header-panel" [ngClass]="{'ActiveClass':ActiveClass==true,'DisabledClass':DisabledClass==true}" (click)="onTabChanges(CUSTOM_MATSTEP_LABEL)">
+        <!-- <span class="number-icon-custom-mat">{{COUNTER}}</span> -->
+        <p class="custom-mat-step-label" [innerHTML]="CUSTOM_MATSTEP_LABEL"></p>
+    </div>
+</div>
