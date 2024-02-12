@@ -27,7 +27,7 @@ jobs:
         env:
           cache-name: cache-node-modules
           version: 0
-          BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+          BRANCH_NAME: ${{ $GITHUB_REF_NAME }} 
         with:
           # caching node_modules
           path: node_modules
@@ -45,7 +45,7 @@ jobs:
             echo "GITHUB_REPOSITORY_NAME=$GITHUB_REPOSITORY_NAME"
             echo "GITHUB_REPOSITORY_NAME_SLUG=$GITHUB_REPOSITORY_NAME_SLUG"
             echo "GITHUB_REF_SLUG=$GITHUB_REF_SLUG"
-            echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
+            echo "GITHUB_REF_NAME=env.BRANCH_NAME"
             echo "GITHUB_REF_NAME_SLUG=$GITHUB_REF_NAME_SLUG"
             echo "GITHUB_SHA_SHORT=$GITHUB_SHA_SHORT"
             npm install --legacy-peer-deps
@@ -67,7 +67,7 @@ jobs:
             git config --global user.email ${{secrets.GIT_EMAIL_DEPLOY}}
             git config --global user.name ${{secrets.GIT_USER_DEPLOY}}
             git remote set-url origin https://${{ secrets.DEPLOY_TOKEN }}@github.com/iTBharathexim/DeltaTradeGlobal.git
-            git push origin ${{GITHUB_REF_NAME }}
+            git push origin ${{env.BRANCH_NAME }}
   steps:
         if: github.event.head_commit.message != 'Updating App version'
         name: S3-Zip-Upload
@@ -84,7 +84,7 @@ jobs:
           - uses: ksm2/archive-action@v1
             with:
               format: ${{ matrix.archive }}
-              name: ${{ GITHUB_REF_NAME }}_${{github.sha}}
+              name: ${{ env.BRANCH_NAME }}_${{github.sha}}
               include: "**/*.(ts|js|css|html)"
           - name: DeployZip
             run: |
@@ -100,4 +100,4 @@ jobs:
               BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
               SOURCE_MODE: ZIP
               SOURCE_PATH: .
-              DEST_FILE: ${{ GITHUB_REF_NAME }}_${{github.sha}}.zip
+              DEST_FILE: ${{ env.BRANCH_NAME }}_${{github.sha}}.zip
