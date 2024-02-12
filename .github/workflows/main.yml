@@ -27,6 +27,7 @@ jobs:
         env:
           cache-name: cache-node-modules
           version: 0
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
         with:
           # caching node_modules
           path: node_modules
@@ -57,7 +58,7 @@ jobs:
             git config --global user.email ${{secrets.GIT_EMAIL_DEPLOY}}
             git config --global user.name ${{secrets.GIT_USER_DEPLOY}}
             git remote set-url origin https://${{ secrets.DEPLOY_TOKEN }}@github.com/iTBharathexim/DeltaTradeGlobal.git
-            git push origin ${github.ref##*/}
+            git push origin ${{ env.BRANCH_NAME | tr / - }}
   steps:
         if: github.event.head_commit.message != 'Updating App version'
         name: S3-Zip-Upload
@@ -74,7 +75,7 @@ jobs:
           - uses: ksm2/archive-action@v1
             with:
               format: ${{ matrix.archive }}
-              name: ${github.ref##*/}_${{github.sha}}
+              name: ${{ env.BRANCH_NAME | tr / - }}_${{github.sha}}
               include: "**/*.(ts|js|css|html)"
           - name: DeployZip
             run: |
@@ -87,6 +88,7 @@ jobs:
               AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
               AWS_REGION: ap-south-1
+              BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
               SOURCE_MODE: ZIP
               SOURCE_PATH: .
-              DEST_FILE: ${github.ref##*/}_${{github.sha}}.zip
+              DEST_FILE: ${{ env.BRANCH_NAME | tr / - }}_${{github.sha}}.zip
