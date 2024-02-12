@@ -27,7 +27,7 @@ jobs:
         env:
           cache-name: cache-node-modules
           version: 0
-          BRANCH_NAME: ${{ $GITHUB_REF_NAME }} 
+          BRANCH_NAME: ${{ GITHUB_REF_NAME }} 
         with:
           # caching node_modules
           path: node_modules
