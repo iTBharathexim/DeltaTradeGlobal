@@ -67,8 +67,62 @@ jobs:
             git config --global user.name ${{secrets.GIT_USER_DEPLOY}}
             git remote set-url origin https://${{ secrets.DEPLOY_TOKEN }}@github.com/iTBharathexim/DeltaTradeGlobal.git
             git push origin ${{env.BRANCH_NAME }}
+  prod-deploy:
+    if: github.event.head_commit.message != 'Updating App version'
+    name: prod-deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+            persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+            fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+            github_token: ${{ secrets.DEPLOY_TOKEN }}   
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache node modules
+        id: cache-nodemodules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+          version: 0
+          BRANCH_NAME: 'prod'
+        with:
+          # caching node_modules
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install Dependencies
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: |
+            npm install --legacy-peer-deps
+            npm i @angular/cli --legacy-peer-deps
+      - name: DEV Build
+        run: |
+            npm version ${{env.version}} --no-git-tag-version --allow-same-version
+            npm version patch -m "[RELEASE] %s" --no-git-tag-version --allow-same-version
+            CURRENT_VERSION=$(node -p "require('./package.json').version")
+            UPDATED_VERSION=$(node -p "require('./package.json').version")
+            git config --global user.email ${{secrets.GIT_EMAIL_DEPLOY}}
+            git config --global user.name ${{secrets.GIT_USER_DEPLOY}}
+            git add package.json
+            [ -f package-lock.json ] && git add package-lock.json
+            git remote set-url origin https://${{ secrets.DEPLOY_TOKEN }}@github.com/iTBharathexim/DeltaTradeGlobal.git
+            git commit -m "Updating App version"
+      - name: App Version Change
+        run: |
+            git config --global user.email ${{secrets.GIT_EMAIL_DEPLOY}}
+            git config --global user.name ${{secrets.GIT_USER_DEPLOY}}
+            git remote set-url origin https://${{ secrets.DEPLOY_TOKEN }}@github.com/iTBharathexim/DeltaTradeGlobal.git
+            git push origin ${{env.BRANCH_NAME }}
   steps:
-        if: github.event.head_commit.message != 'Updating App version'
         name: S3-Zip-Upload
         runs-on: ubuntu-latest
         strategy:
@@ -80,20 +134,11 @@ jobs:
                 persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
                 fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
                 github_token: ${{ secrets.DEPLOY_TOKEN }} 
-            env:
-                BRANCH_NAME: ${{github.ref_name}}
-          - name: "Get branch name and save to env"
-            run: |
-                      if ${IS_PR}; then
-                        BRANCH_NAME="${GITHUB_HEAD_REF}"
-                      else
-                        BRANCH_NAME="${GITHUB_REF##*/}"
-                      fi
-                      echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+            if: github.ref == 'refs/heads/dev' && github.event.head_commit.message != 'Updating App version'
           - uses: ksm2/archive-action@v1
             with:
               format: ${{ matrix.archive }}
-              name: ${{ env.BRANCH_NAME }}_${{github.sha}}
+              name: dev_${{github.sha}}
               include: "**/*.(ts|js|css|html)"
           - name: DeployZip
             run: |
@@ -108,4 +153,25 @@ jobs:
               AWS_REGION: ap-south-1
               SOURCE_MODE: ZIP
               SOURCE_PATH: .
-              DEST_FILE: ${{ env.BRANCH_NAME }}_${{github.sha}}.zip
+              DEST_FILE: dev_${{github.sha}}.zip
+
+            if: github.ref == 'refs/heads/dev' && github.event.head_commit.message != 'Updating App version'
+          - uses: ksm2/archive-action@v1
+            with:
+              format: ${{ matrix.archive }}
+              name: prod_${{github.sha}}
+              include: "**/*.(ts|js|css|html)"
+          - name: DeployZip
+            run: |
+                ls
+          - uses: actions/checkout@v2
+          - name: Upload ZIP to S3
+            uses: NotCoffee418/s3-zip-upload@v1.3
+            env:
+              AWS_SECRET_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+              AWS_REGION: ap-south-1
+              SOURCE_MODE: ZIP
+              SOURCE_PATH: .
+              DEST_FILE: prod_${{github.sha}}.zip
