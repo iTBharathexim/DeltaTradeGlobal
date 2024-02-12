@@ -11,19 +11,6 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
- steps:
-      - uses: FranzDiebold/github-env-vars-action@v1.2.0
-      - name: Print environment variables
-        run: |
-          echo "GITHUB_REPOSITORY_SLUG=$GITHUB_REPOSITORY_SLUG"
-          echo "GITHUB_REPOSITORY_OWNER=$GITHUB_REPOSITORY_OWNER"
-          echo "GITHUB_REPOSITORY_OWNER_SLUG=$GITHUB_REPOSITORY_OWNER_SLUG"
-          echo "GITHUB_REPOSITORY_NAME=$GITHUB_REPOSITORY_NAME"
-          echo "GITHUB_REPOSITORY_NAME_SLUG=$GITHUB_REPOSITORY_NAME_SLUG"
-          echo "GITHUB_REF_SLUG=$GITHUB_REF_SLUG"
-          echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
-          echo "GITHUB_REF_NAME_SLUG=$GITHUB_REF_NAME_SLUG"
-          echo "GITHUB_SHA_SHORT=$GITHUB_SHA_SHORT"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -52,6 +39,15 @@ jobs:
       - name: Install Dependencies
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: |
+            echo "GITHUB_REPOSITORY_SLUG=$GITHUB_REPOSITORY_SLUG"
+            echo "GITHUB_REPOSITORY_OWNER=$GITHUB_REPOSITORY_OWNER"
+            echo "GITHUB_REPOSITORY_OWNER_SLUG=$GITHUB_REPOSITORY_OWNER_SLUG"
+            echo "GITHUB_REPOSITORY_NAME=$GITHUB_REPOSITORY_NAME"
+            echo "GITHUB_REPOSITORY_NAME_SLUG=$GITHUB_REPOSITORY_NAME_SLUG"
+            echo "GITHUB_REF_SLUG=$GITHUB_REF_SLUG"
+            echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
+            echo "GITHUB_REF_NAME_SLUG=$GITHUB_REF_NAME_SLUG"
+            echo "GITHUB_SHA_SHORT=$GITHUB_SHA_SHORT"
             npm install --legacy-peer-deps
             npm i @angular/cli --legacy-peer-deps
       - name: DEV Build
