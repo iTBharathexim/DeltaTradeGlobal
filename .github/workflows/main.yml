@@ -47,15 +47,6 @@ jobs:
       - name: Install Dependencies
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: |
-            echo "GITHUB_REPOSITORY_SLUG=$GITHUB_REPOSITORY_SLUG"
-            echo "GITHUB_REPOSITORY_OWNER=$GITHUB_REPOSITORY_OWNER"
-            echo "GITHUB_REPOSITORY_OWNER_SLUG=$GITHUB_REPOSITORY_OWNER_SLUG"
-            echo "GITHUB_REPOSITORY_NAME=$GITHUB_REPOSITORY_NAME"
-            echo "GITHUB_REPOSITORY_NAME_SLUG=$GITHUB_REPOSITORY_NAME_SLUG"
-            echo "GITHUB_REF_SLUG=$GITHUB_REF_SLUG"
-            echo "GITHUB_REF_NAME=env.BRANCH_NAME"
-            echo "GITHUB_REF_NAME_SLUG=$GITHUB_REF_NAME_SLUG"
-            echo "GITHUB_SHA_SHORT=$GITHUB_SHA_SHORT"
             npm install --legacy-peer-deps
             npm i @angular/cli --legacy-peer-deps
       - name: DEV Build
@@ -94,6 +85,16 @@ jobs:
               format: ${{ matrix.archive }}
               name: ${{ env.BRANCH_NAME }}_${{github.sha}}
               include: "**/*.(ts|js|css|html)"
+            env:
+              BRANCH_NAME: ''
+          - name: "Get branch name and save to env"
+            run: |
+                if ${IS_PR}; then
+                  BRANCH_NAME="${GITHUB_HEAD_REF}"
+                else
+                  BRANCH_NAME="${GITHUB_REF##*/}"
+                fi
+                echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
           - name: DeployZip
             run: |
                 ls
@@ -105,7 +106,6 @@ jobs:
               AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
               AWS_REGION: ap-south-1
-              BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
               SOURCE_MODE: ZIP
               SOURCE_PATH: .
               DEST_FILE: ${{ env.BRANCH_NAME }}_${{github.sha}}.zip
