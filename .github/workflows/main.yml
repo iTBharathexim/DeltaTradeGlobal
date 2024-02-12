@@ -155,7 +155,7 @@ jobs:
               SOURCE_PATH: .
               DEST_FILE: dev/dev_${{github.sha}}.zip
 
-            if: github.ref == 'refs/heads/dev' && github.event.head_commit.message != 'Updating App version'
+            if: github.ref == 'refs/heads/prod' && github.event.head_commit.message != 'Updating App version'
           - uses: ksm2/archive-action@v1
             with:
               format: ${{ matrix.archive }}
