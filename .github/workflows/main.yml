@@ -27,7 +27,7 @@ jobs:
         env:
           cache-name: cache-node-modules
           version: 0
-          BRANCH_NAME: ${{ GITHUB_REF_NAME }} 
+          BRANCH_NAME: ''
         with:
           # caching node_modules
           path: node_modules
@@ -36,6 +36,14 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+      - name: "Get branch name and save to env"
+        run: |
+          if ${IS_PR}; then
+            BRANCH_NAME="${GITHUB_HEAD_REF}"
+          else
+            BRANCH_NAME="${GITHUB_REF##*/}"
+          fi
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
       - name: Install Dependencies
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: |
