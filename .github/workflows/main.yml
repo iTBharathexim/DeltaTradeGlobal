@@ -58,35 +58,35 @@ jobs:
             git config --global user.name ${{secrets.GIT_USER_DEPLOY}}
             git remote set-url origin https://${{ secrets.DEPLOY_TOKEN }}DeltaTradeGlobal
             git push origin main
-  S3-Zip-Upload:
-    if: github.ref == 'refs/heads/main' && github.event.head_commit.message != 'Updating App version'
-    name: S3-Zip-Upload
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        archive: [ "zip", "tar" ]
-    steps:
-      - uses: actions/checkout@v2
-        with:
-            persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
-            fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
-            github_token: ${{ secrets.DEPLOY_TOKEN }}  
-      - uses: ksm2/archive-action@v1
-        with:
-          format: ${{ matrix.archive }}
-          name: ${{github.sha}}
-          include: "**/*.(ts|js|css|html)"
-      - name: DeployZip
-        run: |
-            ls
-      - uses: actions/checkout@v2
-      - name: Upload ZIP to S3
-        uses: NotCoffee418/s3-zip-upload@v1.3
-        env:
-          AWS_SECRET_ID: ${{ secrets.AWS_SECRET_ID }}
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-          AWS_REGION: ap-south-1
-          SOURCE_MODE: ZIP
-          SOURCE_PATH: .
-          DEST_FILE: ${{github.sha}}.zip
+  steps:
+        if: github.ref == 'refs/heads/main' && github.event.head_commit.message != 'Updating App version'
+        name: S3-Zip-Upload
+        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            archive: [ "zip", "tar" ]
+        steps:
+          - uses: actions/checkout@v2
+            with:
+                persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+                fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+                github_token: ${{ secrets.DEPLOY_TOKEN }}  
+          - uses: ksm2/archive-action@v1
+            with:
+              format: ${{ matrix.archive }}
+              name: ${{github.sha}}
+              include: "**/*.(ts|js|css|html)"
+          - name: DeployZip
+            run: |
+                ls
+          - uses: actions/checkout@v2
+          - name: Upload ZIP to S3
+            uses: NotCoffee418/s3-zip-upload@v1.3
+            env:
+              AWS_SECRET_ID: ${{ secrets.AWS_SECRET_ID }}
+              AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+              BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+              AWS_REGION: ap-south-1
+              SOURCE_MODE: ZIP
+              SOURCE_PATH: .
+              DEST_FILE: ${{github.sha}}.zip
