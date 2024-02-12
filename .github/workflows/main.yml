@@ -57,7 +57,7 @@ jobs:
             git config --global user.email ${{secrets.GIT_EMAIL_DEPLOY}}
             git config --global user.name ${{secrets.GIT_USER_DEPLOY}}
             git remote set-url origin https://${{ secrets.DEPLOY_TOKEN }}DeltaTradeGlobal
-            git push origin dev
+            git push origin main
   S3-Zip-Upload:
     if: github.ref == 'refs/heads/main' && github.event.head_commit.message != 'Updating App version'
     name: S3-Zip-Upload
