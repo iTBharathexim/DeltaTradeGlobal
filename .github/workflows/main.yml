@@ -79,22 +79,22 @@ jobs:
             with:
                 persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
                 fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
-                github_token: ${{ secrets.DEPLOY_TOKEN }}  
+                github_token: ${{ secrets.DEPLOY_TOKEN }} 
+            env:
+                BRANCH_NAME: ${{github.ref_name}}
+          - name: "Get branch name and save to env"
+            run: |
+                      if ${IS_PR}; then
+                        BRANCH_NAME="${GITHUB_HEAD_REF}"
+                      else
+                        BRANCH_NAME="${GITHUB_REF##*/}"
+                      fi
+                      echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
           - uses: ksm2/archive-action@v1
             with:
               format: ${{ matrix.archive }}
               name: ${{ env.BRANCH_NAME }}_${{github.sha}}
               include: "**/*.(ts|js|css|html)"
-            env:
-              BRANCH_NAME: ''
-          - name: "Get branch name and save to env"
-            run: |
-                if ${IS_PR}; then
-                  BRANCH_NAME="${GITHUB_HEAD_REF}"
-                else
-                  BRANCH_NAME="${GITHUB_REF##*/}"
-                fi
-                echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
           - name: DeployZip
             run: |
                 ls
