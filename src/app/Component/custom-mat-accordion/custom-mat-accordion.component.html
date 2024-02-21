@@ -1,5 +1,6 @@
 <div class="custom-mat-accordion" [ngClass]="this.addClass">
-    <div class="custom-header">
+    <ng-content></ng-content>
+    <div class="custom-header" (click)="_toggle($event)">
         <ng-content select="custom-mat-expansion-panel"></ng-content>
     </div>
     <div class="content">

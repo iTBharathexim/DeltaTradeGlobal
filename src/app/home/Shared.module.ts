@@ -17,6 +17,9 @@ import { MoreContentComponent } from '../Component/form-components/Upload/upload
 import { InnerDynamicErrorComponent } from '../Component/form-components/Upload/upload-components/inner-dynamic-error/inner-dynamic-error.component';
 import { BusinessEmailValidatorDirective } from '../Controller/business-email-validator.directive';
 import { ComponentFocus } from '../Controller/ComponentFocus';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { CanvasJSAngularStockChartsModule } from '@canvasjs/angular-stockcharts';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,9 @@ import { ComponentFocus } from '../Controller/ComponentFocus';
     MatExpansionModule,
     MatInputModule,
     CustomComponentModule,
+    NgApexchartsModule,
+    CanvasJSAngularChartsModule,
+    CanvasJSAngularStockChartsModule
   ],
   exports: [
     CommonModule,
@@ -59,7 +65,10 @@ import { ComponentFocus } from '../Controller/ComponentFocus';
     MoreContentComponent,
     InnerDynamicErrorComponent,
     BusinessEmailValidatorDirective,
-    ComponentFocus
+    ComponentFocus,
+    NgApexchartsModule,
+    CanvasJSAngularChartsModule,
+    CanvasJSAngularStockChartsModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

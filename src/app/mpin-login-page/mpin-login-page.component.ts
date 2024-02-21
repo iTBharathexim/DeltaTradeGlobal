@@ -8,6 +8,7 @@ import { LoggerInfoService } from '../Component/logger-info/logger-info.service'
 import { App } from '@capacitor/app';
 import { AndoridFileSystemService } from '../Controller/AndoridFileSystem';
 import { FCmController } from '../Controller/FCM-Controllor';
+import { WebsocketService } from '../services/websocket.service';
 
 @Component({
   selector: 'app-mpin-login-page',
@@ -21,9 +22,13 @@ export class MPINLoginPageComponent implements OnInit {
   });
   CURREENT_DATE: string = moment().format('YYYY-MM-DD')
   errorShow: any = ''
+  TIMER: any = null;
+
   constructor(public userService: ApiService, public router: Router,
     public fCmcontroller: FCmController,
-    public toastr: ToastrService, public LoggerInfoService: LoggerInfoService, public andoridFileSystemService: AndoridFileSystemService) {
+    public websocketService: WebsocketService,
+    public toastr: ToastrService, public LoggerInfoService: LoggerInfoService,
+    public andoridFileSystemService: AndoridFileSystemService) {
     userService.UserLogout(null);
   }
 
@@ -44,7 +49,10 @@ export class MPINLoginPageComponent implements OnInit {
       console.log(res, 'LoginMPIN')
       this.LoggerInfoService.showInfo();
       if (res?.docs?.error == undefined) {
-        if (res?.docs?.data?.isLoggin == false) {
+        clearInterval(this.TIMER)
+        let remanningTime: any = Math.round((parseInt(res?.docs?.data?.lastactivetime) - parseInt(new Date().getTime()?.toString())) / 1000);
+        if (remanningTime < 0 || remanningTime == 0) {
+          // if (res?.docs?.data?.isLoggin == false) {
           if (res?.docs?.data?.CouponVerified == true && res?.docs?.data?.emailIdVerified == true) {
             localStorage.setItem('token', res?.docs?.data?.emailId)
             this.userService.UpdateLoginDetails(res?.docs?.data?._id, {
@@ -53,18 +61,26 @@ export class MPINLoginPageComponent implements OnInit {
             }).subscribe((res1) => {
               this.fCmcontroller.ChangeDeviceId(res?.docs?.data?.emailId);
               console.log(this.fCmcontroller.getDeviceId(), "getDeviceId")
-              if(this.fCmcontroller.getPlatform()?.toString()!='web'){
+              if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
                 this.fCmcontroller.getDeviceId().then((userId: any) => {
                   this.userService.PushNotification({
                     registrationToken: userId,
                     title: "Login Successfully..",
                     body: "Login Successfully.."
                   }).subscribe((rez) => {
+                    this.websocketService.connect()
                     this.router.navigate(['home'])
                     console.log(rez, "PushNotification")
+                    setTimeout(() => {
+                      location.reload();
+                    }, 10);
                   })
                 })
-              }else{
+              } else {
+                setTimeout(() => {
+                  location.reload();
+                }, 10);
+                this.websocketService.connect()
                 this.router.navigate(['home'])
               }
             })
@@ -76,8 +92,24 @@ export class MPINLoginPageComponent implements OnInit {
             };
             this.router.navigate(["/Registration"], navigationExtras);
           }
+          // } else {
+          //   this.toastr.error("You are already logged in on a different device.\n Please wait for a few minutes, and try again.")
+          // }
         } else {
           this.toastr.error("You are already logged in on a different device.\n Please wait for a few minutes, and try again.")
+          this.TIMER = setInterval(() => {
+            console.log(remanningTime, "remanningTime")
+            if (remanningTime < 0 || remanningTime == 0) {
+              clearInterval(this.TIMER)
+              this.userService.UpdateLoginDetails(res?.docs?.data?._id, {
+                isLoggin: false,
+              }).subscribe((res1) => {
+                this.toastr.show("Now your try login...");
+              })
+            }
+            remanningTime--;
+          }, 1000);
+          console.log(remanningTime, remanningTime > 0, "lastactivetime")
         }
       } else {
         if (res?.docs == null) {

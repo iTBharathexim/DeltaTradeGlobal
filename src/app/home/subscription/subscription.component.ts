@@ -84,10 +84,13 @@ export class SubscriptionComponent implements OnInit {
           let last_Order_Id_Status_False = res[0]?.order_id;
           let last_Order_Id_Status_TRUE = res[0]?.order_id;
           console.log(last_Order_Id_Status_False, last_Order_Id_Status_TRUE, "status")
+          let Priceafterdiscount:any = plan_data?.Amount - (plan_data?.Amount * parseFloat(res[0]?.discount));
+          let Saving:any = parseFloat(plan_data?.Amount) - parseFloat(Priceafterdiscount)
+
           if (last_Order_Id_Status_False?.status == undefined || last_Order_Id_Status_False?.PlanDetails?.TotalMonthDays != plan_data?.TotalMonthDays) {
             this.apiservice.creareOrder({
               currency: plan_data?.Currency,
-              amount: parseFloat(plan_data?.Amount) * 100,
+              amount: parseFloat(Saving) * 100,
               note: plan_data?.Description,
               receipt: 'UserId_' + res[0]?._id
             }).subscribe((order: any) => {
@@ -133,7 +136,8 @@ export class SubscriptionComponent implements OnInit {
                               FreeTrailPeroidStratDate: moment().format('dddd, MMMM DD, YYYY h:mm A'),
                               FreeTrailPeroidEndDate: moment(this.addMonth(new Date(), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                               order_id: InfoPaymentStatus,
-                              order_status: RazorpayOrderById[0]
+                              order_status: RazorpayOrderById[0],
+                              discount:0
                             }).then((res) => {
                               this.toastr.success("Your Subscription added successfully...");
                               this.router.navigate(["/LiveTradeApp"])
@@ -144,7 +148,8 @@ export class SubscriptionComponent implements OnInit {
                               FreeTrailPeroidStratDate: moment(new Date(res[0]?.FreeTrailPeroidEndDate)).format('dddd, MMMM DD, YYYY h:mm A'),
                               FreeTrailPeroidEndDate: moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                               order_id: InfoPaymentStatus,
-                              order_status: RazorpayOrderById[0]
+                              order_status: RazorpayOrderById[0],
+                              discount:0
                             }).then((res) => {
                               this.toastr.success("Your Subscription added successfully...");
                               this.router.navigate(["/LiveTradeApp"])
@@ -205,7 +210,8 @@ export class SubscriptionComponent implements OnInit {
                         FreeTrailPeroidStratDate: moment().format('dddd, MMMM DD, YYYY h:mm A'),
                         FreeTrailPeroidEndDate: moment(this.addMonth(new Date(), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                         order_id: InfoPaymentStatus,
-                        order_status: RazorpayOrderById[0]
+                        order_status: RazorpayOrderById[0],
+                        discount:0
                       }).then((res) => {
                         this.toastr.success("Your Subscription added successfully...");
                         this.router.navigate(["/LiveTradeApp"])
@@ -216,7 +222,8 @@ export class SubscriptionComponent implements OnInit {
                         FreeTrailPeroidStratDate: moment(new Date(res[0]?.FreeTrailPeroidEndDate)).format('dddd, MMMM DD, YYYY h:mm A'),
                         FreeTrailPeroidEndDate: moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                         order_id: InfoPaymentStatus,
-                        order_status: RazorpayOrderById[0]
+                        order_status: RazorpayOrderById[0],
+                        discount:0
                       }).then((res) => {
                         this.toastr.success("Your Subscription added successfully...");
                         this.router.navigate(["/LiveTradeApp"])

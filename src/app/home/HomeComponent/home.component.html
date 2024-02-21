@@ -53,8 +53,8 @@
                 </svg>
                 <span>Trigger Setting</span>
               </button>
-              <button class="btn btn-primary btn-logout" title="LiveTradeApp"
-                (click)="navigateUrlHome('/LiveTradeApp');this.toggleClass()">
+              <button class="btn btn-primary btn-logout" title="HistoricalRate"
+                (click)="navigateUrlHome('/HistoricalRate');this.toggleClass()">
                 <svg viewBox="0 0 20 21" width="15px" xmlns="http://www.w3.org/2000/svg"
                   xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
@@ -95,6 +95,9 @@
                   aria-hidden="true"></i> Logout</button>
               <button class="btn btn-primary btn-logout" title="App Exit" (click)="CloseApp()"><i
                   class="fa fa-window-close"></i> Close App</button>
+                  <div class="user-profiles">
+                    <span><i class="fa fa-user" aria-hidden="true"></i> {{this.USER_DETAILS?.emailId}}</span>
+                  </div>
             </div>
           </ul>
         </div>
@@ -128,3 +131,7 @@
     <p class="p-tag-style">Plan Expired Date : <span>{{this.SUBSCRIPTION_DETAILS?.FreeTrailPeroidEndDate}}</span></p>
   </div>
 </custom-model>
+<!-- <div id="minirefresh" class="minirefresh-wrap">
+  <div class="minirefresh-scroll">        
+  </div>
+</div> -->

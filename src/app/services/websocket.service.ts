@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import io from "socket.io-client";
+import { AppConfig } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,17 +9,15 @@ import io from "socket.io-client";
 export class WebsocketService {
   socket: any
   // readonly uri: any = "ws://localhost:3000"
-  readonly uri: any = "wss://livetradeapp.bharathexim.com"
+  readonly uri: any = AppConfig.WebSocketApi;
 
   constructor() {
     var connectionOptions: any = {
-      "force new connection": true,
       "reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
       "timeout": 100000000, //before connect_error and connect_timeout are emitted.
-      transports: ['websocket'], 
-      wsEngine: 'uws'
+      transports: ['websocket'],
     };
-    // this.socket = io(this.uri, connectionOptions);
+    this.socket = io(this.uri, connectionOptions);
   }
 
   listen(eventname: string) {
@@ -31,5 +30,13 @@ export class WebsocketService {
 
   emit(eventname: any, data: any) {
     this.socket.emit(eventname, data);
+  }
+  
+  disconnect() {
+    this.socket.disconnect();
+  }
+
+  connect() {
+    this.socket.connect();
   }
 }

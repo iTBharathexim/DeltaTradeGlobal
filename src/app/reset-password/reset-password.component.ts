@@ -49,7 +49,7 @@ export class ResetPasswordComponent implements OnInit {
                   this.userService.SendOtpEmail({ emailId: value?.form?.value?.emailId, subject: "OTP for MPIN reset." }).subscribe((res1: any) => {
                     if (res1?.status) {
                       value.field[1]['divhide'] = false;
-                      this.toastr.success(res1?.message);
+                      this.toastr.success("OTP sent to your mail id successfully");
                     } else {
                       value.field[1]['divhide'] = true;
                       this.toastr.error(res1?.message);

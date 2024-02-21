@@ -18,6 +18,7 @@ import { SharedModule } from './home/Shared.module';
 import { ForwardratecalculatorComponent } from './home/forwardratecalculator/forwardratecalculator.component';
 import { RbiRefComponent } from './home/other-services/rbi-ref/rbi-ref.component';
 import { BenchMarkRatesComponent } from './home/other-services/bench-mark-rates/bench-mark-rates.component';
+import { HistoricalrateComponent } from './home/historicalrate/historicalrate.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'Login', pathMatch: 'full' },
@@ -38,10 +39,11 @@ const routes: Routes = [
   { path: 'ForwardRateCalculator', component: ForwardratecalculatorComponent, canActivate: [AdminGuard] },
   { path: 'RbiRef', component: RbiRefComponent, canActivate: [AdminGuard] },
   { path: 'BenchMarkRates', component: BenchMarkRatesComponent, canActivate: [AdminGuard] },
+  { path: 'HistoricalRate', component: HistoricalrateComponent, canActivate: [AdminGuard] },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: "legacy" }),SharedModule],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: "legacy",onSameUrlNavigation: 'reload' }),SharedModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

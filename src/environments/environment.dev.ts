@@ -8,7 +8,11 @@ export const AppConfig = {
   FRONT_END_URL:'https://devapp.bharathexim.com/',
   S3_BUCKET_URL:'https://devapp.bharathexim.com/',
   TALLY_API:"http://192.168.29.126:8083/",
+  WebSocketApi:"wss://forexappapi.bharathexim.com/",
   logger: {
     level: 'TRACE',
   },
+  callback:()=>{
+   
+  }
 };

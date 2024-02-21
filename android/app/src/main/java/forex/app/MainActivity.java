@@ -1,5 +1,6 @@
 package forex.app;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -12,11 +13,14 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -34,6 +38,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -43,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,9 +57,14 @@ import retrofit2.Retrofit;
 public class MainActivity extends BridgeActivity {
   BootReceiver receiver;
   private static final String TAG = "UdpPostActivity";
-
   private static Retrofit retrofit;
-  private static String BASE_URL = "http://192.168.174.20:8082/v1/";
+  private static String BASE_URL = "http://192.168.224.20:8082/v1/";
+//  private static String BASE_URL = "https://forexappapi.bharathexim.com/v1/";
+
+  private boolean doubleBackPressed = false;
+  private WebView webview;
+
+  @SuppressLint("SetJavaScriptEnabled")
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -65,30 +76,45 @@ public class MainActivity extends BridgeActivity {
     intentfilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentfilter.addAction(Intent.ACTION_PACKAGE_RESTARTED);
     registerReceiver(receiver,intentfilter);
+    webview = com.getcapacitor.Bridge.getWebView();
+    webview.getSettings().setJavaScriptEnabled(true);
 
+    if (Objects.equals(webview.getUrl(), "http://localhost/Login") || Objects.equals(webview.getUrl(), "https://localhost/Login")) {
+      webview.evaluateJavascript("javascript:window." +
+        "localStorage.getItem('token')", new ValueCallback<String>() {
+        @Override public void onReceiveValue(String s) {
+          Log.e("OnRecieve",s);
+          if (s!=null){
+            FirebaseMessaging.getInstance().getToken()
+              .addOnCompleteListener(new OnCompleteListener<String>() {
+                @Override
+                public void onComplete(@NonNull Task<String> task) {
+                  if (!task.isSuccessful()) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                    return;
+                  }
+                  String token = task.getResult();
+                  Log.println(Log.ASSERT,"token", token);
+                  try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("id",s);
+                    jsonObject.put("deviceId", token);
+                    String jsonString = jsonObject.toString();
+                    new PostData().execute(jsonString);
+                  } catch (Exception e) {
+                    e.printStackTrace();
+                  }
+                }
+              });
+          }
+
+        }
+      });
+
+    }
     // --- Remove bridge init as it's deprecated and add these lines
     registerPlugin(com.capacitorjs.plugins.app.AppPlugin.class);
-//    FirebaseMessaging.getInstance().getToken()
-//      .addOnCompleteListener(new OnCompleteListener<String>() {
-//        @Override
-//        public void onComplete(@NonNull Task<String> task) {
-//          if (!task.isSuccessful()) {
-//            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-//            return;
-//          }
-//          String token = task.getResult();
-//          Log.println(Log.ASSERT,"token", token);
-//          try {
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("id","it@bharathexim.com");
-//            jsonObject.put("deviceId", token);
-//            String jsonString = jsonObject.toString();
-//            new PostData().execute(jsonString);
-//          } catch (Exception e) {
-//            e.printStackTrace();
-//          }
-//        }
-//      });
+
 
 //    if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.) != PackageManager.PERMISSION_GRANTED) {
 //      if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -152,56 +178,6 @@ public class MainActivity extends BridgeActivity {
     return filteredList;
   }
 
- public void ThreadRun(){
-   Timer timer = new Timer();
-   timer.scheduleAtFixedRate(new TimerTask() {
-     @Override
-     public void run() {
-       BroadcastReceiver obj= new BroadcastReceiver() {
-         /**
-          * @param context
-          * @param intent
-          */
-         @Override
-         public void onReceive(Context context, Intent intent) {
-           String[] packageNames = intent.getStringArrayExtra("android.intent.extra.PACKAGES");
-           Log.println(Log.ASSERT, "TestUninstalled:", Arrays.toString(packageNames));
-           for(String packageName: packageNames){
-             Log.println(Log.ASSERT, "TestUninstalled:", packageName);
-           }
-         }
-       };
-       IntentFilter intentFilter = new IntentFilter();
-       intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-       intentFilter.addDataScheme("package");
-       registerReceiver(obj, intentFilter);
-       System.out.print("Changing Data ... before change age is "+age+" ");
-       if (checkPackage().size()!=0) {
-         changeAge();
-         System.out.println("after change age is " + age);
-         Log.println(Log.ASSERT, "IF Thead run", "age : " + age);
-         try {
-           JSONObject jsonObject = new JSONObject();
-           jsonObject.put("id","it@bharathexim.com");
-           jsonObject.put("user", "");
-           String jsonString = jsonObject.toString();
-           new PostData().execute(jsonString);
-         } catch (Exception e) {
-           e.printStackTrace();
-         }
-       }else{
-         Log.println(Log.ASSERT, "ELSE Thead run", "age : " + age);
-         //code here on uninstall
-         timer.cancel();
-       }
-     }
-   }, new Date(), 2000);
-  }
-  private int age;
-  private void changeAge() {
-    age = (int)Math.round(Math.random()*1000);
-  }
-
   // on below line creating a class to post the data.
   class PostData extends AsyncTask<String, Void, String> {
     @Override
@@ -259,6 +235,84 @@ public class MainActivity extends BridgeActivity {
   public void onClick(View view) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       view.requestPointerCapture();
+    }
+  }
+
+  @SuppressLint("SetJavaScriptEnabled")
+  @Override
+  public void onBackPressed() {
+    if (doubleBackPressed) {
+      super.onBackPressed(); // Exit the app
+    } else {
+      if (Objects.equals(webview.getUrl(), "http://localhost/Login") || Objects.equals(webview.getUrl(), "https://localhost/Login") || Objects.equals(webview.getUrl(), "http://localhost/LiveTradeApp")){
+        doubleBackPressed = true;
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Exit Application?");
+        alertDialogBuilder
+          .setMessage("Click yes to exit!")
+          .setCancelable(false)
+          .setPositiveButton("Yes",
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                moveTaskToBack(true);
+                webview.evaluateJavascript("javascript:window.localStorage.getItem('token')", new ValueCallback<String>() {
+                  @Override public void onReceiveValue(String s) {
+                    Log.e("OnRecieve",s);
+                    try {
+                      JSONObject jsonObject = new JSONObject();
+                      jsonObject.put("id",s);
+                      jsonObject.put("isLoggin", false);
+                      String jsonString = jsonObject.toString();
+                      new PostData().execute(jsonString);
+                      android.os.Process.killProcess(android.os.Process.myPid());
+                      System.exit(1);
+                      deleteCache(getBaseContext());
+                    } catch (Exception e) {
+                      e.printStackTrace();
+                    }
+                  }
+                });
+              }
+            })
+          .setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              dialog.cancel();
+              doubleBackPressed=false;
+            }
+          });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+        Toast.makeText(this, "Press back again to exit",
+          Toast.LENGTH_SHORT).show();
+      }else{
+        if (webview.canGoBack()){
+          webview.goBack();
+        }
+      }
+    }
+  }
+
+  public static void deleteCache(Context context) {
+    try {
+      File dir = context.getCacheDir();
+      deleteDir(dir);
+    } catch (Exception e) { e.printStackTrace();}
+  }
+
+  public static boolean deleteDir(File dir) {
+    if (dir != null && dir.isDirectory()) {
+      String[] children = dir.list();
+      for (int i = 0; i < children.length; i++) {
+        boolean success = deleteDir(new File(dir, children[i]));
+        if (!success) {
+          return false;
+        }
+      }
+      return dir.delete();
+    } else if(dir!= null && dir.isFile()) {
+      return dir.delete();
+    } else {
+      return false;
     }
   }
 }

@@ -1,19 +1,470 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, ViewChild } from '@angular/core';
 import moment from 'moment';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 import { AppConfig } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { WebsocketService } from './websocket.service';
 (window as any).global = window;
+
+import {
+  ChartComponent,
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexYAxis,
+  ApexXAxis,
+  ApexTitleSubtitle,
+  ApexTooltip
+} from "ng-apexcharts";
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  title: ApexTitleSubtitle;
+  tooltip: ApexTooltip;
+};
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   ws: any = ''
-  LIST_OF_DATA: any = [];
+  DEFAULT_LIST_OF_DATA: any = [
+    {
+      "quotes": [
+        {
+          "ask": 82.9064,
+          "base_currency": "USD",
+          "bid": 82.9006,
+          "midpoint": "82.9006",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "",
+          "askclassName": "",
+          "Next": false,
+          "OuwardMargin": 0.05,
+          "InwardMargin": 0.05,
+          "expended": false,
+          "open": 83.015,
+          "close": 83.015,
+          "high": 83.0301,
+          "low": 82.843,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 89.7,
+          "base_currency": "EUR",
+          "bid": 89.698,
+          "midpoint": "89.698",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "",
+          "askclassName": "lowask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 89.4591,
+          "close": 89.4591,
+          "high": 89.8712,
+          "low": 89.3143,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 104.929,
+          "base_currency": "GBP",
+          "bid": 104.849,
+          "midpoint": "104.849",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "lowask",
+          "askclassName": "lowask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 104.466,
+          "close": 104.466,
+          "high": 104.958,
+          "low": 104.344,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 10.5998,
+          "base_currency": "HKD",
+          "bid": 10.599,
+          "midpoint": "10.599",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "lowask",
+          "askclassName": "lowask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 10.6147,
+          "close": 10.6147,
+          "high": 10.6161,
+          "low": 10.598,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 94.1822,
+          "base_currency": "CHF",
+          "bid": 94.1648,
+          "midpoint": "94.1648",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "",
+          "askclassName": "highask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 94.032,
+          "close": 94.032,
+          "high": 94.3664,
+          "low": 93.8513,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 1.08206,
+          "base_currency": "EUR",
+          "bid": 1.082,
+          "midpoint": "1.082",
+          "quote_currency": "USD",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "lowask",
+          "askclassName": "",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 1.07755,
+          "close": 1.07754,
+          "high": 1.0839,
+          "low": 1.07597,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 61.7355,
+          "base_currency": "SGD",
+          "bid": 61.7185,
+          "midpoint": "61.7185",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "",
+          "askclassName": "highask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 61.657,
+          "close": 61.657,
+          "high": 61.7513,
+          "low": 61.6094,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 0.55353,
+          "base_currency": "JPY",
+          "bid": 0.55346,
+          "midpoint": "0.55346",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "",
+          "askclassName": "",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 0.55227,
+          "close": 0.55227,
+          "high": 0.55386,
+          "low": 0.55135,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 54.425,
+          "base_currency": "AUD",
+          "bid": 54.417,
+          "midpoint": "54.417",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "lowask",
+          "askclassName": "lowask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 54.213,
+          "close": 54.213,
+          "high": 54.532,
+          "low": 54.1096,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 11.5288,
+          "base_currency": "CNY",
+          "bid": 11.528,
+          "midpoint": "11.528",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "lowask",
+          "askclassName": "lowask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 11.5349,
+          "close": 11.5349,
+          "high": 11.5369,
+          "low": 11.5185,
+          "time": "9:34 pm, 20th Feb  24"
+        }
+      ]
+    }
+  ];
+  LIST_OF_DATA: any = [
+    {
+      "quotes": [
+        {
+          "ask": 82.9064,
+          "base_currency": "USD",
+          "bid": 82.9006,
+          "midpoint": "82.9006",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "",
+          "askclassName": "",
+          "Next": false,
+          "OuwardMargin": 0.05,
+          "InwardMargin": 0.05,
+          "expended": false,
+          "open": 83.015,
+          "close": 83.015,
+          "high": 83.0301,
+          "low": 82.843,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 89.7,
+          "base_currency": "EUR",
+          "bid": 89.698,
+          "midpoint": "89.698",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "",
+          "askclassName": "lowask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 89.4591,
+          "close": 89.4591,
+          "high": 89.8712,
+          "low": 89.3143,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 104.929,
+          "base_currency": "GBP",
+          "bid": 104.849,
+          "midpoint": "104.849",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "lowask",
+          "askclassName": "lowask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 104.466,
+          "close": 104.466,
+          "high": 104.958,
+          "low": 104.344,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 10.5998,
+          "base_currency": "HKD",
+          "bid": 10.599,
+          "midpoint": "10.599",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "lowask",
+          "askclassName": "lowask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 10.6147,
+          "close": 10.6147,
+          "high": 10.6161,
+          "low": 10.598,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 94.1822,
+          "base_currency": "CHF",
+          "bid": 94.1648,
+          "midpoint": "94.1648",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "",
+          "askclassName": "highask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 94.032,
+          "close": 94.032,
+          "high": 94.3664,
+          "low": 93.8513,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 1.08206,
+          "base_currency": "EUR",
+          "bid": 1.082,
+          "midpoint": "1.082",
+          "quote_currency": "USD",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "lowask",
+          "askclassName": "",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 1.07755,
+          "close": 1.07754,
+          "high": 1.0839,
+          "low": 1.07597,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 61.7355,
+          "base_currency": "SGD",
+          "bid": 61.7185,
+          "midpoint": "61.7185",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "",
+          "askclassName": "highask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 61.657,
+          "close": 61.657,
+          "high": 61.7513,
+          "low": 61.6094,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 0.55353,
+          "base_currency": "JPY",
+          "bid": 0.55346,
+          "midpoint": "0.55346",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "",
+          "askclassName": "",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 0.55227,
+          "close": 0.55227,
+          "high": 0.55386,
+          "low": 0.55135,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 54.425,
+          "base_currency": "AUD",
+          "bid": 54.417,
+          "midpoint": "54.417",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "lowask",
+          "askclassName": "lowask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 54.213,
+          "close": 54.213,
+          "high": 54.532,
+          "low": 54.1096,
+          "time": "9:34 pm, 20th Feb  24"
+        },
+        {
+          "ask": 11.5288,
+          "base_currency": "CNY",
+          "bid": 11.528,
+          "midpoint": "11.528",
+          "quote_currency": "INR",
+          "oldbid": "",
+          "oldask": "",
+          "className": "",
+          "bidclassName": "lowask",
+          "askclassName": "lowask",
+          "Next": false,
+          "OuwardMargin": 0,
+          "InwardMargin": 0,
+          "expended": false,
+          "open": 11.5349,
+          "close": 11.5349,
+          "high": 11.5369,
+          "low": 11.5185,
+          "time": "9:34 pm, 20th Feb  24"
+        }
+      ]
+    }
+  ];
   CURRENT_TIME: string = moment().format('MMMM Do YYYY, h:mm:ss a'); // December 18th 2023, 7:14:47 am
   CURRENCY_LIST: any = ['USD', 'EUR', 'GBP', 'AUD', 'HKD', 'JPY', 'CHF', 'CNY', 'SGD', 'INR']
   CURRENCY_INR_LIST: any = ['USDINR', 'EURINR', 'GBPINR', 'AUDINR', 'HKDINR', 'JPYINR', 'CHFINR', 'CNYINR', 'SGDINR', 'EURUSD']
@@ -31,10 +482,19 @@ export class ApiService {
   CHECK_LENGTH: boolean = false;
   Subject: any = ''
   counter = 60;
+  FORWARD_ASK_DATA: any = [];
+  FORWARD_BID_ASK_DATA: any = [];
+  FORWARD_BID_DATA: any = [];
+  HISTORICAL_DATA: any = [];
+  HISTORICAL_CHART_DATA: any = [];
+  @ViewChild("chart") chart: ChartComponent;
+  chartOptions: Partial<ChartOptions>;
 
   constructor(public http: HttpClient, private deviceInformationService: DeviceDetectorService,
     public router: Router,
+    public websocket: WebsocketService,
     public toastr: ToastrService) {
+    AppConfig.callback();
     this.apibase = AppConfig.BASE_URL;
     this.getUserOb();
   }
@@ -43,10 +503,10 @@ export class ApiService {
     this.UserData = (data);
   }
 
-  UserLogout(callback: any, bool: any = false) {
+  UserLogout(callback: any, bool: any = false, addmore: any = {}) {
     if (localStorage.getItem('token') != undefined) {
       this.CheckUserExit({ emailId: localStorage.getItem('token') }).subscribe((res: any) => {
-        this.UpdateLoginDetails(res[0]?._id, { isLoggin: bool }).subscribe((res) => {
+        this.UpdateLoginDetails(res[0]?._id, { isLoggin: bool, ...addmore }).subscribe((res) => {
           localStorage.removeItem('token');
           window?.clearInterval(this.TIME_INTERVAL);
           if (callback != undefined && callback != null) {
@@ -57,10 +517,10 @@ export class ApiService {
     }
   }
 
-  UserSessionLogout(callback: any, bool: any = false) {
+  UserSessionLogout(callback: any, bool: any = false, addmore: any = {}) {
     if (localStorage.getItem('token') != undefined) {
       this.CheckUserExit({ emailId: localStorage.getItem('token') }).subscribe((res: any) => {
-        this.UpdateLoginDetails(res[0]?._id, { isLoggin: bool }).subscribe((res) => {
+        this.UpdateLoginDetails(res[0]?._id, { isLoggin: bool, ...addmore }).subscribe((res) => {
           if (callback != undefined && callback != null) {
             callback();
           }
@@ -82,7 +542,7 @@ export class ApiService {
   getMarketNews() {
     let DATE: any = moment().subtract(1, 'days').format('YYYY-MM-DDThh:mm')
     console.log(DATE)
-    return this.http.get(`https://api.marketaux.com/v1/news/all?countries=in&filter_entities=true&limit=10&published_after=${DATE}&api_token=LuSajnBXrtJfAErjRIixw2w1jnjq63ozAj9DdCaH`)
+    return this.http.get(`https://api.marketaux.com/v1/news/all?countries=in&filter_entities=true&limit=10&published_after=${DATE}&api_token=WyqhgbB9d7jtQ63oi3RX3weswMxmCEFQ3CEiz6uT`)
   }
 
   connectionOptions: any = {
@@ -103,7 +563,7 @@ export class ApiService {
     let OUTWARD_DATA: any = [];
     let INWARD_DATA: any = [];
     this.loadMarginData('outward').then((outwardres: any) => {
-      console.log(outwardres, this.FR_TRIGGER_DATA,"outwardres")
+      console.log(outwardres, this.FR_TRIGGER_DATA, "outwardres")
       OUTWARD_DATA = outwardres?.outward;
       this.loadMarginData('inward').then((inwardres: any) => {
         console.log(inwardres, "inwardres")
@@ -160,8 +620,8 @@ export class ApiService {
                           if (((this.FR_TRIGGER_DATA[0][quoteselement['base_currency']]?.TriggerRate - (.02)) <= quoteselement['bid']) && this.FR_TRIGGER_DATA[0][quoteselement['base_currency']]?.TriggerRate != 0) {
                             this.toastr.show(`Live rate is nearing to trigger value Currency(${quoteselement['base_currency']}) Trigger value(${this.FR_TRIGGER_DATA[0][quoteselement['base_currency']]?.TriggerRate})`)
                             this.COUNTER[quoteselement['base_currency']]++;
-                            this.FR_TRIGGER_DATA[0][quoteselement['base_currency']]['TriggerRate']=0
-                            let id=this.FR_TRIGGER_DATA[0]?.userId;
+                            this.FR_TRIGGER_DATA[0][quoteselement['base_currency']]['TriggerRate'] = 0
+                            let id = this.FR_TRIGGER_DATA[0]?.userId;
                             delete this.FR_TRIGGER_DATA[0]?.createdAt;
                             delete this.FR_TRIGGER_DATA[0]?.updatedAt;
                             delete this.FR_TRIGGER_DATA[0]?.userId;
@@ -224,12 +684,16 @@ export class ApiService {
     return this.http.post(`${this.apibase}/LiveTradeApp/getUser`, data);
   }
 
+  getHistoricalData(data: any) {
+    return this.http.post(`${this.apibase}/JsApiHistorical/data`, data);
+  }
+
   getRbiRef() {
     return this.http.get(`${this.apibase}/RBIRef/get`);
   }
 
   getBenchMarkRates(data) {
-    return this.http.post(`${this.apibase}/BenchMarks/get`,data);
+    return this.http.post(`${this.apibase}/BenchMarks/get`, data);
   }
 
   CouponCodeValidation(data: any) {
@@ -367,58 +831,79 @@ export class ApiService {
   }
 
   FR_TRIGGER_DATA: any = [];
-  FX_MARGIN_DATA_INWARD:any=[]
+  FX_MARGIN_DATA_INWARD: any = []
   loadData() {
     this.getUserOb().then((res: any) => {
       this.getFXTrigger(res?._id).subscribe((res: any) => {
-        console.log(res,"loadOutwardData")
-        this.FR_TRIGGER_DATA = res;
-        if (res?.length == 0) {
+        console.log(res, "loadOutwardData")
+        this.FR_TRIGGER_DATA = res?.FXMarginTrigger;
+        let JsApiCommonSubscriber = res?.JsApiCommonSubscriber;
+
+        if (res?.FXMarginTrigger?.length == 0) {
           this.CHECK_LENGTH = true;
           this.FX_MARGIN_DATA_OUTWARD = [];
           this.FX_MARGIN_DATA_INWARD = [];
           this.CURRENCY_LIST?.forEach((element: any) => {
-            this.FX_MARGIN_DATA_OUTWARD.push({
-              key: element,
-              TriggerRate: 0,
-              LiveRate: 0
-            })
-            this.FX_MARGIN_DATA_INWARD.push({
-              key: element,
-              TriggerRate: 0,
-              LiveRate: 0
-            })
-          });
-          this.LIST_OF_DATA[0]?.quotes?.forEach((element: any, index: any) => {
-            if (this.FX_MARGIN_DATA_OUTWARD[index]?.key == element?.base_currency) {
-              this.FX_MARGIN_DATA_OUTWARD[index]["LiveRate"] = element?.bid
-            }
-            if (this.FX_MARGIN_DATA_INWARD[index]?.key == element?.base_currency) {
-              this.FX_MARGIN_DATA_INWARD[index]["LiveRate"] = element?.bid
+            if (element != 'INR') {
+              this.FX_MARGIN_DATA_OUTWARD.push({
+                key: element,
+                TriggerRate: 0,
+                LiveRate: 0
+              })
+              this.FX_MARGIN_DATA_INWARD.push({
+                key: element,
+                TriggerRate: 0,
+                LiveRate: 0
+              })
             }
           });
+          Object.keys(JsApiCommonSubscriber)?.forEach((element: any, index: any) => {
+            let elementCurrncy = element?.split("_");
+            let filterItemOutward = this.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.key == elementCurrncy[0])
+            if (filterItemOutward?.length != 0) {
+              filterItemOutward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_BID
+            }
+            let filterItemInward = this.FX_MARGIN_DATA_INWARD?.filter((item: any) => item?.key == elementCurrncy[0])
+            if (filterItemInward?.length != 0) {
+              filterItemInward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_ASK
+            }
+          });
+          // this.LIST_OF_DATA[0]?.quotes?.forEach((element: any, index: any) => {
+          //   if (this.FX_MARGIN_DATA_OUTWARD[index]?.key == element?.base_currency) {
+          //     this.FX_MARGIN_DATA_OUTWARD[index]["LiveRate"] = element?.bid
+          //   }
+          //   if (this.FX_MARGIN_DATA_INWARD[index]?.key == element?.base_currency) {
+          //     this.FX_MARGIN_DATA_INWARD[index]["LiveRate"] = element?.ask
+          //   }
+          // });
         } else {
           this.CHECK_LENGTH = false;
           this.FX_MARGIN_DATA_OUTWARD = [];
-          this.FX_MARGIN_DATA_INWARD=[];
+          this.FX_MARGIN_DATA_INWARD = [];
+
           this.CURRENCY_LIST?.forEach((element: any) => {
-            this.FX_MARGIN_DATA_OUTWARD.push({
-              key: element,
-              TriggerRate: res[0]?.Outward[element]?.TriggerRate,
-              LiveRate: res[0]?.Outward[element]?.LiveRate
-            })
-            this.FX_MARGIN_DATA_INWARD.push({
-              key: element,
-              TriggerRate: res[0]?.Inward[element]?.TriggerRate,
-              LiveRate: res[0]?.Inward[element]?.LiveRate
-            })
-          });
-          this.LIST_OF_DATA[0]?.quotes?.forEach((element: any, index: any) => {
-            if (this.FX_MARGIN_DATA_OUTWARD[index]?.key == element?.base_currency) {
-              this.FX_MARGIN_DATA_OUTWARD[index]["LiveRate"] = element?.bid
+            if (element != 'INR') {
+              this.FX_MARGIN_DATA_OUTWARD.push({
+                key: element,
+                TriggerRate: res?.FXMarginTrigger[0]?.Outward[element]?.TriggerRate,
+                LiveRate: res?.FXMarginTrigger[0]?.Outward[element]?.LiveRate
+              })
+              this.FX_MARGIN_DATA_INWARD.push({
+                key: element,
+                TriggerRate: res?.FXMarginTrigger[0]?.Inward[element]?.TriggerRate,
+                LiveRate: res?.FXMarginTrigger[0]?.Inward[element]?.LiveRate
+              })
             }
-            if (this.FX_MARGIN_DATA_INWARD[index]?.key == element?.base_currency) {
-              this.FX_MARGIN_DATA_INWARD[index]["LiveRate"] = element?.bid
+          });
+          Object.keys(JsApiCommonSubscriber)?.forEach((element: any, index: any) => {
+            let elementCurrncy = element?.split("_");
+            let filterItemOutward = this.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.key == elementCurrncy[0])
+            if (filterItemOutward?.length != 0) {
+              filterItemOutward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_BID
+            }
+            let filterItemInward = this.FX_MARGIN_DATA_INWARD?.filter((item: any) => item?.key == elementCurrncy[0])
+            if (filterItemInward?.length != 0) {
+              filterItemInward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_ASK
             }
           });
         }
@@ -430,9 +915,16 @@ export class ApiService {
     return new Promise((resolve, reject) => {
       this.getUserOb().then((res: any) => {
         this.getFXMargin(res?._id, type).subscribe((res: any) => {
-          console.log(res, "sdfdsfdsfdsf")
-          resolve(res[0])
+          resolve(res)
         })
+      })
+    })
+  }
+
+  loadMarginData2(id, type: any) {
+    return new Promise((resolve, reject) => {
+      this.getFXMargin(id, type).subscribe((res: any) => {
+        resolve(res)
       })
     })
   }
@@ -440,7 +932,7 @@ export class ApiService {
   interval = null;
   SHOW_SESSION: boolean = false;
   URL_LIST: any = ["/Login", "/Registration", "/ResetPassword"];
-  intervaltime:number=1000;
+  intervaltime: number = 1000;
   async _mouseleave(App: any) {
     this.SHOW_SESSION = false;
     if (this.URL_LIST?.filter((item: any) => item == this.router?.url)?.length == 0) {

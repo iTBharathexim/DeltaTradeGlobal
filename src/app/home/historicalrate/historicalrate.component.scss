@@ -729,7 +729,13 @@ label {
 
 .card-parent-3 .table tr th {
     font-weight: 100;
-    text-align: center;
+    text-align: left;
+}
+
+.card-parent-3 .table tr {
+    font-weight: 100;
+    text-align: left;
+    color: white;
 }
 
 ::ng-deep .body custom-mat-accordion {
@@ -804,7 +810,7 @@ label {
     font-size: 14px;
 }
 
-.Bid-class{
+.Bid-class {
     margin: auto;
     text-align: center;
     background: #73b1ff;
@@ -813,7 +819,7 @@ label {
     color: white;
 }
 
-.Ask-class{
+.Ask-class {
     margin: auto;
     text-align: center;
     background: chartreuse;
@@ -825,6 +831,118 @@ label {
 .forward custom-mat-accordion[aria-expanded=false]:after {
     position: absolute;
     bottom: 3px;
-    right: 4%!important;
+    right: 4% !important;
     left: unset !important;
+}
+
+#chart {
+    margin: auto;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 5px;
+    box-shadow: 0 0 2px 2px #efefef;
+}
+
+.row {
+    width: 100%;
+    height: 100%;
+}
+
+.box-loader {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #00000014;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader {
+    width: 100%;
+    height: 4.8px;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    background-color: black;
+}
+
+.loader::after {
+    content: '';
+    width: 96px;
+    height: 4.8px;
+    background: hsl(0, 0%, 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    animation: hitZak 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes hitZak {
+    0% {
+        left: 0;
+        transform: translateX(-1%);
+    }
+
+    100% {
+        left: 100%;
+        transform: translateX(-99%);
+    }
+}
+
+.button {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(5, 1fr);
+    margin-bottom: 15px;
+}
+
+.button button {
+    background-color: transparent;
+    border-radius: 40px;
+    border: 1px solid black;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-active {
+    background-color: #97c925 !important;
+    color: #fff;
+    border: 2px solid #7f7fc2 !important;
+}
+
+::ng-deep .canvasjs-chart-canvas {
+    width: 100% !important;
+    height: 260px !important;
+}
+
+::ng-deep .canvasjs-chart-credit {
+    display: none !important;
+}
+
+::ng-deep .canvasjs-chart-toolbar {
+    top: -10px !important;
+}
+
+::ng-deep .canvasjs-chart-panel {
+    width: 100% !important;
+    top: 80px !important;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: brown;
+    font-weight: 500;
+    padding: 5px;
+}
+
+.header label {
+    font-weight: 800;
+    color: #fff;
+    font-size: 15px;
 }

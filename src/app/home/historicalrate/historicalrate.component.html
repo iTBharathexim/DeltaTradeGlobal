@@ -1,0 +1,62 @@
+<app-home (ModeChanges)="this.DISPLAY_MODE=$event">
+    <div class="forward">
+        <div class="header"><label for="">HISTORICAL RATE</label></div>
+        <custom-mat-accordion [Expanded]="item.expended"
+            (onChangeEvent)="Collepse($event,i,this.apiservice.HISTORICAL_CHART_DATA)"
+            [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
+            *ngFor="let item of this.apiservice.HISTORICAL_CHART_DATA;let i=index">
+            <!-- <p class="time" *ngIf="(i==0)">{{item?.time}}</p> -->
+            <custom-mat-expansion-panel>
+                <div class="row-flex">
+                    <div class="currecny">
+                        <img [src]="'../../assets/CountryFlag/'+item?.base_currency+'.png'" [alt]="item?.base_currency"
+                            srcset="">
+                        <p style="display: flex;align-items: center;gap: 3px;font-weight: 100;font-size: 13px;">
+                            {{item?.base_currency}}<span class="left-border"></span>{{item?.quote_currency}}</p>
+                    </div>
+                    <label for="" class="lable-Request-Time">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="font-weight: 100;height: 20px;" class="width-tr"></th>
+                                    <th style="font-weight: 100;height: 20px;" class="width-tr"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </label>
+                </div>
+            </custom-mat-expansion-panel>
+            <custom-mat-panel-description>
+                <div class="controller-panel-description">
+                    <div class="col-12 card-parent-3">
+                        <div class="row">
+                            <div id="chart" *ngIf="item?.expended==true && item?.chartOptions!=undefined">
+                                <div class="button">
+                                    <button [ngClass]="{'btn-active':item['1D']==true}"
+                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,getLastWeek(1),1);ResetActiveClass('1D',i,item)">1D</button>
+                                    <button [ngClass]="{'btn-active':item['1W']==true}"
+                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,getLastWeek(7),7);ResetActiveClass('1W',i,item)">1W</button>
+                                    <button [ngClass]="{'btn-active':item['1M']==true}"
+                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,getLastWeek(30),30);ResetActiveClass('1M',i,item)">1M</button>
+                                    <button [ngClass]="{'btn-active':item['1Y']==true}"
+                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,getLastWeek(365),50);ResetActiveClass('1Y',i,item)">1Y</button>
+                                    <button [ngClass]="{'btn-active':item['5Y']==true}"
+                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,getLastWeek(1825),50);ResetActiveClass('5Y',i,item)">5Y</button>
+                                </div>
+                                <!-- <apx-chart [series]="item?.chartOptions.series" [chart]="item?.chartOptions.chart"
+                                    [xaxis]="item?.chartOptions.xaxis" [yaxis]="item?.chartOptions.yaxis"
+                                    [title]="item?.chartOptions.title"
+                                    [tooltip]="item?.chartOptions.tooltip"></apx-chart> -->
+                                <canvasjs-chart [options]="item?.CanvasJsChart" [styles]="{height: '260px'}"></canvasjs-chart>
+                                <!-- <canvasjs-stockchart [options]="item?.CanvasJsChart"  [styles]="{height: '350px'}"></canvasjs-stockchart>     -->
+                            </div>
+                            <div class="box-loader" *ngIf="item?.expended==false || item?.chartOptions==undefined">
+                                <span class="loader"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </custom-mat-panel-description>
+        </custom-mat-accordion>
+    </div>
+</app-home>

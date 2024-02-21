@@ -36,7 +36,7 @@
     position: relative;
 }
 
-.custom-mat-accordion[aria-disabled=true] .content {
+::ng-deep custom-mat-accordion[aria-expanded=true] .content {
     color: rgba(0, 0, 0, .26);
     display: block;
     opacity: 1;

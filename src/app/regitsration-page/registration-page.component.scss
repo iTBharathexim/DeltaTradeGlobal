@@ -83,7 +83,7 @@ div.disabled {
 
 .remove-btn-bg {
     background: transparent !important;
-    color: #101010!important;
+    color: #101010 !important;
     margin-right: 10px !important;
 }
 
@@ -100,3 +100,12 @@ div.disabled {
     cursor: pointer;
 }
 
+img {
+    width: 220px;
+    margin: auto;
+    background: content-box;
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

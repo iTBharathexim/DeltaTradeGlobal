@@ -16,45 +16,25 @@ export class FXMarginDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadoutwardData('outward');
-    this.loadInwardData('inward');
   }
 
   loadoutwardData(type: any) {
     this.apiUser.getUserOb().then((res: any) => {
       this.apiUser.getFXMargin(res?._id, type).subscribe((res: any) => {
         console.log(res, "sdfdsfdsfdsf")
-        if (res?.length == 0) {
+        let OUTWARD_DATA: any = [];
+        let INWARD_DATA: any = [];
+        OUTWARD_DATA = res?.FXMarginDetails[0]?.outward;
+        INWARD_DATA = res?.FXMarginDetails[0]?.inward;
+        if (res?.FXMarginDetails?.length == 0) {
           this.CHECK_LENGTH = true;
+          this.FX_MARGIN_INWARD_DATA = [];
           this.FX_MARGIN_OUTWARD_DATA = [];
           this.apiUser.CURRENCY_LIST?.forEach((element: any) => {
             this.FX_MARGIN_OUTWARD_DATA.push({
               key: element,
               value: 0
             })
-          });
-        } else {
-          this.CHECK_LENGTH = false;
-          this.FX_MARGIN_OUTWARD_DATA = [];
-          for (const key in res[0][type]) {
-            const element = res[0][type][key];
-            this.FX_MARGIN_OUTWARD_DATA.push({
-              key: key,
-              value: element
-            })
-          }
-        }
-      })
-    })
-  }
-
-  loadInwardData(type: any) {
-    this.apiUser.getUserOb().then((res: any) => {
-      this.apiUser.getFXMargin(res?._id, type).subscribe((res: any) => {
-        console.log(res, "sdfdsfdsfdsf")
-        if (res?.length == 0) {
-          this.CHECK_LENGTH = true;
-          this.FX_MARGIN_INWARD_DATA = [];
-          this.apiUser.CURRENCY_LIST?.forEach((element: any) => {
             this.FX_MARGIN_INWARD_DATA.push({
               key: element,
               value: 0
@@ -63,8 +43,18 @@ export class FXMarginDetailsComponent implements OnInit {
         } else {
           this.CHECK_LENGTH = false;
           this.FX_MARGIN_INWARD_DATA = [];
-          for (const key in res[0][type]) {
-            const element = res[0][type][key];
+          this.FX_MARGIN_OUTWARD_DATA = [];
+
+          for (const key in OUTWARD_DATA) {
+            const element = OUTWARD_DATA[key];
+            this.FX_MARGIN_OUTWARD_DATA.push({
+              key: key,
+              value: element
+            })
+          }
+
+          for (const key in INWARD_DATA) {
+            const element = INWARD_DATA[key];
             this.FX_MARGIN_INWARD_DATA.push({
               key: key,
               value: element
@@ -78,48 +68,31 @@ export class FXMarginDetailsComponent implements OnInit {
   CreateMargin(value: any, value2: any, type: any) {
     let Array_to_Object: any = {}
     Array_to_Object["outward"] = {}
+    Array_to_Object["inward"] = {}
     value?.forEach((element: any) => {
       Array_to_Object["outward"][element?.key] = element?.value
     });
-    Array_to_Object['Type'] = "outward";
-    Array_to_Object['userId'] = this.apiUser.UserData?._id;
-
-    let Array_to_Object2: any = {}
-    Array_to_Object2["inward"] = {}
     value2?.forEach((element: any) => {
-      Array_to_Object2["inward"][element?.key] = element?.value
+      Array_to_Object["inward"][element?.key] = element?.value
     });
-    Array_to_Object2['Type'] = "inward";
-    Array_to_Object2['userId'] = this.apiUser.UserData?._id;
+    Array_to_Object['userId'] = this.apiUser.UserData?._id;
     this.apiUser.CreateFXMargin(Array_to_Object).subscribe((res: any) => {
       this.loadoutwardData('outward');
-      this.apiUser.CreateFXMargin(Array_to_Object2).subscribe((res: any) => {
-        this.loadInwardData('inward');
-      })
     })
   }
 
   MarginUpdate(value: any, value2: any, type: any) {
     let Array_to_Object: any = {}
     Array_to_Object["outward"] = {}
+    Array_to_Object["inward"] = {}
     value?.forEach((element: any) => {
       Array_to_Object["outward"][element?.key] = element?.value
     });
-    Array_to_Object['Type'] = "outward";
-
-    let Array_to_Object2: any = {}
-    Array_to_Object2["inward"] = {}
     value2?.forEach((element: any) => {
-      Array_to_Object2["inward"][element?.key] = element?.value
+      Array_to_Object["inward"][element?.key] = element?.value
     });
-    Array_to_Object2['Type'] = "inward";
-    Array_to_Object2['userId'] = this.apiUser.UserData?._id;
-
     this.apiUser.MarginUpdate(Array_to_Object, this.apiUser.UserData?._id).subscribe((res: any) => {
       this.loadoutwardData('outward');
-      this.apiUser.MarginUpdate(Array_to_Object2, this.apiUser.UserData?._id).subscribe((res: any) => {
-        this.loadInwardData('inward');
-      })
     })
   }
 

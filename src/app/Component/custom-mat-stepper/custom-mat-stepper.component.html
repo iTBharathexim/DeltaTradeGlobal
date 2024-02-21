@@ -17,14 +17,4 @@
     </div>
   </div>
   <ng-content select="custom-mat-step"></ng-content>
-  <!-- <div class="button-panel" *ngIf="this.BUTTON_PANEL_HIDE==true">
-    <p class="alert-danger"
-      *ngIf="this.HEADER_DATA[this.BUTTON_COUNTER]?.errorMessage!='' && this.ERROR_MESSAGE_SHOW==true"
-      [innerHTML]="this.HEADER_DATA[this.BUTTON_COUNTER]?.errorMessage"></p>
-    <button class="btn btn-primary" (click)="setBack()" [disabled]="this.BACK_BUTTON_DISABLED" id="CustomMatStepperButton">Back</button>
-    <button class="btn btn-primary" (click)="setNext()" *ngIf="this.MatStepComponent?.length!=(this.BUTTON_COUNTER+1)" [disabled]="this.NEXT_BUTTON_DISABLED">Next</button>
-    <button class="btn btn-primary" (click)="lastbuttonclick()" 
-    *ngIf="this.MatStepComponent?.length==(this.BUTTON_COUNTER+1) && LAST_BUTTON_VISIBLE==true">{{LAST_BUTTON_NAME}}</button>
-    <div #AdditionButtonPanel></div>
-  </div> -->
 </div>

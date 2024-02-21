@@ -14,6 +14,7 @@ import { SubscriptionChildComponent } from './subscription/subscription-child/su
 import { ForwardratecalculatorComponent } from './forwardratecalculator/forwardratecalculator.component';
 import { RbiRefComponent } from './other-services/rbi-ref/rbi-ref.component';
 import { BenchMarkRatesComponent } from './other-services/bench-mark-rates/bench-mark-rates.component';
+import { HistoricalrateComponent } from './historicalrate/historicalrate.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { BenchMarkRatesComponent } from './other-services/bench-mark-rates/bench
     SubscriptionChildComponent,
     ForwardratecalculatorComponent,
     RbiRefComponent,
-    BenchMarkRatesComponent
+    BenchMarkRatesComponent,
+    HistoricalrateComponent
   ],
   imports: [
     SharedModule,

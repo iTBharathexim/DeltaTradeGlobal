@@ -2,8 +2,9 @@ import { Component, ElementRef, EventEmitter, OnInit, Output, SimpleChanges, Vie
 import { ApiService } from '../../services/api.service';
 import moment from 'moment';
 import { Router } from '@angular/router';
-declare var $:any;
+declare var $: any;
 import { App } from '@capacitor/app';
+import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,9 @@ export class HomeComponent implements OnInit {
   data: any = [];
   @Output('ModeChanges') ModeChanges = new EventEmitter();
   @Output('SUBSCRIPTION_CHECK') SUBSCRIPTION_CHECK = new EventEmitter();
-  constructor(public apiservice: ApiService, public router: Router, public ref: ElementRef) {
+  targetElement: any;
+  constructor(public apiservice: ApiService, public router: Router, public ref: ElementRef,
+    public websocketService: WebsocketService) {
     this.apiservice.LOADER_SHOW_HIDE = true
   }
   VISIBLE_TRADE_APP: any = '';
@@ -26,6 +29,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(window.history, "window.history")
+
     this.addULheight();
     $(window).on('resize', () => {
       this.addULheight()
@@ -80,7 +84,7 @@ export class HomeComponent implements OnInit {
   }
 
   logout() {
-    this.apiservice.UpdateLoginDetails(this.USER_DETAILS?._id, { isLoggin: false }).subscribe((res) => {
+    this.apiservice.UpdateLoginDetails(this.USER_DETAILS?._id, { isLoggin: false, lastactivetime: 0 }).subscribe((res) => {
       localStorage.removeItem('token');
       this.router.navigate(['/Login'])
       window?.clearInterval(this.apiservice.TIME_INTERVAL);
@@ -125,17 +129,16 @@ export class HomeComponent implements OnInit {
 
   navigateUrlHome(url: any) {
     window?.clearInterval(this.apiservice.TIME_INTERVAL);
-    setTimeout(() => {
-      this.router.navigate([url])
-    }, 200);
+    this.websocketService.disconnect()
+    this.router.navigate([url])
   }
 
   addULheight() {
     let elem1: any = document.querySelector(".controller");
-    console.log(elem1,"dsdsdsd")
+    console.log(elem1, "dsdsdsd")
     if (elem1 != undefined && elem1 != null) {
       let rect = elem1.getBoundingClientRect();
-      $('.body').css({ 'height': (parseInt(rect?.height) -51) + 'px', 'width': (parseInt(rect?.width) + .5) + 'px' })
+      $('.body').css({ 'height': (parseInt(rect?.height) - 51) + 'px', 'width': (parseInt(rect?.width) + .5) + 'px' })
     }
 
     let elem: any = document.querySelector(".controller .body");
@@ -155,5 +158,23 @@ export class HomeComponent implements OnInit {
   }
   CloseApp() {
     App.exitApp()
+  }
+
+  handleRefresh(event) {
+    setTimeout(() => {
+      // Any calls to load data go here
+      event.target.complete();
+    }, 2000);
+  }
+
+  myRefreshEvent(event: any, message: string) {
+    setTimeout(() => {
+      alert(message);
+      event.next();
+    }, 3000);
+  }
+
+  alert(message: string) {
+    alert(message);
   }
 }
