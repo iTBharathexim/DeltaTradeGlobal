@@ -37,8 +37,16 @@ body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
+
 @import '~ngx-toastr/toastr.css';
+
+@supports (padding: max(16px)) {
+    body {
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+}
 
 body {
     width: 100vw;
@@ -71,20 +79,20 @@ body {
     position: absolute;
     font-size: 22px;
     font-weight: 600;
-    color: black;
-    margin-left: 50px;
-    top: 50px;
+    color: #000;
+    margin-left: 110px;
+    top: 85px;
 }
 
 .wrapper h2::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: 0px;
     height: 3px;
-    width: 68px;
+    width: 100%;
     border-radius: 12px;
-    background: white;
+    background: #c15656;
 }
 
 .step-main {
@@ -112,7 +120,7 @@ body {
     justify-content: center;
 }
 
-.step-main label{
+.step-main label {
     color: black;
 }
 
@@ -182,7 +190,7 @@ form .policy {
     overflow: auto;
 }
 
-.wrapper{
+.wrapper {
     // background: linear-gradient(to right,rgb(137,104,255),rgb(175,152,255)); 
     max-height: 80vh;
     min-height: 580px;
@@ -264,26 +272,37 @@ button.pushable:hover::before {
 }
 
 ::-webkit-scrollbar {
-    width: 0;  /* Remove scrollbar space */
+    width: 0;
+    /* Remove scrollbar space */
     height: 0;
-    background: transparent;  /* Optional: just make scrollbar invisible */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
 }
+
 /* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-    height: 0;  /* Remove scrollbar space */
+    height: 0;
+    /* Remove scrollbar space */
     background: transparent;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    margin: 0; 
+    margin: 0;
     border: none;
 }
 
-input[type=number]:focus-visible{
+input[type=number]:focus-visible {
     border: none !important;
     outline: none !important;
+}
+
+@supports(padding: max(0px)) {
+    .nav-bar {
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+    }
 }

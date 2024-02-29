@@ -1,8 +1,11 @@
 .step-main {
-    margin-top: 48px;
     position: absolute;
-    top: 60px;
-    width: 100%;
+    top: 131px;
+    width: 96%;
+    margin: auto auto auto 8px;
+    background: #dde1e7;
+    border-radius: 10px;
+    box-shadow: -3px -3px 7px #ffffff73, 2px 2px 5px #5e687949;
 }
 
 .wrapper form .input-box {
@@ -108,4 +111,36 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.subcription-button {
+    padding: 5px;
+    background: #008eff !important;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    color: #fff !important;
+    font-weight: 700;
+    cursor: pointer;
+    margin: auto;
+    margin: 0!important;
+}
+
+.or{
+    text-align: center;
+    color: black;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.input-box-button-coupon-code {
+    display: flex;
+    box-shadow: 0 0 9px 4px #ebebeb;
+    border-radius: 5px;
+    height: 35px;
+}
+
+.input-box-button-coupon-code .otp-btn{
+    height: 35px !important;
+    border-radius: 0 5px 5px 0;
 }

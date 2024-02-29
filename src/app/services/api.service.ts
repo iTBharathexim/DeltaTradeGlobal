@@ -33,222 +33,8 @@ export type ChartOptions = {
 })
 export class ApiService {
   ws: any = ''
-  DEFAULT_LIST_OF_DATA: any = [
-    {
-      "quotes": [
-        {
-          "ask": 82.9064,
-          "base_currency": "USD",
-          "bid": 82.9006,
-          "midpoint": "82.9006",
-          "quote_currency": "INR",
-          "oldbid": "",
-          "oldask": "",
-          "className": "",
-          "bidclassName": "",
-          "askclassName": "",
-          "Next": false,
-          "OuwardMargin": 0.05,
-          "InwardMargin": 0.05,
-          "expended": false,
-          "open": 83.015,
-          "close": 83.015,
-          "high": 83.0301,
-          "low": 82.843,
-          "time": "9:34 pm, 20th Feb  24"
-        },
-        {
-          "ask": 89.7,
-          "base_currency": "EUR",
-          "bid": 89.698,
-          "midpoint": "89.698",
-          "quote_currency": "INR",
-          "oldbid": "",
-          "oldask": "",
-          "className": "",
-          "bidclassName": "",
-          "askclassName": "lowask",
-          "Next": false,
-          "OuwardMargin": 0,
-          "InwardMargin": 0,
-          "expended": false,
-          "open": 89.4591,
-          "close": 89.4591,
-          "high": 89.8712,
-          "low": 89.3143,
-          "time": "9:34 pm, 20th Feb  24"
-        },
-        {
-          "ask": 104.929,
-          "base_currency": "GBP",
-          "bid": 104.849,
-          "midpoint": "104.849",
-          "quote_currency": "INR",
-          "oldbid": "",
-          "oldask": "",
-          "className": "",
-          "bidclassName": "lowask",
-          "askclassName": "lowask",
-          "Next": false,
-          "OuwardMargin": 0,
-          "InwardMargin": 0,
-          "expended": false,
-          "open": 104.466,
-          "close": 104.466,
-          "high": 104.958,
-          "low": 104.344,
-          "time": "9:34 pm, 20th Feb  24"
-        },
-        {
-          "ask": 10.5998,
-          "base_currency": "HKD",
-          "bid": 10.599,
-          "midpoint": "10.599",
-          "quote_currency": "INR",
-          "oldbid": "",
-          "oldask": "",
-          "className": "",
-          "bidclassName": "lowask",
-          "askclassName": "lowask",
-          "Next": false,
-          "OuwardMargin": 0,
-          "InwardMargin": 0,
-          "expended": false,
-          "open": 10.6147,
-          "close": 10.6147,
-          "high": 10.6161,
-          "low": 10.598,
-          "time": "9:34 pm, 20th Feb  24"
-        },
-        {
-          "ask": 94.1822,
-          "base_currency": "CHF",
-          "bid": 94.1648,
-          "midpoint": "94.1648",
-          "quote_currency": "INR",
-          "oldbid": "",
-          "oldask": "",
-          "className": "",
-          "bidclassName": "",
-          "askclassName": "highask",
-          "Next": false,
-          "OuwardMargin": 0,
-          "InwardMargin": 0,
-          "expended": false,
-          "open": 94.032,
-          "close": 94.032,
-          "high": 94.3664,
-          "low": 93.8513,
-          "time": "9:34 pm, 20th Feb  24"
-        },
-        {
-          "ask": 1.08206,
-          "base_currency": "EUR",
-          "bid": 1.082,
-          "midpoint": "1.082",
-          "quote_currency": "USD",
-          "oldbid": "",
-          "oldask": "",
-          "className": "",
-          "bidclassName": "lowask",
-          "askclassName": "",
-          "Next": false,
-          "OuwardMargin": 0,
-          "InwardMargin": 0,
-          "expended": false,
-          "open": 1.07755,
-          "close": 1.07754,
-          "high": 1.0839,
-          "low": 1.07597,
-          "time": "9:34 pm, 20th Feb  24"
-        },
-        {
-          "ask": 61.7355,
-          "base_currency": "SGD",
-          "bid": 61.7185,
-          "midpoint": "61.7185",
-          "quote_currency": "INR",
-          "oldbid": "",
-          "oldask": "",
-          "className": "",
-          "bidclassName": "",
-          "askclassName": "highask",
-          "Next": false,
-          "OuwardMargin": 0,
-          "InwardMargin": 0,
-          "expended": false,
-          "open": 61.657,
-          "close": 61.657,
-          "high": 61.7513,
-          "low": 61.6094,
-          "time": "9:34 pm, 20th Feb  24"
-        },
-        {
-          "ask": 0.55353,
-          "base_currency": "JPY",
-          "bid": 0.55346,
-          "midpoint": "0.55346",
-          "quote_currency": "INR",
-          "oldbid": "",
-          "oldask": "",
-          "className": "",
-          "bidclassName": "",
-          "askclassName": "",
-          "Next": false,
-          "OuwardMargin": 0,
-          "InwardMargin": 0,
-          "expended": false,
-          "open": 0.55227,
-          "close": 0.55227,
-          "high": 0.55386,
-          "low": 0.55135,
-          "time": "9:34 pm, 20th Feb  24"
-        },
-        {
-          "ask": 54.425,
-          "base_currency": "AUD",
-          "bid": 54.417,
-          "midpoint": "54.417",
-          "quote_currency": "INR",
-          "oldbid": "",
-          "oldask": "",
-          "className": "",
-          "bidclassName": "lowask",
-          "askclassName": "lowask",
-          "Next": false,
-          "OuwardMargin": 0,
-          "InwardMargin": 0,
-          "expended": false,
-          "open": 54.213,
-          "close": 54.213,
-          "high": 54.532,
-          "low": 54.1096,
-          "time": "9:34 pm, 20th Feb  24"
-        },
-        {
-          "ask": 11.5288,
-          "base_currency": "CNY",
-          "bid": 11.528,
-          "midpoint": "11.528",
-          "quote_currency": "INR",
-          "oldbid": "",
-          "oldask": "",
-          "className": "",
-          "bidclassName": "lowask",
-          "askclassName": "lowask",
-          "Next": false,
-          "OuwardMargin": 0,
-          "InwardMargin": 0,
-          "expended": false,
-          "open": 11.5349,
-          "close": 11.5349,
-          "high": 11.5369,
-          "low": 11.5185,
-          "time": "9:34 pm, 20th Feb  24"
-        }
-      ]
-    }
-  ];
+  NEW_LOADER_SHOW_HIDE: any = false;
+  DEFAULT_LIST_OF_DATA: any = [];
   LIST_OF_DATA: any = [
     {
       "quotes": [
@@ -468,6 +254,7 @@ export class ApiService {
   CURRENT_TIME: string = moment().format('MMMM Do YYYY, h:mm:ss a'); // December 18th 2023, 7:14:47 am
   CURRENCY_LIST: any = ['USD', 'EUR', 'GBP', 'AUD', 'HKD', 'JPY', 'CHF', 'CNY', 'SGD', 'INR']
   CURRENCY_INR_LIST: any = ['USDINR', 'EURINR', 'GBPINR', 'AUDINR', 'HKDINR', 'JPYINR', 'CHFINR', 'CNYINR', 'SGDINR', 'EURUSD']
+  NEW_CURRENCY_INR_LIST: any = ['USD_INR', 'EUR_INR', 'GBP_INR', 'AUD_INR', 'HKD_INR', 'JPY_INR', 'CHF_INR', 'CNY_INR', 'SGD_INR', 'EUR_USD']
 
   MARKET_NEWS_DATA: any = [];
   apibase: string = ''
@@ -663,6 +450,10 @@ export class ApiService {
     return this.http.post(`${this.apibase}/LiveTradeApp/update`, { id: id, data: data });
   }
 
+  LogoutAllDevice(id: any, data: any) {
+    return this.http.post(`${this.apibase}/LiveTradeApp/LogoutAllDevice`, { id: id, data: data });
+  }
+
   PushNotification(data: any) {
     return this.http.post(`${this.apibase}/LiveTradeApp/PushNotification`, data);
   }
@@ -750,6 +541,10 @@ export class ApiService {
 
   TriggerUpdate(data: any, id: any) {
     return this.http.post(`${AppConfig.COUPON_API}/FXTrigger/update`, { data: data, id: id });
+  }
+
+  TriggerUpdateDeviceId(deviceId: any, id: any) {
+    return this.http.post(`${AppConfig.COUPON_API}/FXTrigger/updateDeviceId`, { deviceId: deviceId, id: id });
   }
 
   getDeviceInfo() {
@@ -848,26 +643,32 @@ export class ApiService {
               this.FX_MARGIN_DATA_OUTWARD.push({
                 key: element,
                 TriggerRate: 0,
-                LiveRate: 0
+                LiveRate: 0,
+                error: ''
               })
               this.FX_MARGIN_DATA_INWARD.push({
                 key: element,
                 TriggerRate: 0,
-                LiveRate: 0
+                LiveRate: 0,
+                error: ''
               })
             }
           });
-          Object.keys(JsApiCommonSubscriber)?.forEach((element: any, index: any) => {
-            let elementCurrncy = element?.split("_");
-            let filterItemOutward = this.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.key == elementCurrncy[0])
-            if (filterItemOutward?.length != 0) {
-              filterItemOutward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_BID
-            }
-            let filterItemInward = this.FX_MARGIN_DATA_INWARD?.filter((item: any) => item?.key == elementCurrncy[0])
-            if (filterItemInward?.length != 0) {
-              filterItemInward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_ASK
-            }
-          });
+          if (JsApiCommonSubscriber != undefined) {
+            Object.keys(JsApiCommonSubscriber)?.forEach((element: any, index: any) => {
+              let elementCurrncy = element?.split("_");
+              let filterItemOutward = this.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.key == elementCurrncy[0])
+              if (filterItemOutward?.length != 0) {
+                filterItemOutward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_ASK;
+                filterItemOutward[0]["error"] = ''
+              }
+              let filterItemInward = this.FX_MARGIN_DATA_INWARD?.filter((item: any) => item?.key == elementCurrncy[0])
+              if (filterItemInward?.length != 0) {
+                filterItemInward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_BID;
+                filterItemInward[0]["error"] = ''
+              }
+            });
+          }
           // this.LIST_OF_DATA[0]?.quotes?.forEach((element: any, index: any) => {
           //   if (this.FX_MARGIN_DATA_OUTWARD[index]?.key == element?.base_currency) {
           //     this.FX_MARGIN_DATA_OUTWARD[index]["LiveRate"] = element?.bid
@@ -886,26 +687,30 @@ export class ApiService {
               this.FX_MARGIN_DATA_OUTWARD.push({
                 key: element,
                 TriggerRate: res?.FXMarginTrigger[0]?.Outward[element]?.TriggerRate,
-                LiveRate: res?.FXMarginTrigger[0]?.Outward[element]?.LiveRate
+                LiveRate: res?.FXMarginTrigger[0]?.Outward[element]?.LiveRate,
+                error: ''
               })
               this.FX_MARGIN_DATA_INWARD.push({
                 key: element,
                 TriggerRate: res?.FXMarginTrigger[0]?.Inward[element]?.TriggerRate,
-                LiveRate: res?.FXMarginTrigger[0]?.Inward[element]?.LiveRate
+                LiveRate: res?.FXMarginTrigger[0]?.Inward[element]?.LiveRate,
+                error: ''
               })
             }
           });
-          Object.keys(JsApiCommonSubscriber)?.forEach((element: any, index: any) => {
-            let elementCurrncy = element?.split("_");
-            let filterItemOutward = this.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.key == elementCurrncy[0])
-            if (filterItemOutward?.length != 0) {
-              filterItemOutward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_BID
-            }
-            let filterItemInward = this.FX_MARGIN_DATA_INWARD?.filter((item: any) => item?.key == elementCurrncy[0])
-            if (filterItemInward?.length != 0) {
-              filterItemInward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_ASK
-            }
-          });
+          if (JsApiCommonSubscriber != undefined) {
+            Object.keys(JsApiCommonSubscriber)?.forEach((element: any, index: any) => {
+              let elementCurrncy = element?.split("_");
+              let filterItemOutward = this.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.key == elementCurrncy[0])
+              if (filterItemOutward?.length != 0) {
+                filterItemOutward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_ASK
+              }
+              let filterItemInward = this.FX_MARGIN_DATA_INWARD?.filter((item: any) => item?.key == elementCurrncy[0])
+              if (filterItemInward?.length != 0) {
+                filterItemInward[0]["LiveRate"] = JsApiCommonSubscriber[element]?.QUOTE_BID
+              }
+            });
+          }
         }
       })
     })

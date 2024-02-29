@@ -28,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.getcapacitor.Bridge;
 import com.getcapacitor.BridgeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,6 +53,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.gamegineerlabs.plugins.capacitorpluginvideodemo.CapacitorPluginVideoDemoPlugin;
 import retrofit2.Retrofit;
 
 public class MainActivity extends BridgeActivity {
@@ -76,66 +78,10 @@ public class MainActivity extends BridgeActivity {
     intentfilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentfilter.addAction(Intent.ACTION_PACKAGE_RESTARTED);
     registerReceiver(receiver,intentfilter);
-    webview = com.getcapacitor.Bridge.getWebView();
+    webview = Bridge.getWebview();;
     webview.getSettings().setJavaScriptEnabled(true);
-
-    if (Objects.equals(webview.getUrl(), "http://localhost/Login") || Objects.equals(webview.getUrl(), "https://localhost/Login")) {
-      webview.evaluateJavascript("javascript:window." +
-        "localStorage.getItem('token')", new ValueCallback<String>() {
-        @Override public void onReceiveValue(String s) {
-          Log.e("OnRecieve",s);
-          if (s!=null){
-            FirebaseMessaging.getInstance().getToken()
-              .addOnCompleteListener(new OnCompleteListener<String>() {
-                @Override
-                public void onComplete(@NonNull Task<String> task) {
-                  if (!task.isSuccessful()) {
-                    Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                    return;
-                  }
-                  String token = task.getResult();
-                  Log.println(Log.ASSERT,"token", token);
-                  try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("id",s);
-                    jsonObject.put("deviceId", token);
-                    String jsonString = jsonObject.toString();
-                    new PostData().execute(jsonString);
-                  } catch (Exception e) {
-                    e.printStackTrace();
-                  }
-                }
-              });
-          }
-
-        }
-      });
-
-    }
-    // --- Remove bridge init as it's deprecated and add these lines
     registerPlugin(com.capacitorjs.plugins.app.AppPlugin.class);
-
-
-//    if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.) != PackageManager.PERMISSION_GRANTED) {
-//      if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-//        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getBaseContext());
-//        alertBuilder.setCancelable(true);
-//        alertBuilder.setTitle("Permission necessary");
-//        alertBuilder.setMessage("External storage permission is necessary");
-//        alertBuilder.setPositiveButton(android.R.string.yes, DialogInterface.OnClickListener() {
-//          @TargetApi(Build.VERSION_CODES.)
-//          public void onClick(DialogInterface dialog, int which) {
-//            ActivityCompat.requestPermissions((Activity) getBaseContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);}});
-//
-//        AlertDialog alert = alertBuilder.create();
-//        alert.show();
-//      } else {
-//        ActivityCompat.requestPermissions((Activity) getBaseContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);}
-//      return false;
-//    }
-//    else {
-//      return true;
-//    }
+    registerPlugin(CapacitorPluginVideoDemoPlugin.class);
   }
 
   @Override
@@ -143,6 +89,11 @@ public class MainActivity extends BridgeActivity {
     unregisterReceiver(receiver);
     super.onDestroy();
     Log.v("onDestroy:", "App Destroy");
+  }
+
+  @Override
+  public void onClick(View view) {
+
   }
 
   @Override
@@ -155,12 +106,6 @@ public class MainActivity extends BridgeActivity {
   protected void onRestoreInstanceState(Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
     Log.v(TAG, "onRestore");
-  }
-
-  @Override
-  public void onPageFinished(WebView view, String url){
-    String cookies = CookieManager.getInstance().getCookie(url);
-    Log.println(Log.ASSERT, TAG,"All the cookies in a string:" + cookies);
   }
 
   public List<String> checkPackage(){
@@ -231,13 +176,6 @@ public class MainActivity extends BridgeActivity {
     }
     return true;
   }
-  @Override
-  public void onClick(View view) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      view.requestPointerCapture();
-    }
-  }
-
   @SuppressLint("SetJavaScriptEnabled")
   @Override
   public void onBackPressed() {

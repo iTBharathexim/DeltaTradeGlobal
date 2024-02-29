@@ -22,7 +22,6 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
     public router: Router) {
     this.apiservice.LIST_OF_DATA = [];
     this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
-    this.apiservice.LOADER_SHOW_HIDE = true;
     this.websocketService.connect();
     this.JsApiCommonsubscriber.loadJSApi();
   }
@@ -34,8 +33,7 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit(): void {
     this.apiservice.LIST_OF_DATA = [];
     this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
-    this.apiservice.LOADER_SHOW_HIDE = true;
-    this.websocketService.connect();
+    // this.websocketService.connect();
     this.JsApiCommonsubscriber.loadJSApi();
   }
 
@@ -57,7 +55,6 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
       });
       this.apiservice.LIST_OF_DATA = res1;
       this.apiservice.getTraderDataLive('INR', res1);
-      this.apiservice.LOADER_SHOW_HIDE = false
     }, (error: any) => { })
   }
 
@@ -69,14 +66,11 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
     console.log(event, "sdfsdfdsf")
     if (event?.name == "FX LIVE") {
       this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
-      this.apiservice.LOADER_SHOW_HIDE = true;
-      this.websocketService.connect();
-      this.JsApiCommonsubscriber.loadJSApi();
+      // this.websocketService.connect();
     } else if (event?.name == "Forward") {
       // this.apiservice.StartWebSocket();
     } else if (event?.name == "NEWS") {
-      this.websocketService.disconnect();
-      this.apiservice.LOADER_SHOW_HIDE = false
+      // this.websocketService.disconnect();
       this.apiservice.getMarketNews().subscribe((res: any) => {
         console.log(res, "getMarketNews");
         this.apiservice.MARKET_NEWS_DATA = res?.data;

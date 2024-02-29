@@ -2,7 +2,7 @@
     <div class="forward">
         <div class="header"><label for="">HISTORICAL RATE</label></div>
         <custom-mat-accordion [Expanded]="item.expended"
-            (onChangeEvent)="Collepse($event,i,this.apiservice.HISTORICAL_CHART_DATA)"
+            (onChangeEvent)="Collepse($event,i,this.apiservice.HISTORICAL_CHART_DATA,item.TimeScale)"
             [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
             *ngFor="let item of this.apiservice.HISTORICAL_CHART_DATA;let i=index">
             <!-- <p class="time" *ngIf="(i==0)">{{item?.time}}</p> -->
@@ -33,15 +33,16 @@
                             <div id="chart" *ngIf="item?.expended==true && item?.chartOptions!=undefined">
                                 <div class="button">
                                     <button [ngClass]="{'btn-active':item['1D']==true}"
-                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,getLastWeek(1),1);ResetActiveClass('1D',i,item)">1D</button>
+                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,this.CURRENT_DATE,getLastWeek(1),86400,1);ResetActiveClass('1D',i,item);item.TimeScale=86400">1D</button>
                                     <button [ngClass]="{'btn-active':item['1W']==true}"
-                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,getLastWeek(7),7);ResetActiveClass('1W',i,item)">1W</button>
+                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,this.CURRENT_DATE,getLastWeek(7),14400,7);ResetActiveClass('1W',i,item);item.TimeScale=14400">1W</button>
                                     <button [ngClass]="{'btn-active':item['1M']==true}"
-                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,getLastWeek(30),30);ResetActiveClass('1M',i,item)">1M</button>
+                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,this.CURRENT_DATE,getLastWeek(30),86400,30);ResetActiveClass('1M',i,item);item.TimeScale=86400">1M</button>
                                     <button [ngClass]="{'btn-active':item['1Y']==true}"
-                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,getLastWeek(365),50);ResetActiveClass('1Y',i,item)">1Y</button>
+                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,this.CURRENT_DATE,getLastWeek(365),604800,50);ResetActiveClass('1Y',i,item);item.TimeScale=604800">1Y</button>
                                     <button [ngClass]="{'btn-active':item['5Y']==true}"
-                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,getLastWeek(1825),50);ResetActiveClass('5Y',i,item)">5Y</button>
+                                        (click)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,this.CURRENT_DATE,getLastWeek(1825),2592000,50);ResetActiveClass('5Y',i,item);item.TimeScale=2592000">5Y</button>
+                                    <input type="date" name="date" [(ngModel)]="item.date" id="" (change)="this.JsApiCommonsubscriber.loadHistoricalData(item?.base_currency,this.getDate($event?.target?.value),this.getDate($event?.target?.value),86400,1);ResetActiveClass('1D',i,item);">
                                 </div>
                                 <!-- <apx-chart [series]="item?.chartOptions.series" [chart]="item?.chartOptions.chart"
                                     [xaxis]="item?.chartOptions.xaxis" [yaxis]="item?.chartOptions.yaxis"

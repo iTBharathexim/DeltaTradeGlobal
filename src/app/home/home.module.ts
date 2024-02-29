@@ -15,6 +15,7 @@ import { ForwardratecalculatorComponent } from './forwardratecalculator/forwardr
 import { RbiRefComponent } from './other-services/rbi-ref/rbi-ref.component';
 import { BenchMarkRatesComponent } from './other-services/bench-mark-rates/bench-mark-rates.component';
 import { HistoricalrateComponent } from './historicalrate/historicalrate.component';
+import { LogoAnimationComponent } from './logo-animation/logo-animation.component';
 
 @NgModule({
   declarations: [
@@ -31,12 +32,13 @@ import { HistoricalrateComponent } from './historicalrate/historicalrate.compone
     ForwardratecalculatorComponent,
     RbiRefComponent,
     BenchMarkRatesComponent,
-    HistoricalrateComponent
+    HistoricalrateComponent,
+    LogoAnimationComponent
   ],
   imports: [
     SharedModule,
     CommonModule,
   ],
-  exports: [SharedModule,SubscriptionChildComponent]
+  exports: [SharedModule,SubscriptionChildComponent,LogoAnimationComponent]
 })
 export class HomeModule { }

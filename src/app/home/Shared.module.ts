@@ -29,7 +29,7 @@ import { CanvasJSAngularStockChartsModule } from '@canvasjs/angular-stockcharts'
     MoreContentComponent,
     InnerDynamicErrorComponent,
     BusinessEmailValidatorDirective,
-    ComponentFocus
+    ComponentFocus,
   ],
   imports: [
     CommonModule,
@@ -68,7 +68,7 @@ import { CanvasJSAngularStockChartsModule } from '@canvasjs/angular-stockcharts'
     ComponentFocus,
     NgApexchartsModule,
     CanvasJSAngularChartsModule,
-    CanvasJSAngularStockChartsModule
+    CanvasJSAngularStockChartsModule,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

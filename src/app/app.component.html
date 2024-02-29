@@ -1,13 +1,28 @@
-<div class="div">
+<div [ngClass]="{'div':this.userService.LOADER_SHOW_HIDE==true}">
     <div class="timeOutWarningOverlay" *ngIf="this.userService.SHOW_SESSION==true">
-        <div class="session-logout"> 
+        <div class="session-logout">
             <div>
                 <b>Your session is about to expire. Please click button below to continue the session.</b>
-                <b><span style="background-color:yellow;">00:</span><span id="time" style="background-color:yellow;">{{this.userService.counter}}</span></b>
+                <b><span style="background-color:yellow;">00:</span><span id="time"
+                        style="background-color:yellow;">{{this.userService.counter}}</span></b>
             </div>
             <a id="keep">Keep Me Logged In</a>
         </div>
-    </div> 
+    </div>
     <router-outlet></router-outlet>
     <confirm-dialog-model></confirm-dialog-model>
+
+    <div class="loadingio-spinner-double-ring-alnh0x25g9e" *ngIf="this.userService.NEW_LOADER_SHOW_HIDE==true">
+        <div class="ldio-3ei8be0dxe2">
+            <div></div>
+            <div></div>
+            <div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
 </div>

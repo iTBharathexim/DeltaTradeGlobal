@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class FXMarginDetailsComponent implements OnInit {
   CHECK_LENGTH: boolean = false;
   DISPLAY_MODE: any = ''
 
-  constructor(public apiUser: ApiService) { }
+  constructor(public apiUser: ApiService,public toastor:ToastrService) { }
 
   ngOnInit(): void {
     this.loadoutwardData('outward');
@@ -77,6 +78,7 @@ export class FXMarginDetailsComponent implements OnInit {
     });
     Array_to_Object['userId'] = this.apiUser.UserData?._id;
     this.apiUser.CreateFXMargin(Array_to_Object).subscribe((res: any) => {
+      this.toastor.success("Added Sucessfully...");
       this.loadoutwardData('outward');
     })
   }
@@ -92,6 +94,7 @@ export class FXMarginDetailsComponent implements OnInit {
       Array_to_Object["inward"][element?.key] = element?.value
     });
     this.apiUser.MarginUpdate(Array_to_Object, this.apiUser.UserData?._id).subscribe((res: any) => {
+      this.toastor.success("Modified successfully...");
       this.loadoutwardData('outward');
     })
   }

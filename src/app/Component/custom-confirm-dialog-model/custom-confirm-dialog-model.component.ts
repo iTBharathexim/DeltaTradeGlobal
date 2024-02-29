@@ -22,7 +22,7 @@ export const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR: any = {
 
 export class CustomConfirmDialogModelComponent implements OnInit {
   titleheader: any = '';
-  message:any= '';
+  message:any= 'Are you sure you want to exit?';
   MODEL_TYPE_VIEW: any = {
     ConfirmDialog: false,
     Custom_Model: false,
@@ -108,12 +108,14 @@ export class CustomConfirmDialogModelComponent implements OnInit {
     });
   }
 
-  YesNoDialogModel(titleheader: any, message: any, callback: Function) {
+  YesNoDialogModel(titleheader: any, message: any, callback: Function,TitleStyle:any={},HeaderStyle:any={}) {
     this.HIDE_ALL_MODELS('YesNoDialogModel').then((res:any)=>{
       $('.input-remove').val('');
-      this.titleheader = titleheader;
-      this.message = message;
+      this.CustomConfirmDialogModel.titleheader = titleheader;
+      this.CustomConfirmDialogModel.message = message;
       $('.YesNoDialogModel').css('display', 'flex');
+      this.CustomConfirmDialogModel.TitleStyle=TitleStyle;
+      this.CustomConfirmDialogModel.HeaderStyle=HeaderStyle;
       this.CustomConfirmDialogModel.CALLBACKS = callback;
       window.scroll(0, 0)
       console.log("sgsdfgdfgdfgdgfd")

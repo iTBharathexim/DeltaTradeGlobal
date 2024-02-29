@@ -1,0 +1,52 @@
+.svg-animation {}
+
+.svg-hide-1 {
+    opacity: 0;
+    transform: translateX(-100px);
+}
+
+.svg-hide-2 {
+    opacity: 0;
+    transform: translateX(100px);
+}
+
+.svg-show-1 {
+    transition: svg-show-animation-1 20s ease-in-out;
+}
+
+.svg-show-2 {
+    transition: svg-show-animation-1 20s ease-in-out;
+}
+
+@keyframes svg-show-animation-1 {
+    0% {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+
+    50% {
+        opacity: .5;
+        transform: translateX(-50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+
+.logo-animation {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 101%;
+    height: 100%;
+    background: #ffffffc7;
+    z-index: 99999;
+    display: block;
+}
+
+.logo-animation svg {
+    margin: 20% auto auto;
+    transform: scale(0.8);
+}

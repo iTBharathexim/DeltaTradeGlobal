@@ -19,7 +19,6 @@ export class HomeComponent implements OnInit {
   targetElement: any;
   constructor(public apiservice: ApiService, public router: Router, public ref: ElementRef,
     public websocketService: WebsocketService) {
-    this.apiservice.LOADER_SHOW_HIDE = true
   }
   VISIBLE_TRADE_APP: any = '';
   USER_DETAILS: any = [];
@@ -29,12 +28,14 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(window.history, "window.history")
-
     this.addULheight();
     $(window).on('resize', () => {
       this.addULheight()
     });
-    this.apiservice.LOADER_SHOW_HIDE = true;
+
+    setTimeout(() => {
+      this.apiservice.LOADER_SHOW_HIDE = false
+    }, 3000);
     if (localStorage.getItem('token') != undefined && localStorage.getItem('token') != null && localStorage.getItem('token') != '') {
       this.apiservice.CheckUserExit({ emailId: localStorage.getItem('token') }).subscribe((res: any) => {
         if (res?.length != 0) {
@@ -87,6 +88,7 @@ export class HomeComponent implements OnInit {
     this.apiservice.UpdateLoginDetails(this.USER_DETAILS?._id, { isLoggin: false, lastactivetime: 0 }).subscribe((res) => {
       localStorage.removeItem('token');
       this.router.navigate(['/Login'])
+      this.websocketService.disconnect();
       window?.clearInterval(this.apiservice.TIME_INTERVAL);
     })
   }
@@ -157,7 +159,10 @@ export class HomeComponent implements OnInit {
     window.history.forward()
   }
   CloseApp() {
-    App.exitApp()
+    App.exitApp().then((res) => {
+      this.websocketService.disconnect()
+      this.logout()
+    })
   }
 
   handleRefresh(event) {

@@ -29,41 +29,41 @@ export type ChartOptions = {
   templateUrl: './historicalrate.component.html',
   styleUrls: ['./historicalrate.component.scss']
 })
-export class HistoricalrateComponent implements OnInit,AfterViewInit {
+export class HistoricalrateComponent implements OnInit, AfterViewInit {
   DISPLAY_MODE: any = ''
   timeStamp: number = this.getLastWeek(30);
   http: any;
+  CURRENT_DATE: any = new Date().getTime();
 
   constructor(public apiservice: ApiService,
     public fCmcontroller: FCmController,
     public websocketService: WebsocketService,
     public JsApiCommonsubscriber: JsApiCommonSubscriber,
     public router: Router) {
-    this.apiservice.LOADER_SHOW_HIDE = true;
-    this.JsApiCommonsubscriber.loadHistoricalData('USD', this.timeStamp, 1);
+    this.JsApiCommonsubscriber.loadHistoricalData('USD',this.CURRENT_DATE, this.timeStamp, JsApiCommonsubscriber.TIME_SCALE, 1);
   }
 
   ngOnInit(): void {
 
   }
 
-  chart: any;	
-  labelFormatter = (e:any) => {
-		var suffixes = ["", "K", "M", "B"];
-		var order = Math.max(Math.floor(Math.log(e.value) / Math.log(1000)), 0);
-		if(order > suffixes.length - 1)
-			order = suffixes.length - 1;
-		var suffix = suffixes[order];
-		return ('$' +(e.value / Math.pow(1000, order)) + suffix);
-	}
+  chart: any;
+  labelFormatter = (e: any) => {
+    var suffixes = ["", "K", "M", "B"];
+    var order = Math.max(Math.floor(Math.log(e.value) / Math.log(1000)), 0);
+    if (order > suffixes.length - 1)
+      order = suffixes.length - 1;
+    var suffix = suffixes[order];
+    return ('$' + (e.value / Math.pow(1000, order)) + suffix);
+  }
 
-  dataPoints: any=[];
+  dataPoints: any = [];
   chartOptions = {
     theme: "light2",
     zoomEnabled: true,
     exportEnabled: true,
     title: {
-      text:"Bitcoin Closing Price",
+      text: "Bitcoin Closing Price",
       fontSize: 15,
     },
     axisY: {
@@ -83,10 +83,15 @@ export class HistoricalrateComponent implements OnInit,AfterViewInit {
     return new Date(new Date().getTime() - week * 24 * 60 * 60 * 1000).getTime() as number;
   }
 
-  Collepse(event, index, data) {
-    if (event == true) {
-      this.JsApiCommonsubscriber.loadHistoricalData(data[index]?.base_currency, this.timeStamp, 1);
-    }
+  setLastWeek(date, week): number {
+    return new Date(new Date(date).getTime() - week * 24 * 60 * 60 * 1000).getTime() as number;
+  }
+
+  getDate(date): number {
+    return new Date(date).getTime() as number;
+  }
+
+  Collepse(event, index, data, TIME_SCALE) {
     data?.forEach((element, i) => {
       if (i != index) {
         element['expended'] = false;
@@ -107,6 +112,7 @@ export class HistoricalrateComponent implements OnInit,AfterViewInit {
     }
     data[key] = true;
   }
+
   getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -130,13 +136,7 @@ export class HistoricalrateComponent implements OnInit,AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.apiservice.http.get('https://canvasjs.com/data/gallery/angular/btcusd2021.json', { responseType: 'json' }).subscribe((response: any) => {
-      let data = response;
-      console.log(data,"btcusd2021")
-      for(let i = 0; i < data.length; i++){
-        this.dataPoints.push({x: new Date(data[i].date), y: Number(data[i].close) });
-      }
-    });
+   
   }
 
   getChartInstance(chart: object) {

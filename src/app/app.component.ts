@@ -6,8 +6,9 @@ import { App } from '@capacitor/app';
 import { WebsocketService } from './services/websocket.service';
 import { UserIdleService } from './Controller/user-idle-manager/user-idle/user-idle.servies';
 import { PushNotifications } from '@capacitor/push-notifications';
-import moment from 'moment';
 import { Capacitor } from '@capacitor/core';
+import { CapacitorTouchEventDemo } from 'capacitor-plugin-touch-event';
+import { PushNotificationsController } from './Controller/PushNotificationsController';
 
 @Component({
   selector: 'app-root',
@@ -25,10 +26,17 @@ export class AppComponent implements OnInit, OnDestroy {
   lastPing?: Date;
   title = 'angular-idle-timeout';
   URL_LIST: any = ["/Login", "/Registration", "/ResetPassword"];
-  LOGOUT_TIME: number = 300
+  LOGOUT_TIME: number = 300;
+
   constructor(public router?: Router, public userService?: ApiService,
     public customConfirmDialogModelComponent?: CustomConfirmDialogModelComponent, public websocketService?: WebsocketService,
     private Customidle?: UserIdleService) {
+    this.userService.LOADER_SHOW_HIDE = true
+    if (this.URL_LIST?.filter((item: any) => item == router?.url)?.length != 0) {
+      this.userService.LOADER_SHOW_HIDE = false;
+    } else {
+      this.userService.LOADER_SHOW_HIDE = true;
+    }
     router?.events?.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
         this.Customidle.logout();
@@ -64,16 +72,29 @@ export class AppComponent implements OnInit, OnDestroy {
     });
     this.AppEventEnabled()
 
+    websocketService.listen('userDetails').subscribe((res: any) => {
+      console.log(res, "WebsocketServiceUserDetails")
+      if (res?.length != 0) {
+          this.Customidle.logout();
+          this.router?.navigate(['/Login']);
+      }
+    })
   }
 
   ngOnInit(): void {
+    if(Capacitor.getPlatform()!='web'){
+      PushNotificationsController.LoadPushNotifications();
+    }
+    // CapacitorTouchEventDemo.echo({ value: "HellAlo" }).then((message) => {
+    //   alert(message?.value);
+    // }).catch((error) => alert("error listerner" + JSON.stringify(error)))
     document.addEventListener("visibilitychange", () => {
       if (this.URL_LIST?.filter((item: any) => item == this.router?.url)?.length == 0) {
         if (document.hidden) {
           let date = new Date();
           date.setSeconds(this.LOGOUT_TIME);
           localStorage.setItem('ExpriedTime', date.getTime()?.toString());
-          this.userService?.UserSessionLogout(null, false, { lastactivetime: date.getTime() });
+          // this.userService?.UserSessionLogout(null, false, { lastactivetime: date.getTime() });
         } else {
           let remanningTime: any = parseInt(localStorage.getItem('ExpriedTime')) - new Date().getTime();
           if (remanningTime < 0 || remanningTime == 0) {
@@ -100,11 +121,13 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     registerNotifications();
   }
+
   compareDates(a, b) {
     if (a < b) return -1;
     if (a > b) return +1;
     return 0;
   }
+
   isActiveCounter: number = 1;
   async AppEventEnabled() {
     await App.addListener('appUrlOpen', data => {

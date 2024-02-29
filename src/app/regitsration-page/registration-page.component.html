@@ -10,8 +10,8 @@
 <body>
         <div class="cookieCard" >
                 <div class="wrapper">
-                        <img src="../../assets/images/logo2.png" alt="" srcset="">
-                        <h2>Forex App Registration</h2>
+                        <logo-animation></logo-animation>
+                        <h2>Registration</h2>
                         <div class="step-main" label="Verify email & mobile number"
                                 *ngIf="this.MOBILE_EMAIL_VALIDATION==false">
                                 <form [formGroup]="userForm" (keydown.enter)="$event.preventDefault()">
@@ -91,12 +91,11 @@
                                                                 <a>Privacy Policy Agreement</a>
                                                         </p>
                                                 </div>
-                                                <ng-container *ngIf="userForm.controls?.termscondition?.errors">
-                                                        <ng-container
-                                                                *ngIf="userForm.controls?.termscondition?.errors?.required">
+                                                <!-- <ng-container *ngIf="userForm.controls?.termscondition?.errors">
+                                                        <p style="color: black;" *ngIf="userForm.controls?.termscondition?.errors?.required">
                                                                 is required....
-                                                        </ng-container>
-                                                </ng-container>
+                                                        </p>
+                                                </ng-container> -->
                                                 <button type="Submit" class="btn btn-primary p-2 m-auto remove-btn-bg"
                                                         [ngClass]="{'disabled':userForm.controls?.termscondition?.errors?.required!=undefined?true:false}"
                                                         (click)="onFormEmailValidation()"
@@ -112,9 +111,9 @@
                                                         formControlName="MPIN" placeholder="Enter 6 digit MPIN"
                                                         required>
                                                 <ng-container *ngIf="userForm2.controls?.MPIN?.errors">
-                                                        <ng-container *ngIf="userForm2.controls?.MPIN?.errors?.range">
-                                                                Your MPIN cannot exceed 6 digit.
-                                                        </ng-container>
+                                                        <p style="color: black;" *ngIf="userForm2.controls?.MPIN?.errors?.range">
+                                                                Kindly enter 6-digit MPIN
+                                                        </p>
                                                 </ng-container>
                                         </div>
                                         <div class="input-box">
@@ -123,14 +122,14 @@
                                                         formControlName="ConfirmMPIN" placeholder="Enter 6 digit MPIN"
                                                         required>
                                                 <ng-container *ngIf="userForm2.controls?.ConfirmMPIN?.errors">
-                                                        <ng-container
+                                                        <p style="color: black;"
                                                                 *ngIf="userForm2.controls?.ConfirmMPIN?.errors?.range">
-                                                                Your Confirm MPIN cannot exceed 6 digit.
-                                                        </ng-container>
-                                                        <ng-container
+                                                                Kindly enter 6-digit MPIN
+                                                        </p>
+                                                        <p style="color: black;"
                                                                 *ngIf="userForm2.controls.ConfirmMPIN?.errors?.confirmedValidator">
                                                                 {{userForm2.controls.ConfirmMPIN.errors?.confirmedValidator}}
-                                                        </ng-container>
+                                                        </p>
                                                 </ng-container>
                                         </div>
                                         <div class="input-box button flex-row-input-box">
@@ -165,21 +164,21 @@
                                         </div>
                                 </form>
                         </div>
-                        <div class="step-main" label="Coupon Code" *ngIf="this.CouponCodeValidation==true">
+                        <div class="step-main" label="" *ngIf="this.CouponCodeValidation==true">
                                 <form [formGroup]="userForm4" (keydown.enter)="$event.preventDefault()">
-                                        <div class="input-box">
-                                                <label for="">Coupon Code</label>
-                                                <div class="input-box-button">
+                                        <div class="input-box" style="margin-bottom: 50px;">
+                                                <button type="Submit"
+                                                class="subcription-button" (click)="SUBSCRIPTION_PANEL?.displayShow;addToken()">Subscribe</button>
+                                                <span class="or">OR</span>
+                                                <div class="input-box-button-coupon-code">
                                                         <input type="text" formControlName="couponCodeName"
                                                                 class="input-radius"
-                                                                placeholder="Enter your Coupon Code" required>
+                                                                placeholder="Enter Coupon Code" required>
                                                         <button class="btn btn-primary otp-btn"
                                                                 [disabled]="userForm4.controls?.couponCodeName?.errors==null?false:true"
                                                                 [ngClass]="{'disabled':userForm4.controls?.couponCodeName?.errors==null?false:true}"
                                                                 (click)="onFormCouponCodeValidation()">Verify</button>
                                                 </div>
-                                                <button type="Submit"
-                                                                class="btn btn-primary p-2 m-auto remove-btn-bg left-button" (click)="SUBSCRIPTION_PANEL?.displayShow;addToken()">Subscribe</button>
                                                 <p *ngIf="CouponData?.notfound==true"
                                                         style="color: red;margin-left: 10px;">Coupon code not
                                                         valid..</p>
