@@ -10,7 +10,7 @@ import { AndoridFileSystemService } from '../Controller/AndoridFileSystem';
 import { FCmController } from '../Controller/FCM-Controllor';
 import { WebsocketService } from '../services/websocket.service';
 import { CustomConfirmDialogModelComponent } from '../Component/custom-confirm-dialog-model/custom-confirm-dialog-model.component';
-import { CapacitorEvent } from 'capacitor-plugin-touch-event';
+import { CapacitorEvent } from 'capacitor-plugin-event';
 
 @Component({
   selector: 'app-mpin-login-page',

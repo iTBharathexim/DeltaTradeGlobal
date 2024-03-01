@@ -7,7 +7,7 @@ import { WebsocketService } from './services/websocket.service';
 import { UserIdleService } from './Controller/user-idle-manager/user-idle/user-idle.servies';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
-import { CapacitorEvent } from 'capacitor-plugin-touch-event';
+import { CapacitorEvent } from 'capacitor-plugin-event';
 import { PushNotificationsController } from './Controller/PushNotificationsController';
 
 @Component({
