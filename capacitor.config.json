@@ -17,13 +17,15 @@
         }
     },
     "appId": "forex.app",
-  "appName": "forexapp App",
-  "webDir": "dist/forex-app",
-  "server": {
-    "androidScheme": "https",
-    "allowNavigation": ["*"],
-    "cleartext": true
-  },
+    "appName": "forexapp App",
+    "webDir": "dist/forex-app",
+    "server": {
+        "androidScheme": "https",
+        "allowNavigation": [
+            "*"
+        ],
+        "cleartext": true
+    },
     "cordova": {
         "preferences": {
             "ScrollEnabled": false,
