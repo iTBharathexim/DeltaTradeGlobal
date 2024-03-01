@@ -58,7 +58,7 @@
     "apexcharts": "^3.45.2",
     "axios": "^1.6.2",
     "bootstrap": "^4.6.2",
-    "capacitor-plugin-event": "^0.0.20",
+    "capacitor-plugin-event": "^0.0.22",
     "express": "^4.18.2",
     "jquery": "^3.7.1",
     "minirefresh": "^2.0.2",

@@ -26,5 +26,5 @@ project(':capacitor-status-bar').projectDir = new File('../node_modules/@capacit
 include ':capawesome-capacitor-background-task'
 project(':capawesome-capacitor-background-task').projectDir = new File('../node_modules/@capawesome/capacitor-background-task/android')
 
-include ':capacitor-plugin-touch-event'
-project(':capacitor-plugin-touch-event').projectDir = new File('../node_modules/capacitor-plugin-touch-event/android')
+include ':capacitor-plugin-event'
+project(':capacitor-plugin-event').projectDir = new File('../node_modules/capacitor-plugin-event/android')
