@@ -2,6 +2,12 @@
   <div class="controller" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
     [style]="this.DISPLAY_MODE=='Light'?'--src:url(../../assets/images/logo-transparent-svg.svg)':'--src:url(../../assets/images/logo_transparent_svg_Light.svg)'">
     <div class="nav-bar" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
+      <h5 style="position: absolute;
+      font-size: 16px;
+      right: 90px;
+      top: 15px;
+      z-index: 99;
+      color: black;" *ngIf="this.apiservice.COUNT_DOWN!=0">{{this.apiservice.COUNT_DOWN}}</h5>
       <nav role="navigation" class="navigation"
         [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
         <div class="navigation__wrapper">
@@ -13,90 +19,94 @@
           </label>
           <ul class="navigation__links" [ngClass]="{'activeIcon':ICON_TOGGLE==true}">
             <div class="d-flex">
-              <button class="btn btn-primary btn-logout" title="Light" *ngIf="this.DISPLAY_MODE=='Light'"
-                (click)="ModeChange()">
-                <i class="fas fa-toggle-off" aria-hidden="true"></i> Light Mode
-              </button>
-              <button class="btn btn-primary btn-logout" title="Dark" *ngIf="this.DISPLAY_MODE!='Light'"
-                (click)="ModeChange()">
-                <i class="fas fa-toggle-on" aria-hidden="true"></i> Dark Mode
-              </button>
-              <button class="btn btn-primary btn-logout" title="LiveTradeApp"
-                (click)="navigateUrlHome('/LiveTradeApp');this.toggleClass()"><i class="fa fa-home"
-                  aria-hidden="true"></i>
-                FX Live</button>
-              <button class="btn btn-primary btn-logout" title="FXMargin"
-                (click)="navigateUrlHome('/FXMargin');this.toggleClass()">
-                <svg class="svg-icon"
-                  style="width:20px" fill="white"
-                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M624.213333 289.28l-73.813333-42.666667 238.933333-157.866666-17.066666 285.866666-73.813334-42.666666L372.48 896H273.92l350.293333-606.72M746.666667 512c82.346667 0 149.333333 74.24 149.333333 192S829.013333 896 746.666667 896 597.333333 821.76 597.333333 704s66.986667-192 149.333334-192m0 85.333333c-35.413333 0-64 35.84-64 106.666667 0 70.826667 28.586667 106.666667 64 106.666667s64-35.84 64-106.666667c0-70.826667-28.586667-106.666667-64-106.666667m-426.666667-384C402.346667 213.333333 469.333333 287.573333 469.333333 405.333333S402.346667 597.333333 320 597.333333 170.666667 523.093333 170.666667 405.333333 237.653333 213.333333 320 213.333333m0 85.333334C284.586667 298.666667 256 334.506667 256 405.333333c0 70.826667 28.586667 106.666667 64 106.666667S384 476.16 384 405.333333C384 334.506667 355.413333 298.666667 320 298.666667z"
-                    />
-                </svg>
-                FX Margin detail</button>
-              <button class="btn btn-primary btn-logout" title="ForwardRateCalculator"
-                (click)="navigateUrlHome('/ForwardRateCalculator');this.toggleClass()">
-                <svg class="svg-icon" style="width: 15px" fill="white" viewBox="0 0 1024 1024" version="1.1"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M207.625 347.583v117.084c0 25.758 21.037 46.833 46.75 46.833 25.712 0 46.75-21.075 46.75-46.833V347.583H418c25.712 0 46.75-21.075 46.75-46.833s-21.038-46.833-46.75-46.833H301.125V136.833c0-25.758-21.038-46.833-46.75-46.833-25.713 0-46.75 21.075-46.75 46.833v117.084H90.75c-25.712 0-46.75 21.075-46.75 46.833s21.038 46.833 46.75 46.833h116.875zM605 605.167c-25.712 0-46.75 21.075-46.75 46.833s21.038 46.833 46.75 46.833h327.25c25.712 0 46.75-21.075 46.75-46.833s-21.038-46.833-46.75-46.833H605zM918.225 104.05c-18.7-18.733-46.75-18.733-65.45 0l-748 749.333c-18.7 18.734-18.7 46.834 0 65.567 18.7 18.733 46.75 18.733 65.45 0l748-749.333c18.7-18.734 18.7-49.175 0-65.567zM932.25 792.5H605c-25.712 0-46.75 21.075-46.75 46.833 0 25.759 21.038 46.834 46.75 46.834h327.25c25.712 0 46.75-21.075 46.75-46.834 0-25.758-21.037-46.833-46.75-46.833z" />
-                </svg>
-                Forward rate calculator</button>
-              <button class="btn btn-primary btn-logout" title="FXTrigger"
-                (click)="navigateUrlHome('/FXTrigger');this.toggleClass()">
-                <svg class="svg-icon" style="width: 20px" viewBox="0 0 1024 1024" version="1.1"
-                  xmlns="http://www.w3.org/2000/svg" fill="white">
-                  <path
-                    d="M384 479.573333 384 320C384 261.12 431.786667 213.333333 490.666667 213.333333S597.333333 261.12 597.333333 320l0 159.573333c51.626667-34.56 85.333333-93.013333 85.333333-159.573333C682.666667 213.76 596.906667 128 490.666667 128S298.666667 213.76 298.666667 320C298.666667 386.56 332.373333 445.013333 384 479.573333zM803.84 677.12l-193.706667-96.426667c-7.253333-2.986667-14.933333-4.693333-23.04-4.693333L554.666667 576l0-256C554.666667 284.586667 526.08 256 490.666667 256S426.666667 284.586667 426.666667 320l0 458.24-146.346667-30.72c-3.413333-0.426667-6.4-1.28-10.24-1.28-13.226667 0-25.173333 5.546667-33.706667 14.08l-33.706667 34.133333 210.773333 210.773333C424.96 1016.746667 441.173333 1024 458.666667 1024l289.706667 0c32 0 56.746667-23.466667 61.44-54.613333l32-224.853333c0.426667-2.986667 0.853333-5.973333 0.853333-8.533333C842.666667 709.546667 826.453333 686.506667 803.84 677.12z" />
-                </svg>
-                <span>Trigger Setting</span>
-              </button>
-              <button class="btn btn-primary btn-logout" title="HistoricalRate"
-                (click)="navigateUrlHome('/HistoricalRate');this.toggleClass()">
-                <svg viewBox="0 0 20 21" width="15px" xmlns="http://www.w3.org/2000/svg"
-                  xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
-                    <g fill="white" id="Core" opacity="0.9" transform="translate(-464.000000, -254.000000)">
-                      <g id="history" transform="translate(464.000000, 254.500000)">
-                        <path
-                          d="M10.5,0 C7,0 3.9,1.9 2.3,4.8 L0,2.5 L0,9 L6.5,9 L3.7,6.2 C5,3.7 7.5,2 10.5,2 C14.6,2 18,5.4 18,9.5 C18,13.6 14.6,17 10.5,17 C7.2,17 4.5,14.9 3.4,12 L1.3,12 C2.4,16 6.1,19 10.5,19 C15.8,19 20,14.7 20,9.5 C20,4.3 15.7,0 10.5,0 L10.5,0 Z M9,5 L9,10.1 L13.7,12.9 L14.5,11.6 L10.5,9.2 L10.5,5 L9,5 L9,5 Z"
-                          id="Shape" />
+              <div class="nav-height-controller">
+                <button class="btn btn-primary btn-logout" title="Light" *ngIf="this.DISPLAY_MODE=='Light'"
+                  (click)="ModeChange()">
+                  <i class="fas fa-toggle-off" aria-hidden="true"></i> Light Mode
+                </button>
+                <button class="btn btn-primary btn-logout" title="Dark" *ngIf="this.DISPLAY_MODE!='Light'"
+                  (click)="ModeChange()">
+                  <i class="fas fa-toggle-on" aria-hidden="true"></i> Dark Mode
+                </button>
+                <button class="btn btn-primary btn-logout" title="LiveTradeApp"
+                  (click)="navigateUrlHome('/LiveTradeApp');this.toggleClass()"><i class="fa fa-home"
+                    aria-hidden="true"></i>
+                  FX Live</button>
+                <button class="btn btn-primary btn-logout" title="FXMargin"
+                  (click)="navigateUrlHome('/FXMargin');this.toggleClass()">
+                  <svg class="svg-icon" style="width:20px" fill="white" viewBox="0 0 1024 1024" version="1.1"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M624.213333 289.28l-73.813333-42.666667 238.933333-157.866666-17.066666 285.866666-73.813334-42.666666L372.48 896H273.92l350.293333-606.72M746.666667 512c82.346667 0 149.333333 74.24 149.333333 192S829.013333 896 746.666667 896 597.333333 821.76 597.333333 704s66.986667-192 149.333334-192m0 85.333333c-35.413333 0-64 35.84-64 106.666667 0 70.826667 28.586667 106.666667 64 106.666667s64-35.84 64-106.666667c0-70.826667-28.586667-106.666667-64-106.666667m-426.666667-384C402.346667 213.333333 469.333333 287.573333 469.333333 405.333333S402.346667 597.333333 320 597.333333 170.666667 523.093333 170.666667 405.333333 237.653333 213.333333 320 213.333333m0 85.333334C284.586667 298.666667 256 334.506667 256 405.333333c0 70.826667 28.586667 106.666667 64 106.666667S384 476.16 384 405.333333C384 334.506667 355.413333 298.666667 320 298.666667z" />
+                  </svg>
+                  FX Margin detail</button>
+                <button class="btn btn-primary btn-logout" title="ForwardRateCalculator"
+                  (click)="navigateUrlHome('/ForwardRateCalculator');this.toggleClass()">
+                  <svg class="svg-icon" style="width: 15px" fill="white" viewBox="0 0 1024 1024" version="1.1"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M207.625 347.583v117.084c0 25.758 21.037 46.833 46.75 46.833 25.712 0 46.75-21.075 46.75-46.833V347.583H418c25.712 0 46.75-21.075 46.75-46.833s-21.038-46.833-46.75-46.833H301.125V136.833c0-25.758-21.038-46.833-46.75-46.833-25.713 0-46.75 21.075-46.75 46.833v117.084H90.75c-25.712 0-46.75 21.075-46.75 46.833s21.038 46.833 46.75 46.833h116.875zM605 605.167c-25.712 0-46.75 21.075-46.75 46.833s21.038 46.833 46.75 46.833h327.25c25.712 0 46.75-21.075 46.75-46.833s-21.038-46.833-46.75-46.833H605zM918.225 104.05c-18.7-18.733-46.75-18.733-65.45 0l-748 749.333c-18.7 18.734-18.7 46.834 0 65.567 18.7 18.733 46.75 18.733 65.45 0l748-749.333c18.7-18.734 18.7-49.175 0-65.567zM932.25 792.5H605c-25.712 0-46.75 21.075-46.75 46.833 0 25.759 21.038 46.834 46.75 46.834h327.25c25.712 0 46.75-21.075 46.75-46.834 0-25.758-21.037-46.833-46.75-46.833z" />
+                  </svg>
+                  Forward rate calculator</button>
+                <button class="btn btn-primary btn-logout" title="FXTrigger"
+                  (click)="navigateUrlHome('/FXTrigger');this.toggleClass()">
+                  <svg class="svg-icon" style="width: 20px" viewBox="0 0 1024 1024" version="1.1"
+                    xmlns="http://www.w3.org/2000/svg" fill="white">
+                    <path
+                      d="M384 479.573333 384 320C384 261.12 431.786667 213.333333 490.666667 213.333333S597.333333 261.12 597.333333 320l0 159.573333c51.626667-34.56 85.333333-93.013333 85.333333-159.573333C682.666667 213.76 596.906667 128 490.666667 128S298.666667 213.76 298.666667 320C298.666667 386.56 332.373333 445.013333 384 479.573333zM803.84 677.12l-193.706667-96.426667c-7.253333-2.986667-14.933333-4.693333-23.04-4.693333L554.666667 576l0-256C554.666667 284.586667 526.08 256 490.666667 256S426.666667 284.586667 426.666667 320l0 458.24-146.346667-30.72c-3.413333-0.426667-6.4-1.28-10.24-1.28-13.226667 0-25.173333 5.546667-33.706667 14.08l-33.706667 34.133333 210.773333 210.773333C424.96 1016.746667 441.173333 1024 458.666667 1024l289.706667 0c32 0 56.746667-23.466667 61.44-54.613333l32-224.853333c0.426667-2.986667 0.853333-5.973333 0.853333-8.533333C842.666667 709.546667 826.453333 686.506667 803.84 677.12z" />
+                  </svg>
+                  <span>Trigger Setting</span>
+                </button>
+                <button class="btn btn-primary btn-logout" title="HistoricalRate"
+                  (click)="navigateUrlHome('/HistoricalRate');this.toggleClass()">
+                  <svg viewBox="0 0 20 21" width="15px" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
+                      <g fill="white" id="Core" opacity="0.9" transform="translate(-464.000000, -254.000000)">
+                        <g id="history" transform="translate(464.000000, 254.500000)">
+                          <path
+                            d="M10.5,0 C7,0 3.9,1.9 2.3,4.8 L0,2.5 L0,9 L6.5,9 L3.7,6.2 C5,3.7 7.5,2 10.5,2 C14.6,2 18,5.4 18,9.5 C18,13.6 14.6,17 10.5,17 C7.2,17 4.5,14.9 3.4,12 L1.3,12 C2.4,16 6.1,19 10.5,19 C15.8,19 20,14.7 20,9.5 C20,4.3 15.7,0 10.5,0 L10.5,0 Z M9,5 L9,10.1 L13.7,12.9 L14.5,11.6 L10.5,9.2 L10.5,5 L9,5 L9,5 Z"
+                            id="Shape" />
+                        </g>
                       </g>
                     </g>
-                  </g>
-                </svg>
-                <span>Historical rate</span>
-              </button>
-              <button class="btn btn-primary btn-logout" title="OtherServices"
-                (click)="navigateUrlHome('/OtherServices');this.toggleClass()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="service" fill="white"
-                  style="width: 20px;">
-                  <path
-                    d="M505.329 324.301c-12.496-7.39-28.143-8.585-42.107-2.392 0 0-.054.056-.272.109-.054.054-.163.054-.218.109.054 0 0 0-.163.054l-.109.054-.054.054c-.217.054-.435.163-.706.272-5.107 2.281-25.047 11.138-92.852 41.129v-.109c-15.213-21.569-41.998-5.651-78.291-2.5-56.287-28.849-109.423-57.101-167.72-55.309v115.454h9.671l121.05 47.812c19.777 7.823 42.215 5.814 60.362-5.324l191.517-118.17C513.315 340.654 513.37 329.027 505.329 324.301zM100.649 291.555h-9.716v-7.268c0-5.681-4.604-10.285-10.285-10.285H10.932c-5.681 0-10.285 4.604-10.285 10.285v164.742c0 5.681 4.604 10.285 10.285 10.285h69.716c5.681 0 10.285-4.604 10.285-10.285v-7.268h9.716c6.263 0 11.34-5.078 11.34-11.341V302.896C111.99 296.633 106.912 291.555 100.649 291.555zM59.471 443.539c-6.99 0-12.716-5.725-12.716-12.715 0-6.989 5.726-12.715 12.716-12.715 6.989 0 12.715 5.726 12.715 12.715C72.186 437.814 66.46 443.539 59.471 443.539z">
-                  </path>
-                  <path
-                    d="M193.495,195.43l21.725,2.498c2.607,11.297,7.06,22.16,13.252,31.937l-13.687,17.163c-3.584,4.562-3.15,10.971,0.869,14.99l14.99,14.99c4.019,4.019,10.428,4.454,14.99,0.869l17.163-13.686c9.776,6.192,20.638,10.645,31.936,13.251l2.498,21.726c1.702,15.038,21.441,8.544,32.262,9.993c5.757,0,10.537-4.237,11.189-9.993l2.498-21.726c11.298-2.606,22.16-7.061,31.936-13.253l17.163,13.688c4.562,3.584,10.971,3.15,14.99-0.869l14.99-14.99c4.019-4.019,4.454-10.428,0.87-14.991l-13.687-17.163c6.192-9.776,10.645-20.638,13.252-31.935l21.725-2.499c5.757-0.651,9.993-5.43,9.993-11.189v-21.073c0-5.757-4.236-10.536-9.993-11.189l-21.725-2.499c-2.607-11.296-7.06-22.16-13.252-31.935l13.687-17.163c3.584-4.562,3.15-10.971-0.87-14.99l-14.99-14.99c-4.019-4.019-10.428-4.454-14.99-0.869l-17.163,13.686c-9.776-6.192-20.638-10.645-31.936-13.251l-2.498-21.726c-0.652-5.758-5.431-9.993-11.189-9.993h-21.073c-5.757,0-10.537,4.237-11.189,9.993l-2.498,21.726c-11.298,2.606-22.16,7.059-31.936,13.251l-17.163-13.686c-4.562-3.584-10.971-3.149-14.99,0.87l-14.99,14.99c-4.019,4.019-4.453,10.427-0.869,14.99l13.687,17.162c-6.192,9.777-10.645,20.639-13.252,31.937l-21.725,2.499c-5.757,0.651-9.993,5.432-9.993,11.189v21.073C183.502,190,187.738,194.779,193.495,195.43z M284.001,138.859c19.301-19.301,50.52-19.301,69.821,0c19.171,19.171,19.171,50.519,0,69.691c-19.301,19.301-50.52,19.301-69.821,0C264.7,189.379,264.7,158.03,284.001,138.859z">
-                  </path>
-                </svg>
-                <span>Other Services</span></button>
-              <button class="btn btn-primary btn-logout" title="Subscription"
-                (click)="navigateUrlHome('/Subscription');this.toggleClass()"><i class="fa-solid fa-bell"></i>
-                Subscription</button>
-              <!-- <button class="btn btn-primary btn-logout" title="Subscription" (click)="this.SUBSCRIPTION_DETAILS_PANEL?.displayShow;this.toggleClass()"><i class="fa-solid fa-user"></i> User Details</button> -->
-              <button class="btn btn-primary btn-logout" title="AboutUs" (click)="navigateUrlHome('/AboutUs')"><i
-                  class="fa fa-info-circle" aria-hidden="true"></i>
-                About us</button>
-              <button class="btn btn-primary btn-logout" title="ContactUs" (click)="navigateUrlHome('/ContactUs')"><i
-                  class="fa-solid fa-envelope"></i>
-                Contact us</button>
-              <button class="btn btn-primary btn-logout" title="Logout" (click)="logout()"><i class="fa fa-sign-out"
-                  aria-hidden="true"></i> Logout</button>
-              <button class="btn btn-primary btn-logout" title="App Exit" (click)="CloseApp()"><i
-                  class="fa fa-window-close"></i> Close App</button>
-                  <div class="user-profiles">
-                    <span><i class="fa fa-user" aria-hidden="true"></i> {{this.USER_DETAILS?.emailId}}</span>
-                  </div>
+                  </svg>
+                  <span>Historical rate</span>
+                </button>
+                <button class="btn btn-primary btn-logout" title="OtherServices"
+                  (click)="navigateUrlHome('/OtherServices');this.toggleClass()">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="service" fill="white"
+                    style="width: 20px;">
+                    <path
+                      d="M505.329 324.301c-12.496-7.39-28.143-8.585-42.107-2.392 0 0-.054.056-.272.109-.054.054-.163.054-.218.109.054 0 0 0-.163.054l-.109.054-.054.054c-.217.054-.435.163-.706.272-5.107 2.281-25.047 11.138-92.852 41.129v-.109c-15.213-21.569-41.998-5.651-78.291-2.5-56.287-28.849-109.423-57.101-167.72-55.309v115.454h9.671l121.05 47.812c19.777 7.823 42.215 5.814 60.362-5.324l191.517-118.17C513.315 340.654 513.37 329.027 505.329 324.301zM100.649 291.555h-9.716v-7.268c0-5.681-4.604-10.285-10.285-10.285H10.932c-5.681 0-10.285 4.604-10.285 10.285v164.742c0 5.681 4.604 10.285 10.285 10.285h69.716c5.681 0 10.285-4.604 10.285-10.285v-7.268h9.716c6.263 0 11.34-5.078 11.34-11.341V302.896C111.99 296.633 106.912 291.555 100.649 291.555zM59.471 443.539c-6.99 0-12.716-5.725-12.716-12.715 0-6.989 5.726-12.715 12.716-12.715 6.989 0 12.715 5.726 12.715 12.715C72.186 437.814 66.46 443.539 59.471 443.539z">
+                    </path>
+                    <path
+                      d="M193.495,195.43l21.725,2.498c2.607,11.297,7.06,22.16,13.252,31.937l-13.687,17.163c-3.584,4.562-3.15,10.971,0.869,14.99l14.99,14.99c4.019,4.019,10.428,4.454,14.99,0.869l17.163-13.686c9.776,6.192,20.638,10.645,31.936,13.251l2.498,21.726c1.702,15.038,21.441,8.544,32.262,9.993c5.757,0,10.537-4.237,11.189-9.993l2.498-21.726c11.298-2.606,22.16-7.061,31.936-13.253l17.163,13.688c4.562,3.584,10.971,3.15,14.99-0.869l14.99-14.99c4.019-4.019,4.454-10.428,0.87-14.991l-13.687-17.163c6.192-9.776,10.645-20.638,13.252-31.935l21.725-2.499c5.757-0.651,9.993-5.43,9.993-11.189v-21.073c0-5.757-4.236-10.536-9.993-11.189l-21.725-2.499c-2.607-11.296-7.06-22.16-13.252-31.935l13.687-17.163c3.584-4.562,3.15-10.971-0.87-14.99l-14.99-14.99c-4.019-4.019-10.428-4.454-14.99-0.869l-17.163,13.686c-9.776-6.192-20.638-10.645-31.936-13.251l-2.498-21.726c-0.652-5.758-5.431-9.993-11.189-9.993h-21.073c-5.757,0-10.537,4.237-11.189,9.993l-2.498,21.726c-11.298,2.606-22.16,7.059-31.936,13.251l-17.163-13.686c-4.562-3.584-10.971-3.149-14.99,0.87l-14.99,14.99c-4.019,4.019-4.453,10.427-0.869,14.99l13.687,17.162c-6.192,9.777-10.645,20.639-13.252,31.937l-21.725,2.499c-5.757,0.651-9.993,5.432-9.993,11.189v21.073C183.502,190,187.738,194.779,193.495,195.43z M284.001,138.859c19.301-19.301,50.52-19.301,69.821,0c19.171,19.171,19.171,50.519,0,69.691c-19.301,19.301-50.52,19.301-69.821,0C264.7,189.379,264.7,158.03,284.001,138.859z">
+                    </path>
+                  </svg>
+                  <span>Other Services</span></button>
+                <button class="btn btn-primary btn-logout" title="Subscription"
+                  (click)="navigateUrlHome('/Subscription');this.toggleClass()"><i class="fa-solid fa-bell"></i>
+                  Subscription</button>
+                <!-- <button class="btn btn-primary btn-logout" title="Subscription" (click)="this.SUBSCRIPTION_DETAILS_PANEL?.displayShow;this.toggleClass()"><i class="fa-solid fa-user"></i> User Details</button> -->
+                <button class="btn btn-primary btn-logout" title="AboutUs" (click)="navigateUrlHome('/AboutUs')"><i
+                    class="fa fa-info-circle" aria-hidden="true"></i>
+                  About us</button>
+                <button class="btn btn-primary btn-logout" title="ContactUs" (click)="navigateUrlHome('/ContactUs')"><i
+                    class="fa-solid fa-envelope"></i>
+                  Contact us</button>
+                <button class="btn btn-primary btn-logout" title="Holidays" (click)="navigateUrlHome('/Holidays')"><i
+                    class="fa-solid fa-envelope"></i>
+                  Holidays</button>
+                <button class="btn btn-primary btn-logout" title="Logout" (click)="logout()"><i class="fa fa-sign-out"
+                    aria-hidden="true"></i> Logout</button>
+                <button class="btn btn-primary btn-logout" title="App Exit" (click)="CloseApp()"><i
+                    class="fa fa-window-close"></i> Close App</button>
+
+              </div>
+            </div>
+            <div class="user-profiles">
+              <span><i class="fa fa-user" aria-hidden="true"></i> {{this.USER_DETAILS?.emailId}}</span>
             </div>
           </ul>
         </div>

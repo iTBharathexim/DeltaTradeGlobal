@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
   targetElement: any;
   constructor(public apiservice: ApiService, public router: Router, public ref: ElementRef,
     public websocketService: WebsocketService) {
+      websocketService.connect();
   }
   VISIBLE_TRADE_APP: any = '';
   USER_DETAILS: any = [];
@@ -131,7 +132,7 @@ export class HomeComponent implements OnInit {
 
   navigateUrlHome(url: any) {
     window?.clearInterval(this.apiservice.TIME_INTERVAL);
-    this.websocketService.disconnect()
+    // this.websocketService.disconnect()
     this.router.navigate([url])
   }
 

@@ -276,7 +276,77 @@ export class ApiService {
   HISTORICAL_CHART_DATA: any = [];
   @ViewChild("chart") chart: ChartComponent;
   chartOptions: Partial<ChartOptions>;
-
+  COUNT_DOWN: any = 0;
+  HOLIDAYS_INDIA: any = [
+    {
+      name: "Republic Day",
+      date: "January 26, 2024",
+      days: "Friday"
+    },
+    {
+      name: "Mahashivratri",
+      date: "March 08, 2024",
+      days: "Friday"
+    },
+    {
+      name: "Holi",
+      date: "March 25, 2024",
+      days: "Monday"
+    },
+    {
+      name: "Good Friday",
+      date: "March 29, 2024",
+      days: "Friday"
+    },
+    {
+      name: "Id-Ul-Fitr (Ramadan Eid)",
+      date: "April 11, 2024",
+      days: "Thursday"
+    },
+    {
+      name: "Shri Ram Navmi",
+      date: "April 17, 2024",
+      days: "Wednesday"
+    },
+    {
+      name: "Maharashtra Day",
+      date: "May 01, 2024",
+      days: "Wednesday"
+    },
+    {
+      name: "Bakri Id",
+      date: "June 17, 2024",
+      days: "Monday"
+    },
+    {
+      name: "Moharram",
+      date: "July 17, 2024",
+      days: "Wednesday"
+    },
+    {
+      name: "Independence Day/Parsi New Year",
+      date: "August 15, 2024",
+      days: "Thursday"
+    },
+    {
+      name: "Mahatma Gandhi Jayanti",
+      date: "October 02, 2024",
+      days: "Wednesday"
+    }, {
+      name: "Diwali Laxmi Pujan*",
+      date: "November 01, 2024",
+      days: "Friday"
+    }, {
+      name: "Gurunanak Jayanti",
+      date: "June 17, 2024",
+      days: "Monday"
+    },
+    {
+      name: "Christmas",
+      date: "December 25, 2024",
+      days: "Wednesday"
+    },
+  ]
   constructor(public http: HttpClient, private deviceInformationService: DeviceDetectorService,
     public router: Router,
     public websocket: WebsocketService,
@@ -642,12 +712,14 @@ export class ApiService {
             if (element != 'INR') {
               this.FX_MARGIN_DATA_OUTWARD.push({
                 key: element,
+                OriginalCurrency: element + '_INR',
                 TriggerRate: 0,
                 LiveRate: 0,
                 error: ''
               })
               this.FX_MARGIN_DATA_INWARD.push({
                 key: element,
+                OriginalCurrency: element + '_INR',
                 TriggerRate: 0,
                 LiveRate: 0,
                 error: ''
@@ -686,12 +758,14 @@ export class ApiService {
             if (element != 'INR') {
               this.FX_MARGIN_DATA_OUTWARD.push({
                 key: element,
+                OriginalCurrency: element + '_INR',
                 TriggerRate: res?.FXMarginTrigger[0]?.Outward[element]?.TriggerRate,
                 LiveRate: res?.FXMarginTrigger[0]?.Outward[element]?.LiveRate,
                 error: ''
               })
               this.FX_MARGIN_DATA_INWARD.push({
                 key: element,
+                OriginalCurrency: element + '_INR',
                 TriggerRate: res?.FXMarginTrigger[0]?.Inward[element]?.TriggerRate,
                 LiveRate: res?.FXMarginTrigger[0]?.Inward[element]?.LiveRate,
                 error: ''

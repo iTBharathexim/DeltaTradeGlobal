@@ -225,9 +225,9 @@
     }
 
     .controller::before {
-        background-size: 100% 100%!important;
-        left: -55px!important;
-        width: 320px!important;
+        background-size: 100% 100% !important;
+        left: -55px !important;
+        width: 320px !important;
     }
 }
 
@@ -739,4 +739,10 @@ label {
     text-align: center;
     font-size: 10px;
     font-weight: 500;
+    right: 6px;
+}
+
+.nav-height-controller {
+    height: 85vh;
+    overflow: auto;
 }

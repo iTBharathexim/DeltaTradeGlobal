@@ -1,9 +1,7 @@
 package forex.app;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,62 +9,43 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
+import com.capacitorjs.plugins.app.AppPlugin;
 import com.getcapacitor.Bridge;
 import com.getcapacitor.BridgeActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceIdReceiver;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.getcapacitor.JSObject;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import io.gamegineerlabs.plugins.capacitorpluginvideodemo.CapacitorPluginVideoDemoPlugin;
-import retrofit2.Retrofit;
+import io.capacitor.plugins.event.EventPlugin;
 
 public class MainActivity extends BridgeActivity {
   BootReceiver receiver;
   private static final String TAG = "UdpPostActivity";
-  private static Retrofit retrofit;
   private static String BASE_URL = "http://192.168.224.20:8082/v1/";
 //  private static String BASE_URL = "https://forexappapi.bharathexim.com/v1/";
 
   private boolean doubleBackPressed = false;
-  private WebView webview;
+  private static WebView webview;
 
-  @SuppressLint("SetJavaScriptEnabled")
+  @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface", "ClickableViewAccessibility"})
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -80,9 +59,42 @@ public class MainActivity extends BridgeActivity {
     registerReceiver(receiver,intentfilter);
     webview = Bridge.getWebview();;
     webview.getSettings().setJavaScriptEnabled(true);
-    registerPlugin(com.capacitorjs.plugins.app.AppPlugin.class);
-    registerPlugin(CapacitorPluginVideoDemoPlugin.class);
+    registerPlugin(AppPlugin.class);
+    registerPlugin(EventPlugin.class);
+    EventBus.getDefault().register(this);
+
+    webview.setOnTouchListener(new View.OnTouchListener() {
+      @Override
+      public boolean onTouch(View view, MotionEvent motionEvent) {
+        EventBus.getDefault().post(new MessageEvent("TouchApp","SessionLogoutAllDevice"));
+        return false;
+      }
+    });
   }
+
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onMessageEvent(MessageEvent event) {
+    switch (event.getKey()) {
+      case "SessionLogoutAllDevice" -> {
+        webview.clearCache(true);
+        webview.clearHistory();
+        webview.reload();
+        webview.loadUrl("javascript:localStorage.clear()");
+        Log.println(Log.ASSERT, "SessionLogoutAllDevice", "Url : " + event.getMessage());
+      }
+      case "TouchApp" -> {
+        if (!Objects.equals(webview.getUrl(), "http://localhost/Login")) {
+          EventPlugin.getInstance().SessionTimerStop();
+          EventPlugin.getInstance().TimerStart();
+          Log.println(Log.ASSERT, "SessionLogoutAllDevice", "Url : " + webview.getUrl());
+        }else{
+          EventPlugin.getInstance().SessionTimerStop();
+        }
+      }
+      default -> {
+      }
+    }
+  };
 
   @Override
   public void onDestroy() {
@@ -94,6 +106,15 @@ public class MainActivity extends BridgeActivity {
   @Override
   public void onClick(View view) {
 
+  }
+
+  @Override
+  public WebView getWebView() {
+    return webview;
+  }
+
+  static void setStaticWebView(String url) {
+    webview.loadUrl(url);
   }
 
   @Override
@@ -121,6 +142,11 @@ public class MainActivity extends BridgeActivity {
       }
     }
     return filteredList;
+  }
+
+  public void SessionLogoutAllDevice() {
+    Log.println(Log.ASSERT, "SessionLogoutAllMain", "SessionLogoutAllDevice : "+webview.getUrl());
+//    webview.loadUrl("https://localhost/");
   }
 
   // on below line creating a class to post the data.

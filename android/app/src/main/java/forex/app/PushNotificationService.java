@@ -1,51 +1,47 @@
 package forex.app;
 
 import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.service.quicksettings.Tile;
 import android.util.Log;
-import android.widget.Toast;
-
+import android.webkit.WebView;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
+import com.getcapacitor.Bridge;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.net.URL;
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.Objects;
 
 @SuppressLint("MissingFirebaseInstanceTokenRefresh")
 public class PushNotificationService extends FirebaseMessagingService {
-
-  @Override
+  private static String BASE_URL = "http://192.168.224.20:8082/v1/";
+  public WebView webview=Bridge.getWebview();
+//  private static String BASE_URL = "https://forexappapi.bharathexim.com/v1/";
+ @Override
   public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
     super.onMessageReceived(remoteMessage);
     String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
     String text = remoteMessage.getNotification().getBody();
-    Log.println(Log.ASSERT, "Title", title + " : Text : " + text);
+    Log.println(Log.ASSERT, "onMessageReceived", title + " : Text : " + text);
     sendNotification(title, text);
+   if (Objects.equals(title, "SessionLogoutAllDevice")){
+     EventBus.getDefault().post(new MessageEvent("SessionLogoutAllDevice","SessionLogoutAllDevice"));
+   }
   }
 
   private void sendNotification(String title, String body) {
     Intent intent = new Intent(this, MainActivity.class);
+
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
       PendingIntent.FLAG_IMMUTABLE);
@@ -73,4 +69,5 @@ public class PushNotificationService extends FirebaseMessagingService {
     }
     notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
   }
+
 }

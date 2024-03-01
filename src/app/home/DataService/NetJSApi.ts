@@ -186,20 +186,20 @@ export class JsApiCommonSubscriber {
                         this.USER_DETAILS = res[0]
                         this.DISPLAY_MODE = this.USER_DETAILS?.DisplayMode
                         let data = [];
-                        let UserObject:any={
-                            userId:this.USER_DETAILS?._id,
-                            deviceId:null
+                        let UserObject: any = {
+                            userId: this.USER_DETAILS?._id,
+                            deviceId: null
                         }
                         if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
                             this.fCmcontroller.getDeviceId().then((userId: any) => {
-                                UserObject['deviceId']=userId;
-                                this.websocketService.emit("userId",UserObject)
+                                UserObject['deviceId'] = userId;
+                                this.websocketService.emit("userId", UserObject)
                             });
-                        }else{
-                            this.websocketService.emit("userId",UserObject)
+                        } else {
+                            this.websocketService.emit("userId", UserObject)
                         }
                         this.websocketService?.listen('test').subscribe((res: any) => {
-                            console.log(res, "websocketService")
+                            // console.log(res,this.apiservice.FX_MARGIN_DATA_OUTWARD, "websocketService")
                             let OUTWARD_DATA: any = [];
                             let INWARD_DATA: any = [];
                             let timer: any = moment().format('h:mm:ss a, Do MMM  YY')
@@ -208,13 +208,23 @@ export class JsApiCommonSubscriber {
                             let askclassName = '';
                             let bidclassName = '';
                             let ObjectLength = Object.keys(res);
+
                             for (let index = 0; index < this.apiservice.NEW_CURRENCY_INR_LIST?.length; index++) {
                                 let element = res[this.apiservice.NEW_CURRENCY_INR_LIST[index]];
                                 let splitkey: any = this.apiservice.NEW_CURRENCY_INR_LIST[index]?.split('_');
-                                let FR_TRIGGER_DATA = { FXMarginTrigger: element?.FXMARGIN_TRIGGER_DATA != undefined ? element?.FXMARGIN_TRIGGER_DATA : [] };
                                 OUTWARD_DATA = element?.FXMARGIN_DATA != undefined ? element?.FXMARGIN_DATA[0]?.outward : [];
                                 INWARD_DATA = element?.FXMARGIN_DATA != undefined ? element?.FXMARGIN_DATA[0]?.inward : [];
                                 const olddata: any = data[count];
+                                let filterItemOutward = this.apiservice.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.OriginalCurrency == this.apiservice.NEW_CURRENCY_INR_LIST[index])
+                                if (filterItemOutward?.length != 0) {
+                                    filterItemOutward[0]["LiveRate"] = element?.QUOTE_ASK;
+                                    filterItemOutward[0]["error"] = ''
+                                }
+                                let filterItemInward = this.apiservice.FX_MARGIN_DATA_INWARD?.filter((item: any) => item?.OriginalCurrency == this.apiservice.NEW_CURRENCY_INR_LIST[index])
+                                if (filterItemInward?.length != 0) {
+                                    filterItemInward[0]["LiveRate"] = element?.QUOTE_BID;
+                                    filterItemInward[0]["error"] = ''
+                                }
 
                                 if (!this.WHITELISTING?.includes(splitkey[0])) {
                                     const oldFORWARD_ASK_DATA: any = this.apiservice.FORWARD_ASK_DATA[forwardcount];

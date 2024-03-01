@@ -114,6 +114,6 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.websocketService.disconnect();
+    // this.websocketService.disconnect();
   }
 }

@@ -20,6 +20,7 @@ import { RbiRefComponent } from './home/other-services/rbi-ref/rbi-ref.component
 import { BenchMarkRatesComponent } from './home/other-services/bench-mark-rates/bench-mark-rates.component';
 import { HistoricalrateComponent } from './home/historicalrate/historicalrate.component';
 import { LogoAnimationComponent } from './home/logo-animation/logo-animation.component';
+import { HolidaysComponent } from './home/holidays/holidays.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'Login', pathMatch: 'full' },
@@ -42,6 +43,7 @@ const routes: Routes = [
   { path: 'BenchMarkRates', component: BenchMarkRatesComponent, canActivate: [AdminGuard] },
   { path: 'HistoricalRate', component: HistoricalrateComponent, canActivate: [AdminGuard] },
   { path: 'LogoAnimation', component: LogoAnimationComponent, canActivate: [AdminGuard] },
+  { path: 'Holidays', component: HolidaysComponent, canActivate: [AdminGuard] },
 ];
 
 @NgModule({

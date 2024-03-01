@@ -16,6 +16,7 @@ import { RbiRefComponent } from './other-services/rbi-ref/rbi-ref.component';
 import { BenchMarkRatesComponent } from './other-services/bench-mark-rates/bench-mark-rates.component';
 import { HistoricalrateComponent } from './historicalrate/historicalrate.component';
 import { LogoAnimationComponent } from './logo-animation/logo-animation.component';
+import {HolidaysComponent}from './holidays/holidays.component'
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { LogoAnimationComponent } from './logo-animation/logo-animation.componen
     RbiRefComponent,
     BenchMarkRatesComponent,
     HistoricalrateComponent,
-    LogoAnimationComponent
+    LogoAnimationComponent,
+    HolidaysComponent
   ],
   imports: [
     SharedModule,

@@ -7,7 +7,7 @@ import { WebsocketService } from './services/websocket.service';
 import { UserIdleService } from './Controller/user-idle-manager/user-idle/user-idle.servies';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
-import { CapacitorTouchEventDemo } from 'capacitor-plugin-touch-event';
+import { CapacitorEvent } from 'capacitor-plugin-touch-event';
 import { PushNotificationsController } from './Controller/PushNotificationsController';
 
 @Component({
@@ -75,38 +75,72 @@ export class AppComponent implements OnInit, OnDestroy {
     websocketService.listen('userDetails').subscribe((res: any) => {
       console.log(res, "WebsocketServiceUserDetails")
       if (res?.length != 0) {
-          this.Customidle.logout();
-          this.router?.navigate(['/Login']);
+        this.Customidle.logout();
+        this.router?.navigate(['/Login']);
       }
     })
   }
 
   ngOnInit(): void {
-    if(Capacitor.getPlatform()!='web'){
+    if (Capacitor.getPlatform() != 'web') {
       PushNotificationsController.LoadPushNotifications();
-    }
-    // CapacitorTouchEventDemo.echo({ value: "HellAlo" }).then((message) => {
-    //   alert(message?.value);
-    // }).catch((error) => alert("error listerner" + JSON.stringify(error)))
-    document.addEventListener("visibilitychange", () => {
-      if (this.URL_LIST?.filter((item: any) => item == this.router?.url)?.length == 0) {
-        if (document.hidden) {
-          let date = new Date();
-          date.setSeconds(this.LOGOUT_TIME);
-          localStorage.setItem('ExpriedTime', date.getTime()?.toString());
-          // this.userService?.UserSessionLogout(null, false, { lastactivetime: date.getTime() });
-        } else {
-          let remanningTime: any = parseInt(localStorage.getItem('ExpriedTime')) - new Date().getTime();
-          if (remanningTime < 0 || remanningTime == 0) {
-            this.userService?.UserLogout(() => {
+      CapacitorEvent.register().then((res) => { });
+      CapacitorEvent.addListener('onUserLogout', (result: any) => {
+        this.userService.UserLogout(() => {
+          this.Customidle?.logout();
+          this.Customidle.idleTimerLeft = null;
+          this.router?.navigate(['/Login']);
+          this.websocketService.disconnect()
+          location.reload();
+        }, false, { lastactivetime: 0 });
+      });
+      CapacitorEvent.addListener('OnTimerCountDown', (result: any) => {
+        this.userService.COUNT_DOWN = msToTime(parseInt(result?.value));
+        let splitIdeTime: any = this.userService.COUNT_DOWN?.split(":")
+        if (splitIdeTime?.length != 0) {
+          if (splitIdeTime[1] == "00") {
+            let count = parseInt(splitIdeTime[2]);
+            this.userService.counter = count;
+            if (count <= 30 && count > 0) {
+              this.userService.SHOW_SESSION = true
+            }
+            if (count == 0) {
               this.userService.SHOW_SESSION = false;
-              this.Customidle?.logout();
-              this.router?.navigate(['/Login']);
-              location.reload();
-              this.websocketService.disconnect();
-            }, false, { lastactivetime: 0 });
+            }
           }
         }
+      })
+      function msToTime(duration) {
+        var milliseconds = Math.floor((duration % 1000) / 100);
+        var seconds: any = Math.floor((duration / 1000) % 60);
+        var minutes: any = Math.floor((duration / (1000 * 60)) % 60);
+        var hours: any = Math.floor((duration / (1000 * 60 * 60)) % 24);
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+        return hours + ":" + minutes + ":" + seconds;
+      }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (this.URL_LIST?.filter((item: any) => item == this.router?.url)?.length == 0) {
+        // if (document.hidden) {
+        //   let date = new Date();
+        //   date.setSeconds(this.LOGOUT_TIME);
+        //   localStorage.setItem('ExpriedTime', date.getTime()?.toString());
+        //   // this.userService?.UserSessionLogout(null, false, { lastactivetime: date.getTime() });
+        // } else {
+        //   let remanningTime: any = parseInt(localStorage.getItem('ExpriedTime')) - new Date().getTime();
+        //   if (remanningTime < 0 || remanningTime == 0) {
+        //     this.userService?.UserLogout(() => {
+        //       this.userService.SHOW_SESSION = false;
+        //       this.Customidle?.logout();
+        //       this.router?.navigate(['/Login']);
+        //       location.reload();
+        //       this.websocketService.disconnect();
+        //     }, false, { lastactivetime: 0 });
+        //   }
+        // }
       }
     });
     const registerNotifications = async () => {
