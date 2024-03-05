@@ -130,7 +130,8 @@ export class SubscriptionChildComponent implements OnInit {
                               FreeTrailPeroidEndDate: moment(this.addMonth(new Date(), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                               order_id: InfoPaymentStatus,
                               order_status: RazorpayOrderById[0],
-                              CouponVerified:true
+                              CouponVerified:true,
+                              ExpiredTimeStamp:moment(this.addMonth(new Date(),plan_data?.TotalMonthDays)).unix()
                             }).then((res) => {
                               this.toastr.success("Your Subscription added successfully...");
                               this.router.navigate(["/Login"])
@@ -145,7 +146,8 @@ export class SubscriptionChildComponent implements OnInit {
                               FreeTrailPeroidEndDate: moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                               order_id: InfoPaymentStatus,
                               order_status: RazorpayOrderById[0],
-                              CouponVerified:true
+                              CouponVerified:true,
+                              ExpiredTimeStamp:moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate),plan_data?.TotalMonthDays)).unix()
                             }).then((res) => {
                               this.toastr.success("Your Subscription added successfully...");
                               this.router.navigate(["/Login"])
@@ -210,7 +212,8 @@ export class SubscriptionChildComponent implements OnInit {
                         FreeTrailPeroidEndDate: moment(this.addMonth(new Date(), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                         order_id: InfoPaymentStatus,
                         order_status: RazorpayOrderById[0],
-                        CouponVerified:true
+                        CouponVerified:true,
+                        ExpiredTimeStamp:moment(this.addMonth(new Date(),plan_data?.TotalMonthDays)).unix()
                       }).then((res) => {
                         this.toastr.success("Your Subscription added successfully...");
                         this.router.navigate(["/Login"])
@@ -225,7 +228,8 @@ export class SubscriptionChildComponent implements OnInit {
                         FreeTrailPeroidEndDate: moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                         order_id: InfoPaymentStatus,
                         order_status: RazorpayOrderById[0],
-                        CouponVerified:true
+                        CouponVerified:true,
+                        ExpiredTimeStamp:moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate),plan_data?.TotalMonthDays)).unix()
                       }).then((res) => {
                         this.toastr.success("Your Subscription added successfully...");
                         this.router.navigate(["/Login"])

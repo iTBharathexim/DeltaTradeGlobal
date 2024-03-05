@@ -16,7 +16,8 @@ import { RbiRefComponent } from './other-services/rbi-ref/rbi-ref.component';
 import { BenchMarkRatesComponent } from './other-services/bench-mark-rates/bench-mark-rates.component';
 import { HistoricalrateComponent } from './historicalrate/historicalrate.component';
 import { LogoAnimationComponent } from './logo-animation/logo-animation.component';
-import {HolidaysComponent}from './holidays/holidays.component'
+import { HolidaysComponent } from './holidays/holidays.component'
+import { OnboardingScreenComponent } from './onboarding-screen/onboarding-screen.component';
 
 @NgModule({
   declarations: [
@@ -35,12 +36,13 @@ import {HolidaysComponent}from './holidays/holidays.component'
     BenchMarkRatesComponent,
     HistoricalrateComponent,
     LogoAnimationComponent,
-    HolidaysComponent
+    HolidaysComponent,
+    OnboardingScreenComponent
   ],
   imports: [
     SharedModule,
     CommonModule,
   ],
-  exports: [SharedModule,SubscriptionChildComponent,LogoAnimationComponent]
+  exports: [SharedModule, SubscriptionChildComponent, LogoAnimationComponent]
 })
 export class HomeModule { }

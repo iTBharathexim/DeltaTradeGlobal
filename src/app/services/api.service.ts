@@ -347,6 +347,8 @@ export class ApiService {
       days: "Wednesday"
     },
   ]
+  WHITELIST_URL_LIST: any = ["/Login", "/Registration", "/ResetPassword","/OnboardingScreen"];
+
   constructor(public http: HttpClient, private deviceInformationService: DeviceDetectorService,
     public router: Router,
     public websocket: WebsocketService,
@@ -423,21 +425,18 @@ export class ApiService {
       console.log(outwardres, this.FR_TRIGGER_DATA, "outwardres")
       OUTWARD_DATA = outwardres?.outward;
       this.loadMarginData('inward').then((inwardres: any) => {
-        console.log(inwardres, "inwardres")
         INWARD_DATA = inwardres?.inward;
         this.COUNTER = [];
         this.CURRENCY_LIST.forEach((element: any) => {
           this.COUNTER[element] = 0
         });
         this.TIME_INTERVAL = setInterval(() => {
-          // this.loadData();
           this.http.post(`https://livetradeapp.bharathexim.com/GetLiveData`,
             {
               CurrencyList: this.CURRENCY_LIST,
               api_key: "caebb18b-eea0-424b-b936-d85242eb7ab2"
             },
             { headers: headers }).subscribe((resData: any) => {
-              console.log(resData, "getTraderDataLive")
               let JSONDATA: any = resData
               let dumdata: any = [];
               JSONDATA?.quotes?.forEach((element: any) => {
@@ -530,6 +529,18 @@ export class ApiService {
 
   UpdateDeviceId(id: any, data: any) {
     return this.http.post(`${this.apibase}/LiveTradeApp/updatedeviceId`, { id: id, deviceId: data });
+  }
+
+  DeviceRegister(data: any) {
+    return this.http.post(`${this.apibase}/DeviceOnboardingScreen/register`, { data: data });
+  }
+
+  getDeviceRegister(id: any) {
+    return this.http.post(`${this.apibase}/DeviceOnboardingScreen/get`, { deviceId: id });
+  }
+
+  updateDeviceRegister(id: any,data:any) {
+    return this.http.post(`${this.apibase}/DeviceOnboardingScreen/update`, { deviceId: id ,data: data});
   }
 
   SendOtpEmail(data: any) {
@@ -634,7 +645,6 @@ export class ApiService {
   UpdateUserPaymentDetails(updatedata: any, other: any) {
     return new Promise((resolve, reject) => {
       this.CheckUserExit({ emailId: localStorage.getItem('token') }).subscribe((res: any) => {
-        console.log(res, "CheckUserExit")
         if (res?.length != 0) {
           let InfoPaymentStatus = res[0]?.PaymentStatus;
           InfoPaymentStatus.push(updatedata);
@@ -649,7 +659,6 @@ export class ApiService {
   UpdateUserDetails(updatedata: any) {
     return new Promise((resolve, reject) => {
       this.CheckUserExit({ emailId: localStorage.getItem('token') }).subscribe((res: any) => {
-        console.log(res, "CheckUserExit")
         if (res?.length != 0) {
           this.UpdateLoginDetails(res[0]?._id, updatedata).subscribe((updatedataRes) => {
             resolve(updatedataRes);
@@ -700,7 +709,6 @@ export class ApiService {
   loadData() {
     this.getUserOb().then((res: any) => {
       this.getFXTrigger(res?._id).subscribe((res: any) => {
-        console.log(res, "loadOutwardData")
         this.FR_TRIGGER_DATA = res?.FXMarginTrigger;
         let JsApiCommonSubscriber = res?.JsApiCommonSubscriber;
 
@@ -741,14 +749,6 @@ export class ApiService {
               }
             });
           }
-          // this.LIST_OF_DATA[0]?.quotes?.forEach((element: any, index: any) => {
-          //   if (this.FX_MARGIN_DATA_OUTWARD[index]?.key == element?.base_currency) {
-          //     this.FX_MARGIN_DATA_OUTWARD[index]["LiveRate"] = element?.bid
-          //   }
-          //   if (this.FX_MARGIN_DATA_INWARD[index]?.key == element?.base_currency) {
-          //     this.FX_MARGIN_DATA_INWARD[index]["LiveRate"] = element?.ask
-          //   }
-          // });
         } else {
           this.CHECK_LENGTH = false;
           this.FX_MARGIN_DATA_OUTWARD = [];
@@ -814,24 +814,24 @@ export class ApiService {
   intervaltime: number = 1000;
   async _mouseleave(App: any) {
     this.SHOW_SESSION = false;
-    if (this.URL_LIST?.filter((item: any) => item == this.router?.url)?.length == 0) {
-      this.interval = setInterval(async () => {
-        if (this.counter == 30) {
-          this.SHOW_SESSION = true
-        }
-        let { isActive } = await App.getState();
-        if (this.counter == 1) {
-          this.SHOW_SESSION = false
-          this.UserLogout(() => {
-            clearInterval(this.interval);
-            this.counter = 60;
-            this.router?.navigate(['/Login']);
-          });
-          console.log(this.counter, "setTimeout")
-        }
-        this.counter--;
-        console.log("SHOW_SESSION", isActive, this.counter, this.SHOW_SESSION)
-      }, 1000)
-    }
+    // if (this.URL_LIST?.filter((item: any) => item == this.router?.url)?.length == 0) {
+    //   this.interval = setInterval(async () => {
+    //     if (this.counter == 30) {
+    //       this.SHOW_SESSION = true
+    //     }
+    //     let { isActive } = await App.getState();
+    //     if (this.counter == 1) {
+    //       this.SHOW_SESSION = false
+    //       this.UserLogout(() => {
+    //         clearInterval(this.interval);
+    //         this.counter = 60;
+    //         this.router?.navigate(['/Login']);
+    //       });
+    //       console.log(this.counter, "setTimeout")
+    //     }
+    //     this.counter--;
+    //     console.log("SHOW_SESSION", isActive, this.counter, this.SHOW_SESSION)
+    //   }, 1000)
+    // }
   }
 }

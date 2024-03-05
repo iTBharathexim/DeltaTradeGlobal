@@ -1,8 +1,10 @@
 <app-home (ModeChanges)="this.DISPLAY_MODE=$event">
     <div class="controller">
-        <article class="profile" *ngFor="let item of this.apiservice.HOLIDAYS_INDIA;let i=index">
+        <input type="text" name="" id="" placeholder="Search Holidays" (keyup)="filterHolidays($event.target)">
+        <article class="profile" *ngFor="let item of this.HOLIDAYS_FILTER_DATA;let i=index">
             <div class="profile-image">
-                <img src="../../../assets/images/6813.jpg" />
+                {{this.OneChar(item?.name)}}
+                <!-- <img src="../../../assets/images/6813.jpg" /> -->
             </div>
             <h2 class="profile-username">{{item?.name}}</h2>
             <small class="profile-user-handle">{{item?.date}}</small>

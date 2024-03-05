@@ -34,6 +34,7 @@ export class MPINLoginPageComponent implements OnInit {
     public andoridFileSystemService: AndoridFileSystemService) {
     this.userService.NEW_LOADER_SHOW_HIDE = false;
     // userService.UserLogout(null);
+   
   }
 
   LOGO_ANIMATION: any = {
@@ -46,49 +47,31 @@ export class MPINLoginPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
+      this.fCmcontroller.getDeviceId().then((DeviceId) => {
+        this.userService.getDeviceRegister(DeviceId).subscribe((DeviceRes: any) => {
+          if (DeviceRes?.data?.length != 0) {
+            if (DeviceRes?.data[0]?.OnboardingScreen == false) {
+              this.router.navigate((['/OnboardingScreen']))
+            }
+          } else {
+            this.userService.DeviceRegister({ UserDevice: this.userService.getDeviceInfo(), deviceId: DeviceId, OnboardingScreen: false }).subscribe((DeviceRes: any) => {
+              this.router.navigate(['/OnboardingScreen'])
+            });
+          }
+        })
+      })
+    }else{
+      // this.router.navigate(['/OnboardingScreen'])
+    }
   }
 
   onFormSubmit() {
     this.userService.LoginMPIN(this.userForm.value).subscribe((res: any) => {
-      console.log(res, 'LoginMPIN')
       this.LoggerInfoService.showInfo();
       if (res?.docs?.error == undefined) {
         clearInterval(this.TIMER)
         localStorage.setItem('token', res?.docs?.data?.emailId)
-        // this.userService.UpdateLoginDetails(res?.docs?.data?._id, {
-        //   isLoggin: true, DeviceInfoLogin: this.userService.getDeviceInfo(),
-        //   LoginCounter: res?.docs?.data?.LoginCounter != undefined ? res?.docs?.data?.LoginCounter + 1 : 1
-        // }).subscribe((res1) => {
-        //   this.fCmcontroller.ChangeDeviceId(res?.docs?.data?.emailId);
-        //   console.log(this.fCmcontroller.getDeviceId(), "getDeviceId")
-        //   if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
-        //     this.fCmcontroller.getDeviceId().then((userId: any) => {
-        //       this.userService.PushNotification({
-        //         registrationToken: userId,
-        //         title: "Login Successfully..",
-        //         body: "Login Successfully.."
-        //       }).subscribe((rez) => {
-        //         this.websocketService.connect()
-        //         let navigationExtras: NavigationExtras = {
-        //           queryParams: {
-        //             "type": 'home'
-        //           }
-        //         };
-        //         this.router.navigate(['LogoAnimation'], navigationExtras)
-        //         console.log(rez, "PushNotification")
-        //       })
-        //     })
-        //   } else {
-        //     let navigationExtras: NavigationExtras = {
-        //       queryParams: {
-        //         "type": 'home'
-        //       }
-        //     };
-        //     this.router.navigate(['LogoAnimation'], navigationExtras)
-        //     this.websocketService.connect()
-        //   }
-        // })
         if (res?.docs?.data?.isLoggin == false) {
           if (res?.docs?.data?.CouponVerified == true && res?.docs?.data?.emailIdVerified == true) {
             localStorage.setItem('token', res?.docs?.data?.emailId)
@@ -102,8 +85,8 @@ export class MPINLoginPageComponent implements OnInit {
                   this.userService.UpdateDeviceId(res?.docs?.data?.emailId, userId).subscribe((res) => { })
                   this.userService.PushNotification({
                     registrationToken: userId,
-                    title: "Login Successfully..",
-                    body: "Login Successfully.."
+                    title: "Login Successful..",
+                    body: "Login Successful.."
                   }).subscribe((rez) => {
                     this.websocketService.connect()
                     let navigationExtras: NavigationExtras = {
@@ -114,7 +97,6 @@ export class MPINLoginPageComponent implements OnInit {
                     CapacitorEvent.SessionTimerStart({ value: "3" }).then((res) => {
                       this.router.navigate(['LogoAnimation'], navigationExtras);
                     });
-                    console.log(rez, "PushNotification")
                   })
                 })
               } else {
@@ -136,7 +118,6 @@ export class MPINLoginPageComponent implements OnInit {
             this.router.navigate(["/Registration"], navigationExtras);
           }
         } else {
-          // this.toastr.error("You are already logged in on a different device.\n Please wait for a few minutes, and try again.")
           this.customConfirmDialogModelComponent?.YesNoDialogModel("Notification", "You have already logged in to other device, </br>do you want to transfer to this device?", (value: any) => {
             if (value?.value == 'Yes') {
               if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
@@ -158,6 +139,13 @@ export class MPINLoginPageComponent implements OnInit {
                     }
                   });
                 });
+              } else {
+                this.userService.LogoutAllDevice(res?.docs?.data?._id, {
+                  isLoggin: false,
+                  lastactivetime: 0
+                }).subscribe((res1) => {
+                  this.toastr.show("Now you try login...");
+                })
               }
             }
           }, { 'color': 'red' }, { 'color': 'green' })
@@ -173,9 +161,7 @@ export class MPINLoginPageComponent implements OnInit {
     }, (err) => {
       this.toastr.error(err?.error?.text);
       this.errorShow = JSON.stringify(err) + '2'
-      console.log(err, 'sdfsdhfsdklfhdsfksdfsdfds')
     })
-    console.log(this.userForm.value, 'sdsgjdfgsdfdf')
   }
 
   RoleType: any = ''

@@ -21,6 +21,7 @@ import { BenchMarkRatesComponent } from './home/other-services/bench-mark-rates/
 import { HistoricalrateComponent } from './home/historicalrate/historicalrate.component';
 import { LogoAnimationComponent } from './home/logo-animation/logo-animation.component';
 import { HolidaysComponent } from './home/holidays/holidays.component';
+import { OnboardingScreenComponent } from './home/onboarding-screen/onboarding-screen.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'Login', pathMatch: 'full' },
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'OtpEmail_OtpMobile', component: OtpPageComponent },
   { path: 'MPIN-Create', component: MPINPageComponent },
   { path: 'ResetPassword', component: ResetPasswordComponent },
+  { path: 'OnboardingScreen', component: OnboardingScreenComponent },
   { path: 'home', component: HomeComponent, redirectTo: 'LiveTradeApp', canActivate: [AdminGuard] },
   { path: 'LiveTradeApp', component: LiveTradeAppComponent, canActivate: [AdminGuard] },
   { path: 'FXMargin', component: FXMarginDetailsComponent, canActivate: [AdminGuard] },
@@ -47,7 +49,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: "legacy",onSameUrlNavigation: 'reload' }),SharedModule],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: "legacy", onSameUrlNavigation: 'reload' }), SharedModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

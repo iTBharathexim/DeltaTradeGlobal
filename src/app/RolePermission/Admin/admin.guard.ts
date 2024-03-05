@@ -6,21 +6,21 @@ import { ApiService } from 'src/app/services/api.service';
   providedIn: 'root'
 })
 export class AdminGuard implements CanActivate {
-  role:any = '';
-  constructor(public user_service:ApiService,public router:Router){
+  role: any = '';
+  constructor(public user_service: ApiService, public router: Router) {
   }
- async canActivate(
+  async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot) {
-      return this.getToken()!=undefined?true:this.redirect();
+    return this.getToken() != undefined ? true : this.redirect();
   }
 
-  redirect(){
+  redirect() {
     this.router.navigate(['/Login'])
     return true;
   }
 
-  getToken(){
+  getToken() {
     return localStorage.getItem('token')
   }
 }

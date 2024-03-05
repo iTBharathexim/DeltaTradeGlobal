@@ -16,6 +16,10 @@ export class JsApiCommonSubscriber {
     WHITELISTING: any = ['JPY', 'AUD', 'CNY'];
     FORWARD_WHITE_LISTING: any = ['EUR_INR', 'GBP_INR', 'HKD_INR', "CHF_INR"];
     TIME_SCALE: number = 604800;
+    days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    Currentday = this.days[new Date().getDay()];
+    Currentmonth = this.months[new Date().getMonth()];
 
     constructor(public apiservice: ApiService,
         public fCmcontroller: FCmController,
@@ -185,7 +189,7 @@ export class JsApiCommonSubscriber {
                         this.apiservice.NEW_LOADER_SHOW_HIDE = true;
                         this.USER_DETAILS = res[0]
                         this.DISPLAY_MODE = this.USER_DETAILS?.DisplayMode
-                        let data = [];
+                        let data:any = [];
                         let UserObject: any = {
                             userId: this.USER_DETAILS?._id,
                             deviceId: null
@@ -199,21 +203,20 @@ export class JsApiCommonSubscriber {
                             this.websocketService.emit("userId", UserObject)
                         }
                         this.websocketService?.listen('test').subscribe((res: any) => {
-                            // console.log(res,this.apiservice.FX_MARGIN_DATA_OUTWARD, "websocketService")
+                            // console.log(res,this.apiservice.FX_MARGIN_DATA_OUTWARD,this.Currentday,moment(res[this.apiservice.NEW_CURRENCY_INR_LIST[0]]?.Timestamp).format('h:mm:ss a, Do MMM  YY'),res[this.apiservice.NEW_CURRENCY_INR_LIST[0]], "websocketService")
                             let OUTWARD_DATA: any = [];
                             let INWARD_DATA: any = [];
-                            let timer: any = moment().format('h:mm:ss a, Do MMM  YY')
                             let count = 0;
                             let forwardcount = 0;
                             let askclassName = '';
                             let bidclassName = '';
-                            let ObjectLength = Object.keys(res);
-
+                            let timer: any = this.Currentday != "Saturday" && this.Currentday != "Sunday" ? moment().format('h:mm:ss a, Do MMM  YY') : moment(res[this.apiservice.NEW_CURRENCY_INR_LIST[0]]?.Timestamp).format('h:mm:ss a, Do MMM  YY');
                             for (let index = 0; index < this.apiservice.NEW_CURRENCY_INR_LIST?.length; index++) {
                                 let element = res[this.apiservice.NEW_CURRENCY_INR_LIST[index]];
                                 let splitkey: any = this.apiservice.NEW_CURRENCY_INR_LIST[index]?.split('_');
                                 OUTWARD_DATA = element?.FXMARGIN_DATA != undefined ? element?.FXMARGIN_DATA[0]?.outward : [];
                                 INWARD_DATA = element?.FXMARGIN_DATA != undefined ? element?.FXMARGIN_DATA[0]?.inward : [];
+
                                 const olddata: any = data[count];
                                 let filterItemOutward = this.apiservice.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.OriginalCurrency == this.apiservice.NEW_CURRENCY_INR_LIST[index])
                                 if (filterItemOutward?.length != 0) {
@@ -303,7 +306,8 @@ export class JsApiCommonSubscriber {
                                         high: parseFloat(element?.QUOTE_HIGH),
                                         low: parseFloat(element?.QUOTE_LOW),
                                         time: timer,
-                                        counter: count
+                                        counter: count,
+                                        MarketStatus:this.get9to5()
                                     })
                                 } else {
                                     data[count] = ({
@@ -326,42 +330,11 @@ export class JsApiCommonSubscriber {
                                         high: parseFloat(element?.QUOTE_HIGH),
                                         low: parseFloat(element?.QUOTE_LOW),
                                         time: timer,
-                                        counter: count
+                                        counter: count,
+                                        MarketStatus:this.get9to5()
                                     })
                                 }
                                 count++;
-                                // if (FR_TRIGGER_DATA?.FXMarginTrigger?.length != 0 && FR_TRIGGER_DATA?.FXMarginTrigger?.length != 0) {
-                                //     if (((FR_TRIGGER_DATA?.FXMarginTrigger[0]?.Inward[splitkey[0]]?.TriggerRate - (.02)) <= element?.QUOTE_BID) && FR_TRIGGER_DATA?.FXMarginTrigger[0]?.Inward[splitkey[0]]?.TriggerRate != 0) {
-                                //         if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
-                                //             this.fCmcontroller.getDeviceId().then((userId: any) => {
-                                //                 this.apiservice.PushNotification({
-                                //                     registrationToken: userId,
-                                //                     title: `Live rate is nearing to trigger value Currency(${splitkey[0]}) Trigger value(${FR_TRIGGER_DATA?.FXMarginTrigger[0]?.Inward[splitkey[0]]?.TriggerRate})`,
-                                //                     body: `Live rate is nearing to trigger value Currency(${splitkey[0]}) Trigger value(${FR_TRIGGER_DATA?.FXMarginTrigger[0]?.Inward[splitkey[0]]?.TriggerRate})`
-                                //                 }).subscribe((rez) => {
-                                //                     console.log(rez, "PushNotification")
-                                //                     FR_TRIGGER_DATA.FXMarginTrigger[0].Inward[splitkey[0]]['TriggerRate'] = 0
-                                //                     this.apiservice.TriggerUpdate({ Inward: FR_TRIGGER_DATA?.FXMarginTrigger[0]?.Inward }, this.USER_DETAILS?._id).subscribe((res) => { })
-                                //                 })
-                                //             })
-                                //         }
-                                //     }
-                                //     if (((FR_TRIGGER_DATA?.FXMarginTrigger[1]?.Outward[splitkey[0]]?.TriggerRate - (.02)) <= element?.QUOTE_ASK) && FR_TRIGGER_DATA?.FXMarginTrigger[1]?.Outward[splitkey[0]]?.TriggerRate != 0) {
-                                //         if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
-                                //             this.fCmcontroller.getDeviceId().then((userId: any) => {
-                                //                 this.apiservice.PushNotification({
-                                //                     registrationToken: userId,
-                                //                     title: `Live rate is nearing to trigger value Currency(${splitkey[0]}) Trigger value(${FR_TRIGGER_DATA?.FXMarginTrigger[1]?.Outward[splitkey[0]]?.TriggerRate})`,
-                                //                     body: `Live rate is nearing to trigger value Currency(${splitkey[0]}) Trigger value(${FR_TRIGGER_DATA?.FXMarginTrigger[1]?.Outward[splitkey[0]]?.TriggerRate})`
-                                //                 }).subscribe((rez) => {
-                                //                     console.log(rez, "PushNotification")
-                                //                     FR_TRIGGER_DATA.FXMarginTrigger[0].Outward[splitkey[0]]['TriggerRate'] = 0
-                                //                     this.apiservice.TriggerUpdate({ Outward: FR_TRIGGER_DATA?.FXMarginTrigger[1]?.Outward }, this.USER_DETAILS?._id).subscribe((res) => { })
-                                //                 })
-                                //             })
-                                //         }
-                                //     }
-                                // }
                             }
                             this.apiservice.LIST_OF_DATA[0] = { quotes: data };
                             this.apiservice.NEW_LOADER_SHOW_HIDE = false;
@@ -373,4 +346,23 @@ export class JsApiCommonSubscriber {
         })
     }
 
+    get9to5() {
+        var d = new Date();
+        var e = d.toLocaleTimeString('en-US', { hour12: false });
+        var f = e.split(':');
+        let condition = false;
+        if (parseInt(f[0]) < 9) {
+            condition = true;
+        }
+        if (parseInt(f[0]) >= 17) {
+            condition = true;
+        }
+        if (this.apiservice.HOLIDAYS_INDIA.filter((item: any) => item?.date?.toString() == moment().format('MMMM DD, YYYY')?.toString())?.length != 0) {
+            condition = true;
+        }
+        if ((this.Currentday=='Saturday' || this.Currentday=='Sunday')) {
+            condition = true;
+        }
+        return condition;
+    }
 }

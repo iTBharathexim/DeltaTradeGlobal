@@ -804,7 +804,7 @@ label {
     font-size: 14px;
 }
 
-.Bid-class{
+.Bid-class {
     margin: auto;
     text-align: center;
     background: #73b1ff;
@@ -813,7 +813,7 @@ label {
     color: white;
 }
 
-.Ask-class{
+.Ask-class {
     margin: auto;
     text-align: center;
     background: #3772a9;
@@ -825,6 +825,46 @@ label {
 .forward custom-mat-accordion[aria-expanded=false]:after {
     position: absolute;
     bottom: 3px;
-    right: 4%!important;
+    right: 4% !important;
     left: unset !important;
+}
+
+
+@-webkit-keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.marquee {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+.marquee span {
+    text-transform: uppercase;
+    will-change: transform;
+    transform: translateX(-100%);
+    white-space: nowrap;
+    animation: marquee 8s linear infinite;
+    font-size: 12px;
+    font-family: Gravitas One, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    color: #ff2507;
 }

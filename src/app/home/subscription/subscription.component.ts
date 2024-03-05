@@ -83,9 +83,9 @@ export class SubscriptionComponent implements OnInit {
           this.SUBSCRIPTION_DETAILS = null;
           let last_Order_Id_Status_False = res[0]?.order_id;
           let last_Order_Id_Status_TRUE = res[0]?.order_id;
-          console.log(last_Order_Id_Status_False, last_Order_Id_Status_TRUE, "status")
           let Priceafterdiscount:any = plan_data?.Amount - (plan_data?.Amount * parseFloat(res[0]?.discount));
           let Saving:any = parseFloat(plan_data?.Amount) - parseFloat(Priceafterdiscount)
+          console.log(last_Order_Id_Status_False, last_Order_Id_Status_TRUE,Priceafterdiscount,Saving, "status")
 
           if (last_Order_Id_Status_False?.status == undefined || last_Order_Id_Status_False?.PlanDetails?.TotalMonthDays != plan_data?.TotalMonthDays) {
             this.apiservice.creareOrder({
@@ -137,7 +137,8 @@ export class SubscriptionComponent implements OnInit {
                               FreeTrailPeroidEndDate: moment(this.addMonth(new Date(), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                               order_id: InfoPaymentStatus,
                               order_status: RazorpayOrderById[0],
-                              discount:0
+                              discount:0,
+                              ExpiredTimeStamp:moment(this.addMonth(new Date(),plan_data?.TotalMonthDays)).unix()
                             }).then((res) => {
                               this.toastr.success("Your Subscription added successfully...");
                               this.router.navigate(["/LiveTradeApp"])
@@ -149,7 +150,8 @@ export class SubscriptionComponent implements OnInit {
                               FreeTrailPeroidEndDate: moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                               order_id: InfoPaymentStatus,
                               order_status: RazorpayOrderById[0],
-                              discount:0
+                              discount:0,
+                              ExpiredTimeStamp:moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate),plan_data?.TotalMonthDays)).unix()
                             }).then((res) => {
                               this.toastr.success("Your Subscription added successfully...");
                               this.router.navigate(["/LiveTradeApp"])
@@ -211,7 +213,8 @@ export class SubscriptionComponent implements OnInit {
                         FreeTrailPeroidEndDate: moment(this.addMonth(new Date(), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                         order_id: InfoPaymentStatus,
                         order_status: RazorpayOrderById[0],
-                        discount:0
+                        discount:0,
+                        ExpiredTimeStamp:moment(this.addMonth(new Date(),plan_data?.TotalMonthDays)).unix()
                       }).then((res) => {
                         this.toastr.success("Your Subscription added successfully...");
                         this.router.navigate(["/LiveTradeApp"])
@@ -223,7 +226,8 @@ export class SubscriptionComponent implements OnInit {
                         FreeTrailPeroidEndDate: moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                         order_id: InfoPaymentStatus,
                         order_status: RazorpayOrderById[0],
-                        discount:0
+                        discount:0,
+                        ExpiredTimeStamp:moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate),plan_data?.TotalMonthDays)).unix()
                       }).then((res) => {
                         this.toastr.success("Your Subscription added successfully...");
                         this.router.navigate(["/LiveTradeApp"])

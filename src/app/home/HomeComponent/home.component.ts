@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
   targetElement: any;
   constructor(public apiservice: ApiService, public router: Router, public ref: ElementRef,
     public websocketService: WebsocketService) {
-      websocketService.connect();
+    websocketService.connect();
   }
   VISIBLE_TRADE_APP: any = '';
   USER_DETAILS: any = [];
@@ -28,7 +28,6 @@ export class HomeComponent implements OnInit {
   @ViewChild("SUBSCRIPTION_DETAILS_PANEL") SUBSCRIPTION_DETAILS_PANEL: any;
 
   ngOnInit(): void {
-    console.log(window.history, "window.history")
     this.addULheight();
     $(window).on('resize', () => {
       this.addULheight()
@@ -47,11 +46,8 @@ export class HomeComponent implements OnInit {
           if (last_Order_Id_Status_TRUE != undefined && last_Order_Id_Status_TRUE != null) {
             this.SUBSCRIPTION_DETAILS = Object.assign(last_Order_Id_Status_TRUE, res[0])
           }
-          this.apiservice.getRazorpayOrderById(last_Order_Id_Status_TRUE?.id).subscribe((RazorpayOrderById: any) => {
-            console.log(RazorpayOrderById, "RazorpayOrderById")
-          })
           this.DISPLAY_MODE = this.USER_DETAILS?.DisplayMode
-          let CompareDates = compareDates(res[0]?.FreeTrailPeroidStratDate, res[0]?.FreeTrailPeroidEndDate);
+          let CompareDates = res[0]?.SubcriptionExpired;
           if (CompareDates == true) {
             this.VISIBLE_TRADE_APP = false;
           } else {
@@ -65,16 +61,10 @@ export class HomeComponent implements OnInit {
         }
       })
       this.SHOWPAGE('MAIN');
-      const compareDates = (d1: any, d2: any) => {
-        var Enddate = new Date(d2)
-        var dateCheck = new Date()
-        return dateCheck.getTime() <= Enddate.getTime()
-      };
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes, "sadasfdsfdf")
   }
 
   getCurrentTimeMoment(date: any) {
@@ -138,7 +128,6 @@ export class HomeComponent implements OnInit {
 
   addULheight() {
     let elem1: any = document.querySelector(".controller");
-    console.log(elem1, "dsdsdsd")
     if (elem1 != undefined && elem1 != null) {
       let rect = elem1.getBoundingClientRect();
       $('.body').css({ 'height': (parseInt(rect?.height) - 51) + 'px', 'width': (parseInt(rect?.width) + .5) + 'px' })
@@ -149,7 +138,6 @@ export class HomeComponent implements OnInit {
       let rect = elem.getBoundingClientRect();
       $('.navigation__links').css({ 'height': (parseInt(rect?.height) + 1) + 'px', 'width': (parseInt(rect?.width) + .5) + 'px' })
     }
-
   }
 
   HistroyBack() {
@@ -159,25 +147,12 @@ export class HomeComponent implements OnInit {
   HistroyNext() {
     window.history.forward()
   }
+
   CloseApp() {
     App.exitApp().then((res) => {
       this.websocketService.disconnect()
       this.logout()
     })
-  }
-
-  handleRefresh(event) {
-    setTimeout(() => {
-      // Any calls to load data go here
-      event.target.complete();
-    }, 2000);
-  }
-
-  myRefreshEvent(event: any, message: string) {
-    setTimeout(() => {
-      alert(message);
-      event.next();
-    }, 3000);
   }
 
   alert(message: string) {

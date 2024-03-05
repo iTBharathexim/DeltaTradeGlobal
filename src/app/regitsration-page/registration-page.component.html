@@ -83,7 +83,7 @@
                             margin-top: 0;" class="text-muted mb-4 bottom-text ml-2">
                                                                 By continuing, you agree to DeltaTradeGlobal
                                                                 <a class="hover-a-tag"
-                                                                        (click)="OpenPopup(TermsofService_PANEL)">Terms
+                                                                        (click)="OpenPopup(TermsofService_PANELRegistration)">Terms
                                                                         of Service</a> we
                                                                 will
                                                                 manage
@@ -207,18 +207,18 @@
 
 <custom-model [customstyle]="{'max-width':'400px !important','font-size':'12px'}" class="p-2" height="65vh"
         id="TermsofService" modalbodyheight="65vh" ModalTitleStyle="font-size: 15px;
-    font-weight: bold;" name="SOFTWARE LICENSE AGREEMENT" #TermsofService_PANEL>
+    font-weight: bold;" name="SOFTWARE LICENSE AGREEMENT" #TermsofService_PANELRegistration>
         <div class="col-12 mt-2 mb-2">
                 <terms-condition-template></terms-condition-template>
-                <button type="button" class="btn btn-primary" (click)="TermsofService_PANEL?.displayHidden">Ok</button>
+                <button type="button" class="btn btn-primary" (click)="TermsofService_PANELRegistration?.displayHidden">Ok</button>
         </div>
 </custom-model>
 
 <custom-model [customstyle]="{'max-width':'400px !important','font-size':'12px'}" class="p-2" height="65vh"
         id="SUBSCRIPTION" modalbodyheight="65vh" ModalTitleStyle="font-size: 15px;
-    font-weight: bold;" name="Subscription Plan" #SUBSCRIPTION_PANEL>
+    font-weight: bold;" name="Subscription Plan 123" #SUBSCRIPTION_PANEL>
         <div class="col-12 mt-2 mb-2" *ngIf="this.VIEW_SBSCRIPTION_PANEL==true">
-                <subscription-child [POPUP_PANEL]="[SUBSCRIPTION_PANEL,TermsofService_PANEL]"></subscription-child>
+                <subscription-child></subscription-child>
                 <button type="button" class="btn btn-primary" (click)="SUBSCRIPTION_PANEL?.displayHidden">Ok</button>
         </div>
 </custom-model>

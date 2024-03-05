@@ -219,23 +219,12 @@ public class MainActivity extends BridgeActivity {
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
                 moveTaskToBack(true);
-                webview.evaluateJavascript("javascript:window.localStorage.getItem('token')", new ValueCallback<String>() {
-                  @Override public void onReceiveValue(String s) {
-                    Log.e("OnRecieve",s);
-                    try {
-                      JSONObject jsonObject = new JSONObject();
-                      jsonObject.put("id",s);
-                      jsonObject.put("isLoggin", false);
-                      String jsonString = jsonObject.toString();
-                      new PostData().execute(jsonString);
-                      android.os.Process.killProcess(android.os.Process.myPid());
-                      System.exit(1);
-                      deleteCache(getBaseContext());
-                    } catch (Exception e) {
-                      e.printStackTrace();
-                    }
-                  }
-                });
+                webview.clearCache(true);
+                webview.clearHistory();
+                webview.loadUrl("javascript:localStorage.clear()");
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(1);
+                deleteCache(getBaseContext());
               }
             })
           .setNegativeButton("No", new DialogInterface.OnClickListener() {

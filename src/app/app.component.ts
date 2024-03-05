@@ -25,14 +25,13 @@ export class AppComponent implements OnInit, OnDestroy {
   timedOut = false;
   lastPing?: Date;
   title = 'angular-idle-timeout';
-  URL_LIST: any = ["/Login", "/Registration", "/ResetPassword"];
   LOGOUT_TIME: number = 300;
 
   constructor(public router?: Router, public userService?: ApiService,
     public customConfirmDialogModelComponent?: CustomConfirmDialogModelComponent, public websocketService?: WebsocketService,
     private Customidle?: UserIdleService) {
     this.userService.LOADER_SHOW_HIDE = true
-    if (this.URL_LIST?.filter((item: any) => item == router?.url)?.length != 0) {
+    if (this.userService.WHITELIST_URL_LIST?.filter((item: any) => item == router?.url)?.length != 0) {
       this.userService.LOADER_SHOW_HIDE = false;
     } else {
       this.userService.LOADER_SHOW_HIDE = true;
@@ -40,33 +39,33 @@ export class AppComponent implements OnInit, OnDestroy {
     router?.events?.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
         this.Customidle.logout();
-        if (this.URL_LIST?.filter((item: any) => item == event?.url)?.length == 0) {
-          this.Customidle?.onStart(this.LOGOUT_TIME / 60, this.LOGOUT_TIME / 60, (value) => {
-            if (value != null) {
-              if (this.URL_LIST?.filter((item: any) => item == this.router?.url)?.length == 0) {
-                let splitIdeTime: any = value?.split(":")
-                if (splitIdeTime?.length != 0) {
-                  if (splitIdeTime[0] == "0") {
-                    let count = parseInt(splitIdeTime[1]);
-                    this.userService.counter = count;
-                    if (count < 30 && count > 0) {
-                      this.userService.SHOW_SESSION = true
-                    }
-                    if (count == 0) {
-                      this.userService.SHOW_SESSION = false;
-                      this.userService.UserLogout(() => {
-                        Customidle?.logout();
-                        Customidle.idleTimerLeft = null;
-                        this.router?.navigate(['/Login']);
-                        websocketService.disconnect()
-                        location.reload();
-                      }, false, { lastactivetime: 0 });
-                    }
-                  }
-                }
-              }
-            }
-          });
+        if (this.userService.WHITELIST_URL_LIST?.filter((item: any) => item == event?.url)?.length == 0) {
+          // this.Customidle?.onStart(this.LOGOUT_TIME / 60, this.LOGOUT_TIME / 60, (value) => {
+          //   if (value != null) {
+          //     if (this.userService.WHITELIST_URL_LIST?.filter((item: any) => item == this.router?.url)?.length == 0) {
+          //       let splitIdeTime: any = value?.split(":")
+          //       if (splitIdeTime?.length != 0) {
+          //         if (splitIdeTime[0] == "0") {
+          //           let count = parseInt(splitIdeTime[1]);
+          //           this.userService.counter = count;
+          //           if (count < 30 && count > 0) {
+          //             this.userService.SHOW_SESSION = true
+          //           }
+          //           if (count == 0) {
+          //             this.userService.SHOW_SESSION = false;
+          //             this.userService.UserLogout(() => {
+          //               Customidle?.logout();
+          //               Customidle.idleTimerLeft = null;
+          //               this.router?.navigate(['/Login']);
+          //               websocketService.disconnect()
+          //               location.reload();
+          //             }, false, { lastactivetime: 0 });
+          //           }
+          //         }
+          //       }
+          //     }
+          //   }
+          // });
         }
       }
     });
@@ -123,7 +122,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     document.addEventListener("visibilitychange", () => {
-      if (this.URL_LIST?.filter((item: any) => item == this.router?.url)?.length == 0) {
+      if (this.userService.WHITELIST_URL_LIST?.filter((item: any) => item == this.router?.url)?.length == 0) {
         // if (document.hidden) {
         //   let date = new Date();
         //   date.setSeconds(this.LOGOUT_TIME);
@@ -164,36 +163,36 @@ export class AppComponent implements OnInit, OnDestroy {
 
   isActiveCounter: number = 1;
   async AppEventEnabled() {
-    await App.addListener('appUrlOpen', data => {
-      console.log('App opened with URL:', data);
-    });
+    // await App.addListener('appUrlOpen', data => {
+    //   console.log('App opened with URL:', data);
+    // });
 
-    await App.addListener('appRestoredResult', data => {
-      console.log('Restored state:', data);
-    });
+    // await App.addListener('appRestoredResult', data => {
+    //   console.log('Restored state:', data);
+    // });
 
-    await App.addListener('backButton', ({ canGoBack }) => { })
+    // await App.addListener('backButton', ({ canGoBack }) => { })
 
-    await App.removeAllListeners().then(async () => {
-      await App.addListener('backButton', ({ canGoBack }) => {
-        if (canGoBack == false) {
-          this.customConfirmDialogModelComponent?.YesNoDialogModel("Confirm", "Are you sure you want to exit?", (value: any) => {
-            if (value?.value == 'Yes') {
-              App.exitApp();
-              this.userService?.UserLogout(() => {
-                this.router?.navigate(['/Login']);
-                this.websocketService.disconnect();
-                if (Capacitor.getPlatform() === 'andorid') {
-                  App.exitApp();
-                }
-              });
-            }
-          })
-        } else {
-          window.history.back();
-        }
-      });
-    });
+    // await App.removeAllListeners().then(async () => {
+    //   await App.addListener('backButton', ({ canGoBack }) => {
+    //     if (canGoBack == false) {
+    //       this.customConfirmDialogModelComponent?.YesNoDialogModel("Confirm", "Are you sure you want to exit?", (value: any) => {
+    //         if (value?.value == 'Yes') {
+    //           App.exitApp();
+    //           this.userService?.UserLogout(() => {
+    //             this.router?.navigate(['/Login']);
+    //             this.websocketService.disconnect();
+    //             if (Capacitor.getPlatform() === 'andorid') {
+    //               App.exitApp();
+    //             }
+    //           });
+    //         }
+    //       })
+    //     } else {
+    //       window.history.back();
+    //     }
+    //   });
+    // });
   }
 
   counter: any = 60;

@@ -50,9 +50,8 @@ export class CustomModelComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.footerbuttontext[this.id] = this.condition;
-    document.body.appendChild(this.eleref.nativeElement);
+    // document.body.appendChild(this.eleref.nativeElement);
     setTimeout(() => {
-      this.dragElement(document.querySelector('.draggableBody'));
       $(window).on('resize', () => {
         this.addULheight()
       });
@@ -84,8 +83,7 @@ export class CustomModelComponent implements OnInit, OnChanges {
   }
 
   OKBUTTON() {
-    console.log(this.condition, 'FOOTER_BUTTON_EVENT')
-    if (this.condition == true) {
+          if (this.condition == true) {
       this.FOOTER_BUTTON_EVENT.emit(this.condition);
       this.displayHidden
     } else {

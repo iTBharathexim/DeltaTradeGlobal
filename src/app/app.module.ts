@@ -73,9 +73,10 @@ const environmentConfig: any = AppConfig.logger;
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(public router: Router) {
-    if (localStorage.getItem('token') == undefined) {
-      router.navigate(['/Login'])
-    }
+  constructor(public router: Router,public userService:ApiService) {
+    // console.log(userService.WHITELIST_URL_LIST?.filter((item)=>item==router?.url),router.url,"dfsdfsdfd")
+    // if (localStorage.getItem('token') == undefined && userService.WHITELIST_URL_LIST?.filter((item)=>item==router?.url)?.length==0) {
+    //   router.navigate(['/Login'])
+    // }
   }
 }
