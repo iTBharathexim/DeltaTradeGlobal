@@ -80,7 +80,6 @@ export class MPINLoginPageComponent implements OnInit {
               LoginCounter: res?.docs?.data?.LoginCounter != undefined ? res?.docs?.data?.LoginCounter + 1 : 1
             }).subscribe((res1) => {
               if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
-                console.log(this.fCmcontroller.getDeviceId(), "getDeviceId")
                 this.fCmcontroller.getDeviceId().then((userId: any) => {
                   this.userService.UpdateDeviceId(res?.docs?.data?.emailId, userId).subscribe((res) => { })
                   this.userService.PushNotification({
