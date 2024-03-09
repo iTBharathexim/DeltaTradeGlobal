@@ -83,10 +83,8 @@ export class SubscriptionComponent implements OnInit {
           this.SUBSCRIPTION_DETAILS = null;
           let last_Order_Id_Status_False = res[0]?.order_id;
           let last_Order_Id_Status_TRUE = res[0]?.order_id;
-          let Priceafterdiscount:any = plan_data?.Amount - (plan_data?.Amount * parseFloat(res[0]?.discount));
-          let Saving:any = parseFloat(plan_data?.Amount) - parseFloat(Priceafterdiscount)
-          console.log(last_Order_Id_Status_False, last_Order_Id_Status_TRUE,Priceafterdiscount,Saving, "status")
-
+          let Priceafterdiscount: any = plan_data?.Amount - (plan_data?.Amount * parseFloat(res[0]?.discount));
+          let Saving: any = parseFloat(res[0]?.discount) != 0 && res[0]?.discount != undefined ? parseFloat(plan_data?.Amount) - parseFloat(Priceafterdiscount) : parseFloat(plan_data?.Amount);
           if (last_Order_Id_Status_False?.status == undefined || last_Order_Id_Status_False?.PlanDetails?.TotalMonthDays != plan_data?.TotalMonthDays) {
             this.apiservice.creareOrder({
               currency: plan_data?.Currency,
@@ -121,6 +119,9 @@ export class SubscriptionComponent implements OnInit {
                     modal: {
                       ondismiss: (e: any) => {
                         console.log(e, 'dismissed')
+                        this.apiservice.UpdateUserDetails({ order_id: res[0]?.order_id, PlanDetails: res[0]?.PlanDetails }).then((updateres) => {
+
+                        })
                       }
                     },
                     redirect: true, // this redirects to the bank page from my website without opening a new window
@@ -137,8 +138,8 @@ export class SubscriptionComponent implements OnInit {
                               FreeTrailPeroidEndDate: moment(this.addMonth(new Date(), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                               order_id: InfoPaymentStatus,
                               order_status: RazorpayOrderById[0],
-                              discount:0,
-                              ExpiredTimeStamp:moment(this.addMonth(new Date(),plan_data?.TotalMonthDays)).unix()
+                              discount: 0,
+                              ExpiredTimeStamp: moment(this.addMonth(new Date(), plan_data?.TotalMonthDays)).unix()
                             }).then((res) => {
                               this.toastr.success("Your Subscription added successfully...");
                               this.router.navigate(["/LiveTradeApp"])
@@ -150,8 +151,8 @@ export class SubscriptionComponent implements OnInit {
                               FreeTrailPeroidEndDate: moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                               order_id: InfoPaymentStatus,
                               order_status: RazorpayOrderById[0],
-                              discount:0,
-                              ExpiredTimeStamp:moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate),plan_data?.TotalMonthDays)).unix()
+                              discount: 0,
+                              ExpiredTimeStamp: moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate), plan_data?.TotalMonthDays)).unix()
                             }).then((res) => {
                               this.toastr.success("Your Subscription added successfully...");
                               this.router.navigate(["/LiveTradeApp"])
@@ -167,6 +168,9 @@ export class SubscriptionComponent implements OnInit {
                   rzp1.on('payment.failed', (response: any) => {
                     console.log(response, "errorresponse")
                     response['Date'] = new Date().toLocaleDateString()
+                    this.apiservice.UpdateUserDetails({ order_id: res[0]?.order_id, PlanDetails: res[0]?.PlanDetails }).then((updateres) => {
+
+                    })
                     this.apiservice.UpdateUserPaymentDetails(response, {}).then((res) => {
                       console.log(res, "UpdateUserPaymentDetails")
                     })
@@ -196,6 +200,9 @@ export class SubscriptionComponent implements OnInit {
               modal: {
                 ondismiss: (e: any) => {
                   console.log(e, 'dismissed')
+                  this.apiservice.UpdateUserDetails({ order_id: res[0]?.order_id, PlanDetails: res[0]?.PlanDetails }).then((updateres) => {
+
+                  })
                 }
               },
               redirect: true, // this redirects to the bank page from my website without opening a new window
@@ -213,8 +220,8 @@ export class SubscriptionComponent implements OnInit {
                         FreeTrailPeroidEndDate: moment(this.addMonth(new Date(), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                         order_id: InfoPaymentStatus,
                         order_status: RazorpayOrderById[0],
-                        discount:0,
-                        ExpiredTimeStamp:moment(this.addMonth(new Date(),plan_data?.TotalMonthDays)).unix()
+                        discount: 0,
+                        ExpiredTimeStamp: moment(this.addMonth(new Date(), plan_data?.TotalMonthDays)).unix()
                       }).then((res) => {
                         this.toastr.success("Your Subscription added successfully...");
                         this.router.navigate(["/LiveTradeApp"])
@@ -226,8 +233,8 @@ export class SubscriptionComponent implements OnInit {
                         FreeTrailPeroidEndDate: moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate), plan_data?.TotalMonthDays)).format('dddd, MMMM DD, YYYY h:mm A'),
                         order_id: InfoPaymentStatus,
                         order_status: RazorpayOrderById[0],
-                        discount:0,
-                        ExpiredTimeStamp:moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate),plan_data?.TotalMonthDays)).unix()
+                        discount: 0,
+                        ExpiredTimeStamp: moment(this.addMonth(new Date(res[0]?.FreeTrailPeroidEndDate), plan_data?.TotalMonthDays)).unix()
                       }).then((res) => {
                         this.toastr.success("Your Subscription added successfully...");
                         this.router.navigate(["/LiveTradeApp"])
@@ -241,6 +248,9 @@ export class SubscriptionComponent implements OnInit {
             var rzp1 = new Razorpay(RozarpayOptions);
             rzp1.on('payment.failed', (response: any) => {
               response['Date'] = new Date().toLocaleDateString()
+              this.apiservice.UpdateUserDetails({ order_id: res[0]?.order_id, PlanDetails: res[0]?.PlanDetails }).then((updateres) => {
+
+              })
               this.apiservice.UpdateUserPaymentDetails(response, {}).then((res) => {
                 console.log(res, "UpdateUserPaymentDetails")
               })
@@ -289,5 +299,13 @@ export class SubscriptionComponent implements OnInit {
         }
       })
     })
+  }
+
+  replacePlan(plan: any) {
+    return plan?.replace("Plan", "")
+  }
+
+  checkTrailVersion(planName) {
+    return this.apiservice.UserData?.order_status?.status != 'notpaid' && this.apiservice.UserData?.order_status != undefined ? planName : 'Trial Plan';
   }
 }

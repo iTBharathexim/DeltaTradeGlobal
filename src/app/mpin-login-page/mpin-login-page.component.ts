@@ -47,23 +47,6 @@ export class MPINLoginPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
-      this.fCmcontroller.getDeviceId().then((DeviceId) => {
-        this.userService.getDeviceRegister(DeviceId).subscribe((DeviceRes: any) => {
-          if (DeviceRes?.data?.length != 0) {
-            if (DeviceRes?.data[0]?.OnboardingScreen == false) {
-              this.router.navigate((['/OnboardingScreen']))
-            }
-          } else {
-            this.userService.DeviceRegister({ UserDevice: this.userService.getDeviceInfo(), deviceId: DeviceId, OnboardingScreen: false }).subscribe((DeviceRes: any) => {
-              this.router.navigate(['/OnboardingScreen'])
-            });
-          }
-        })
-      })
-    }else{
-      // this.router.navigate(['/OnboardingScreen'])
-    }
   }
 
   onFormSubmit() {
@@ -125,7 +108,7 @@ export class MPINLoginPageComponent implements OnInit {
                   isLoggin: false,
                   lastactivetime: 0
                 }).subscribe((res1) => {
-                  this.toastr.show("Now you try login...");
+                  this.toastr.success("Please login now...");
                 })
                 this.fCmcontroller.getDeviceId().then((CurrentDeviceId: any) => {
                   res?.docs?.data?.deviceId?.forEach(userId => {
@@ -144,7 +127,7 @@ export class MPINLoginPageComponent implements OnInit {
                   isLoggin: false,
                   lastactivetime: 0
                 }).subscribe((res1) => {
-                  this.toastr.show("Now you try login...");
+                  this.toastr.success("Please login now...");
                 })
               }
             }

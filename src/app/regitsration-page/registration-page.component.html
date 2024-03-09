@@ -9,7 +9,14 @@
 
 <body>
         <div class="cookieCard" >
-                <div class="wrapper">
+                <div class="wrapper">                       
+                        <a class="singup-a" style="position: absolute;
+                        right: 0;
+                        top: 91px;
+                        border-radius: 50%;
+                        border: 1px solid #484848;
+                        padding: 5px;
+                        font-size: 10px;" routerLink="/Login"> <i class="fa fa-home" aria-hidden="true"></i></a>
                         <logo-animation></logo-animation>
                         <h2>Registration</h2>
                         <div class="step-main" label="Verify email & mobile number"
@@ -44,7 +51,8 @@
                                                 <label for="">Mobile No.</label>
                                                 <div class="input-box-button">
                                                         <input type="text" class="input-radius"
-                                                                formControlName="mobileNo"
+                                                        MobileValidator
+                                                          formControlName="mobileNo"
                                                                 placeholder="Enter your Mobile No.">
                                                         <button class="btn btn-primary otp-btn"
                                                                 [disabled]="userForm.controls?.mobileNo?.errors==null?false:true"
@@ -69,10 +77,10 @@
                                                         </ng-container>
                                                 </ng-container>
                                         </div>
-                                        <div class="input-box" style="flex-direction: row;">
+                                        <!-- <div class="input-box" style="flex-direction: row;">
                                                 <a class="a" routerLink="/ResetPassword">Reset Password</a>
                                                 <a class="singup-a" routerLink="/Login">Sign In</a>
-                                        </div>
+                                        </div> -->
                                         <div class="input-box button">
                                                 <div class="row-flex" style="display: flex;
                         align-items: baseline;
@@ -205,9 +213,8 @@
 
 </html>
 
-<custom-model [customstyle]="{'max-width':'400px !important','font-size':'12px'}" class="p-2" height="65vh"
-        id="TermsofService" modalbodyheight="65vh" ModalTitleStyle="font-size: 15px;
-    font-weight: bold;" name="SOFTWARE LICENSE AGREEMENT" #TermsofService_PANELRegistration>
+<custom-model [customstyle]="{'max-width':'400px !important','font-size':'12px'}" class="p-2" id="TermsofService" ModalTitleStyle="font-size: 15px;
+    font-weight: bold;" name="Terms &amp; Conditions" #TermsofService_PANELRegistration>
         <div class="col-12 mt-2 mb-2">
                 <terms-condition-template></terms-condition-template>
                 <button type="button" class="btn btn-primary" (click)="TermsofService_PANELRegistration?.displayHidden">Ok</button>
@@ -216,7 +223,7 @@
 
 <custom-model [customstyle]="{'max-width':'400px !important','font-size':'12px'}" class="p-2" height="65vh"
         id="SUBSCRIPTION" modalbodyheight="65vh" ModalTitleStyle="font-size: 15px;
-    font-weight: bold;" name="Subscription Plan 123" #SUBSCRIPTION_PANEL>
+    font-weight: bold;" name="Subscription Plan" #SUBSCRIPTION_PANEL>
         <div class="col-12 mt-2 mb-2" *ngIf="this.VIEW_SBSCRIPTION_PANEL==true">
                 <subscription-child></subscription-child>
                 <button type="button" class="btn btn-primary" (click)="SUBSCRIPTION_PANEL?.displayHidden">Ok</button>

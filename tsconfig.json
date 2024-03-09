@@ -27,6 +27,8 @@
       "dom"
     ]
   },
+  "files": ["src/polfills.ts"],
+  "include": ["src/**/*.d.ts"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInputAccessModifiers": false,

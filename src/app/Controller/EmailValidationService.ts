@@ -15,7 +15,8 @@ export class EmailValidationService {
     return (c: AbstractControl): { [key: string]: boolean } | null => {
       const workingEmailValidator = (email: any) => {
         if (email?.indexOf('@') != -1) {
-          return ['gmail', 'gmail.com','gmail.co']?.indexOf(email?.split('@')[1])!=-1?true:false
+          // 'gmail', 'gmail.com','gmail.co'
+          return ['']?.indexOf(email?.split('@')[1])!=-1?true:false
         }
         return false;
       }

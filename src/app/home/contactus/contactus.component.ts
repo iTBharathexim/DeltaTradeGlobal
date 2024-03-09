@@ -42,7 +42,7 @@ export class ContactusComponent implements OnInit {
         this.userService.SendContactUsEmail(this.userForm.value).subscribe((r:any)=>{
           console.log(r,"dsfsdfdsfdfs")
           if (r?.status==true) {
-            this.toastr.success("Successfully Send messgae...")
+            this.toastr.success("Message sent successfully")
             this.userForm?.reset();
           }
         })

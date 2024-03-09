@@ -1,3 +1,4 @@
+declare function require(moduleName: string): any;
 export const AppConfig = {
   production: false,
   environment: 'DEV',
@@ -14,5 +15,6 @@ export const AppConfig = {
   },
   callback:()=>{
    
-  }
+  },
+  appVersion: require('../../package.json').version,
 };

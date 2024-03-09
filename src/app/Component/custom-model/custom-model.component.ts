@@ -74,7 +74,7 @@ export class CustomModelComponent implements OnInit, OnChanges {
   }
 
   OpenPopup() {
-    $('.dropdown-controller')?.css('display', 'flex')
+    $('.dropdown-controller#'+this.id)?.css('display', 'flex')
   }
 
   ClosePopup() {
@@ -83,7 +83,7 @@ export class CustomModelComponent implements OnInit, OnChanges {
   }
 
   OKBUTTON() {
-          if (this.condition == true) {
+    if (this.condition == true) {
       this.FOOTER_BUTTON_EVENT.emit(this.condition);
       this.displayHidden
     } else {
@@ -166,7 +166,7 @@ export class CustomModelComponent implements OnInit, OnChanges {
     let elem: any = document.querySelector('.upload-modal#' + this.id);
     if (elem != undefined && elem != null) {
       let rect = elem.getBoundingClientRect();
-      $('.draggableBody').css({ 'width': (parseInt(rect?.width) - 10) + 'px','height': (parseInt(rect?.height) - 100) + 'px' })
+      $('.draggableBody').css({ 'width': (parseInt(rect?.width) - 10) + 'px', 'height': (parseInt(rect?.height) - 100) + 'px' })
     }
   }
   ngOnChanges(changes: SimpleChanges): void {

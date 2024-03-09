@@ -1,14 +1,25 @@
-<app-home (ModeChanges)="this.DISPLAY_MODE=$event">
-    <div class="controller">
-        <input type="text" name="" id="" placeholder="Search Holidays" (keyup)="filterHolidays($event.target)">
+<app-home (ModeChanges)="this.DISPLAY_MODE=$event;TableColorChange();">
+    <!-- <div class="controller"> -->
+        <!-- <input type="text" name="" id="" placeholder="Search Holidays" (keyup)="filterHolidays($event.target)">
         <article class="profile" *ngFor="let item of this.HOLIDAYS_FILTER_DATA;let i=index">
             <div class="profile-image">
                 {{this.OneChar(item?.name)}}
-                <!-- <img src="../../../assets/images/6813.jpg" /> -->
             </div>
             <h2 class="profile-username">{{item?.name}}</h2>
             <small class="profile-user-handle">{{item?.date}}</small>
             <h2 class="profile-username">{{item?.days}}</h2>
         </article>
-    </div>
+    </div> -->
+    <!-- <ng-calendar-heatmap [data]="calendarData" [options]="calendarOptions"></ng-calendar-heatmap>   -->
+
+    <div class="calendar-wrapper" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
+        <button id="btnPrev" type="button">Prev</button>
+            <button id="btnNext" type="button">Next</button>
+        <div id="divCal"></div>
+        <div class="holiday-message" *ngIf="this.HOLIDAYS_MESSAGE?.length!=0">
+           <p *ngFor="let item of this.HOLIDAYS_MESSAGE;let i=index">
+           <span>{{this.splitComma(item.date)}} , {{item.name}}</span>
+        </p>
+        </div>
+      </div>      
 </app-home>

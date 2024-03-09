@@ -2,6 +2,7 @@ package forex.app;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,12 +58,16 @@ public class MainActivity extends BridgeActivity {
     intentfilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentfilter.addAction(Intent.ACTION_PACKAGE_RESTARTED);
     registerReceiver(receiver,intentfilter);
+    IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+    filter.addAction(Intent.ACTION_SCREEN_ON);
+    BroadcastReceiver bre = new SCBroadcaster();
+    registerReceiver(bre, filter);
+
     webview = Bridge.getWebview();;
     webview.getSettings().setJavaScriptEnabled(true);
     registerPlugin(AppPlugin.class);
     registerPlugin(EventPlugin.class);
     EventBus.getDefault().register(this);
-
     webview.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -85,13 +90,29 @@ public class MainActivity extends BridgeActivity {
       case "TouchApp" -> {
         if (!Objects.equals(webview.getUrl(), "http://localhost/Login")) {
           EventPlugin.getInstance().SessionTimerStop();
-          EventPlugin.getInstance().TimerStart();
+          EventPlugin.getInstance().TimerStart(EventPlugin.getInstance().DEFAULT_VALUE_TIMER);
           Log.println(Log.ASSERT, "SessionLogoutAllDevice", "Url : " + webview.getUrl());
         }else{
           EventPlugin.getInstance().SessionTimerStop();
         }
       }
-      default -> {
+      case "ScreenOn" -> {
+        if (!Objects.equals(webview.getUrl(), "http://localhost/Login") && EventPlugin.getInstance().CounterTimer) {
+          webview.clearCache(true);
+          webview.clearHistory();
+          webview.reload();
+          webview.loadUrl("javascript:localStorage.clear()");
+        }
+
+        if (!Objects.equals(webview.getUrl(), "http://localhost/Login")) {
+          EventPlugin.getInstance().timerResume();
+          EventPlugin.getInstance().OnScreenState(true);
+          Log.println(Log.ASSERT, "ScreenOn", "Url : " + webview.getUrl()+" : "+EventPlugin.getInstance().CounterTimer);
+         }else{
+           EventPlugin.getInstance().SessionTimerStop();
+         }
+       }
+        default -> {
       }
     }
   };
@@ -106,6 +127,18 @@ public class MainActivity extends BridgeActivity {
   @Override
   public void onClick(View view) {
 
+  }
+
+  public void onPause() {
+    super.onPause();
+    Log.println(Log.ASSERT,"wasScreenOn","onPause");
+    EventPlugin.getInstance().OnScreenState(false);
+  }
+
+  public void onResume() {
+    super.onResume();
+    EventBus.getDefault().post(new MessageEvent("ScreenOn","ScreenOn"));
+    Log.println(Log.ASSERT,"wasScreenOn","onResume");
   }
 
   @Override

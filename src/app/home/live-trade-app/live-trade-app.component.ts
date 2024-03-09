@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import { FCmController } from 'src/app/Controller/FCM-Controllor';
 import { JsApiCommonSubscriber } from '../DataService/NetJSApi';
+import { CapacitorEvent } from 'capacitor-plugin-event';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-live-trade-app',
@@ -24,6 +26,15 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
     this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
     this.websocketService.connect();
     this.JsApiCommonsubscriber.loadJSApi();
+    if (Capacitor.getPlatform() != 'web') {
+      CapacitorEvent.addListener("OnScreenState", (result: any) => {
+        if (result?.value == true) {
+          this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
+          this.websocketService.connect();
+          this.JsApiCommonsubscriber.loadJSApi();
+        }
+      })
+    }
   }
   VISIBLE_TRADE_APP: any = '';
   USER_DETAILS: any = [];

@@ -17,7 +17,8 @@ export class BusinessEmailValidatorDirective implements Validator {
                 if (control?.value == null || control?.value == undefined) {
                     valid = null;
                 }
-                valid = ['gmail', 'gmail.com', 'gmail.co', 'gmail.c']?.indexOf(control?.value?.split('@')[1]) != -1 ? true : false;
+                // 'gmail', 'gmail.com', 'gmail.co', 'gmail.c'
+                valid = ['']?.indexOf(control?.value?.split('@')[1]) != -1 ? true : false;
                 if ((control?.dirty || control?.touched)) {
                     if (valid) {
                         const icon = document.createElement('i');

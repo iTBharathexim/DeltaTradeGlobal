@@ -20,6 +20,8 @@ import { ComponentFocus } from '../Controller/ComponentFocus';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { CanvasJSAngularStockChartsModule } from '@canvasjs/angular-stockcharts';
+import { MobileValidatorDirective } from '../Controller/mobile-validator.directive';
+import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { CanvasJSAngularStockChartsModule } from '@canvasjs/angular-stockcharts'
     InnerDynamicErrorComponent,
     BusinessEmailValidatorDirective,
     ComponentFocus,
+    MobileValidatorDirective
   ],
   imports: [
     CommonModule,
@@ -45,7 +48,8 @@ import { CanvasJSAngularStockChartsModule } from '@canvasjs/angular-stockcharts'
     CustomComponentModule,
     NgApexchartsModule,
     CanvasJSAngularChartsModule,
-    CanvasJSAngularStockChartsModule
+    CanvasJSAngularStockChartsModule,
+    CalendarHeatmapModule
   ],
   exports: [
     CommonModule,
@@ -65,10 +69,12 @@ import { CanvasJSAngularStockChartsModule } from '@canvasjs/angular-stockcharts'
     MoreContentComponent,
     InnerDynamicErrorComponent,
     BusinessEmailValidatorDirective,
+    MobileValidatorDirective,
     ComponentFocus,
     NgApexchartsModule,
     CanvasJSAngularChartsModule,
     CanvasJSAngularStockChartsModule,
+    CalendarHeatmapModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

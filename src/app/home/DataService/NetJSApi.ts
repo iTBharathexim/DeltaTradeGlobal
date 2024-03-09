@@ -144,6 +144,7 @@ export class JsApiCommonSubscriber {
                                             showInLegend: true,
                                             name: "Open",
                                             lineDashType: "dash",
+                                            lineColor: "#3F98D7",
                                             markerType: "square",
                                             xValueFormatString: "DD MMM, YYYY",
                                             dataPoints: dataPoints
@@ -151,14 +152,16 @@ export class JsApiCommonSubscriber {
                                         {
                                             type: "line",
                                             showInLegend: true,
-                                            name: "Close",
+                                            name: "High",
+                                            lineColor: "black",
                                             lineDashType: "dot",
-                                            dataPoints: dataPoints1
+                                            dataPoints: dataPoints3
                                         },
                                         {
                                             type: "line",
                                             showInLegend: true,
                                             name: "Low",
+                                            lineColor: "#E65758",
                                             lineDashType: "dash",
                                             markerType: "square",
                                             xValueFormatString: "DD MMM, YYYY",
@@ -167,10 +170,11 @@ export class JsApiCommonSubscriber {
                                         {
                                             type: "line",
                                             showInLegend: true,
-                                            name: "High",
+                                            name: "Close",
+                                            lineColor: "#7A62BA",
                                             lineDashType: "dot",
-                                            dataPoints: dataPoints3
-                                        }
+                                            dataPoints: dataPoints1
+                                        },
                                     ]
                                 }
                             })
@@ -210,7 +214,7 @@ export class JsApiCommonSubscriber {
                             let forwardcount = 0;
                             let askclassName = '';
                             let bidclassName = '';
-                            let timer: any = this.Currentday != "Saturday" && this.Currentday != "Sunday" ? moment().format('h:mm:ss a, Do MMM  YY') : moment(res[this.apiservice.NEW_CURRENCY_INR_LIST[0]]?.Timestamp).format('h:mm:ss a, Do MMM  YY');
+                            let timer: any = moment(res[this.apiservice.NEW_CURRENCY_INR_LIST[0]]?.Timestamp).format('h:mm:ss a, Do MMM  YY');
                             for (let index = 0; index < this.apiservice.NEW_CURRENCY_INR_LIST?.length; index++) {
                                 let element = res[this.apiservice.NEW_CURRENCY_INR_LIST[index]];
                                 let splitkey: any = this.apiservice.NEW_CURRENCY_INR_LIST[index]?.split('_');
@@ -348,6 +352,7 @@ export class JsApiCommonSubscriber {
 
     get9to5() {
         var d = new Date();
+        // d.setDate(d.getDate()+1);
         var e = d.toLocaleTimeString('en-US', { hour12: false });
         var f = e.split(':');
         let condition = false;
@@ -357,7 +362,7 @@ export class JsApiCommonSubscriber {
         if (parseInt(f[0]) >= 17) {
             condition = true;
         }
-        if (this.apiservice.HOLIDAYS_INDIA.filter((item: any) => item?.date?.toString() == moment().format('MMMM DD, YYYY')?.toString())?.length != 0) {
+        if (this.apiservice.HOLIDAYS_INDIA.filter((item: any) => item?.date?.toString() == moment(d).format('MMMM DD, YYYY')?.toString())?.length != 0) {
             condition = true;
         }
         if ((this.Currentday=='Saturday' || this.Currentday=='Sunday')) {

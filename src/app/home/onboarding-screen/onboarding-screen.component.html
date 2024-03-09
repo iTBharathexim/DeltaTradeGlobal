@@ -1,4 +1,4 @@
-<div class="controller">
+<div class="controller" *ngIf="this.PAGE_VISIBLE==true">
     <!-- <button class='open-walkthrough'>Start</button> -->
     <div class='walkthrough show reveal'>
         <div class='walkthrough-pagination'>
@@ -94,6 +94,7 @@
             </button>
         </div>
         <div class='walkthrough-footer'>
+            <button class='button prev-screen'>Back</button>
             <button class='button next-screen'>Next</button>
             <button class='button finish close' disabled='true' (click)="navigateUrlHome('/Login')">Finish</button>
         </div>

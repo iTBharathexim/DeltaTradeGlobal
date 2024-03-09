@@ -11,7 +11,7 @@
         <div class="content">
                 <div class="text">
                         <logo-animation></logo-animation>
-                        <p>Forex App Login</p>
+                        <p style="font-size: 20px;">Login</p>
                 </div>
                 <form [formGroup]="userForm">
                         <div class="field">
@@ -45,9 +45,9 @@
 
 </html>
 
-<custom-model [customstyle]="{'max-width':'400px !important','font-size':'12px'}" class="p-2" height="65vh"
-        id="TermsofService" modalbodyheight="65vh" ModalTitleStyle="font-size: 15px;
-    font-weight: bold;" name="SOFTWARE LICENSE AGREEMENT" #TermsofService_PANEL>
+<custom-model [customstyle]="{'max-width':'400px !important','font-size':'12px'}" class="p-2"
+  id="TermsofService" ModalTitleStyle="font-size: 15px;
+    font-weight: bold;" name="Terms &amp; Conditions" #TermsofService_PANEL>
         <div class="col-12 mt-2 mb-2">
                 <terms-condition-template></terms-condition-template>
                 <button type="button" class="btn btn-primary" (click)="TermsofService_PANEL?.displayHidden">Ok</button>

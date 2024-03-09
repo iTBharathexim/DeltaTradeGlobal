@@ -2,12 +2,13 @@
   <div class="controller" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
     [style]="this.DISPLAY_MODE=='Light'?'--src:url(../../assets/images/logo-transparent-svg.svg)':'--src:url(../../assets/images/logo_transparent_svg_Light.svg)'">
     <div class="nav-bar" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
-      <h5 style="position: absolute;
+      <!-- <h5 style="position: absolute;
       font-size: 16px;
       right: 90px;
       top: 15px;
       z-index: 99;
-      color: black;" *ngIf="this.apiservice.COUNT_DOWN!=0">{{this.apiservice.COUNT_DOWN}}</h5>
+      color: black;" *ngIf="this.apiservice.COUNT_DOWN!=0">{{this.apiservice.COUNT_DOWN}}</h5> -->
+    
       <nav role="navigation" class="navigation"
         [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
         <div class="navigation__wrapper">
@@ -105,6 +106,13 @@
 
               </div>
             </div>
+            <h5 style="
+                position: absolute;
+    font-size: 9px;
+    right: 90px;
+    bottom: 44px;
+    z-index: 99;
+    color: white;">v{{this.apiservice.API_AppConfig.appVersion}}</h5>
             <div class="user-profiles">
               <span><i class="fa fa-user" aria-hidden="true"></i> {{this.USER_DETAILS?.emailId}}</span>
             </div>

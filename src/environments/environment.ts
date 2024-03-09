@@ -1,3 +1,5 @@
+declare function require(moduleName: string): any;
+
 export const AppConfig = {
   production: false,
   environment: 'LOCAL',
@@ -13,6 +15,7 @@ export const AppConfig = {
   },
   callback:()=>{
    
-  }
+  },
+  appVersion: require('../../package.json').version,
 };
 

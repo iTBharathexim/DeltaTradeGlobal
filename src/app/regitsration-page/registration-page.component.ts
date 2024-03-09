@@ -14,7 +14,7 @@ import moment from 'moment';
 })
 export class RegistrationPageComponent implements OnInit {
   userForm: any = new FormGroup({
-    mobileNo: new FormControl(null, []),
+    mobileNo: new FormControl(null, [Validators.required, MaxMinValidationService.checkLimit(10, 10)]),
     MobileOTPVerified: new FormControl(null, []),
     emailId: new FormControl(null, [Validators.required]),
     emailIdVerified: new FormControl(null, [Validators.required, MaxMinValidationService.checkLimit(6, 6)]),

@@ -284,6 +284,11 @@ export class ApiService {
       days: "Friday"
     },
     {
+      name: "Chhatrapati Shivaji Jayanti",
+      date: "Febuary 19, 2024",
+      days: "Friday"
+    },
+    {
       name: "Mahashivratri",
       date: "March 08, 2024",
       days: "Friday"
@@ -299,8 +304,23 @@ export class ApiService {
       days: "Friday"
     },
     {
+      name: "Bank Yearly Closing",
+      date: "April 1, 2024",
+      days: "Friday"
+    },
+    {
+      name: "Gudi Padwa",
+      date: "April 9, 2024",
+      days: "Friday"
+    },
+    {
       name: "Id-Ul-Fitr (Ramadan Eid)",
       date: "April 11, 2024",
+      days: "Thursday"
+    },
+    {
+      name: "Dr. Ambedkar Jayanti",
+      date: "April 14, 2024",
       days: "Thursday"
     },
     {
@@ -309,8 +329,18 @@ export class ApiService {
       days: "Wednesday"
     },
     {
+      name: "Mahavir Jayanti",
+      date: "April 21, 2024",
+      days: "Wednesday"
+    },
+    {
       name: "Maharashtra Day",
       date: "May 01, 2024",
+      days: "Wednesday"
+    },
+    {
+      name: "Buddha Purnima",
+      date: "May 23, 2024",
       days: "Wednesday"
     },
     {
@@ -324,21 +354,48 @@ export class ApiService {
       days: "Wednesday"
     },
     {
-      name: "Independence Day/Parsi New Year",
+      name: "Independence Day",
       date: "August 15, 2024",
       days: "Thursday"
+    },
+    {
+      name: "Parsi New Year",
+      date: "August 15, 2024",
+      days: "Thursday"
+    },
+    {
+      name: "Ganesh Chaturthi",
+      date: "September 07, 2024",
+      days: "Wednesday"
+    },
+    {
+      name: "Id-e-Milad",
+      date: "September 16, 2024",
+      days: "Wednesday"
     },
     {
       name: "Mahatma Gandhi Jayanti",
       date: "October 02, 2024",
       days: "Wednesday"
-    }, {
+    },
+    {
+      name: "Dassera",
+      date: "October 12, 2024",
+      days: "Wednesday"
+    },
+    {
       name: "Diwali Laxmi Pujan*",
       date: "November 01, 2024",
       days: "Friday"
-    }, {
+    },
+    {
+      name: "Balipratiprada",
+      date: "November 02, 2024",
+      days: "Friday"
+    },
+    {
       name: "Gurunanak Jayanti",
-      date: "June 17, 2024",
+      date: "November 15, 2024",
       days: "Monday"
     },
     {
@@ -347,8 +404,8 @@ export class ApiService {
       days: "Wednesday"
     },
   ]
-  WHITELIST_URL_LIST: any = ["/Login", "/Registration", "/ResetPassword","/OnboardingScreen"];
-
+  WHITELIST_URL_LIST: any = ["/Login", "/Registration", "/ResetPassword", "/OnboardingScreen"];
+  API_AppConfig = AppConfig;
   constructor(public http: HttpClient, private deviceInformationService: DeviceDetectorService,
     public router: Router,
     public websocket: WebsocketService,
@@ -539,8 +596,8 @@ export class ApiService {
     return this.http.post(`${this.apibase}/DeviceOnboardingScreen/get`, { deviceId: id });
   }
 
-  updateDeviceRegister(id: any,data:any) {
-    return this.http.post(`${this.apibase}/DeviceOnboardingScreen/update`, { deviceId: id ,data: data});
+  updateDeviceRegister(id: any, data: any) {
+    return this.http.post(`${this.apibase}/DeviceOnboardingScreen/update`, { deviceId: id, data: data });
   }
 
   SendOtpEmail(data: any) {
