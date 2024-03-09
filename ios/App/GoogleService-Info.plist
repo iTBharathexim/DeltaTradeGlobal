@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyD3hm71VH-UT2DkbNAVuNetl2vE2vntr1Q</string>
+	<key>GCM_SENDER_ID</key>
+	<string>905190605918</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.deltatradeglobal.deltatrade</string>
+	<key>PROJECT_ID</key>
+	<string>deltatrade-3ac72</string>
+	<key>STORAGE_BUCKET</key>
+	<string>deltatrade-3ac72.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:905190605918:ios:f3de9a75bb49218d82a0cf</string>
+	<key>DATABASE_URL</key>
+	<string>https://deltatrade-3ac72-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

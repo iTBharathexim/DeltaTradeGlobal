@@ -93,7 +93,7 @@
     display: flex;
     border-bottom: 2px solid #b6b6b6;
     position: absolute;
-    top: 0px;
+    top: 50px;
 }
 
 .body {
@@ -103,9 +103,9 @@
     border-bottom-right-radius: 0px;
     background-color: #fff;
     margin: -4px auto auto;
-    height: 92vh;
+    height: 82vh;
     position: absolute;
-    top: 55px;
+    top: 103px;
 }
 
 .mat-tab-group {
@@ -346,7 +346,7 @@
     background-size: 80% 80%;
     margin: -13px auto auto;
     left: -10px;
-    top: 15px;
+    top: 65px;
 }
 
 ::ng-deep .mat-tab-header {
@@ -745,4 +745,10 @@ label {
 .nav-height-controller {
     height: 85vh;
     overflow: auto;
+}
+
+body{
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
 }

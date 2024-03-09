@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit {
           if (last_Order_Id_Status_TRUE != undefined && last_Order_Id_Status_TRUE != null) {
             this.SUBSCRIPTION_DETAILS = Object.assign(last_Order_Id_Status_TRUE, res[0])
           }
+          console.log(this.USER_DETAILS?.FreeTrailPeroidEndDate,"USER_DETAILS");
           this.DISPLAY_MODE = this.USER_DETAILS?.DisplayMode
           let CompareDates = res[0]?.SubcriptionExpired;
           if (CompareDates == true) {
