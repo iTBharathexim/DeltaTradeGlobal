@@ -1,6 +1,6 @@
 {
   "name": "forex-app",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "scripts": {
     "ng": "ng",
     "build": "ng build --max_old_space_size=50000",
