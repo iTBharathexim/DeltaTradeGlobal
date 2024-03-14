@@ -9,6 +9,7 @@ import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
 import { CapacitorEvent } from 'capacitor-plugin-event';
 import { PushNotificationsController } from './Controller/PushNotificationsController';
+import { JsApiCommonSubscriber } from './home/DataService/NetJSApi';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
   LOGOUT_TIME: number = 300;
 
   constructor(public router?: Router, public userService?: ApiService,
+    public JsApiCommonsubscriber?: JsApiCommonSubscriber,
     public customConfirmDialogModelComponent?: CustomConfirmDialogModelComponent, public websocketService?: WebsocketService,
     private Customidle?: UserIdleService) {
     this.userService.LOADER_SHOW_HIDE = true
@@ -81,6 +83,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+   
     if (Capacitor.getPlatform() != 'web') {
       PushNotificationsController.LoadPushNotifications();
       CapacitorEvent.register().then((res) => { });

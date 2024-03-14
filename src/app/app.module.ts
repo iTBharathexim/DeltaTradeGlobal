@@ -32,6 +32,7 @@ import { WebsocketService } from './services/websocket.service';
 import { InactivityService } from './Controller/InactivityService';
 import { UserIdleService } from './Controller/user-idle-manager/user-idle/user-idle.servies';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { JsApiCommonSubscriber } from './home/DataService/NetJSApi';
 const environmentConfig: any = AppConfig.logger;
 
 @NgModule({
@@ -73,10 +74,10 @@ const environmentConfig: any = AppConfig.logger;
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(public router: Router,public userService:ApiService) {
-    // console.log(userService.WHITELIST_URL_LIST?.filter((item)=>item==router?.url),router.url,"dfsdfsdfd")
-    // if (localStorage.getItem('token') == undefined && userService.WHITELIST_URL_LIST?.filter((item)=>item==router?.url)?.length==0) {
-    //   router.navigate(['/Login'])
-    // }
+  constructor(public router: Router,public userService:ApiService,
+    public websocketService: WebsocketService,
+    public JsApiCommonsubscriber: JsApiCommonSubscriber    ) {
+    this.websocketService.connect()
+    this.JsApiCommonsubscriber.loadJSApi();
   }
 }

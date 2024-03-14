@@ -2,16 +2,39 @@ import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular
 import { ApiService } from '../../services/api.service';
 import moment from 'moment';
 import { Router } from '@angular/router';
-import { WebsocketService } from 'src/app/services/websocket.service';
-import { FCmController } from 'src/app/Controller/FCM-Controllor';
+import { WebsocketService } from '../../services/websocket.service';
+import { FCmController } from '../../Controller/FCM-Controllor';
 import { JsApiCommonSubscriber } from '../DataService/NetJSApi';
 import { CapacitorEvent } from 'capacitor-plugin-event';
 import { Capacitor } from '@capacitor/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-live-trade-app',
   templateUrl: './live-trade-app.component.html',
-  styleUrls: ['./live-trade-app.component.scss']
+  styleUrls: ['./live-trade-app.component.scss'],
+  animations: [
+    trigger('HighClose', [
+      state('open', style({
+        backgroundColor: '#f65d5d',
+        color: "white",
+        BorderRadius: "10px",
+        padding: "5px"
+      })),
+      state('closed', style({
+        backgroundColor: '#4cf140',
+        color: "white",
+        BorderRadius: "10px",
+        padding: "5px"
+      })),
+      transition('* => closed', [
+        animate('0.4s')
+      ]),
+      transition('* => open', [
+        animate('0.4s')
+      ]),
+    ]),
+  ],
 })
 export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
   title = 'angular-mobile-app';
@@ -24,17 +47,15 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
     public router: Router) {
     this.apiservice.LIST_OF_DATA = [];
     this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
-    this.websocketService.connect();
-    this.JsApiCommonsubscriber.loadJSApi();
-    if (Capacitor.getPlatform() != 'web') {
-      CapacitorEvent.addListener("OnScreenState", (result: any) => {
-        if (result?.value == true) {
-          this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
-          this.websocketService.connect();
-          this.JsApiCommonsubscriber.loadJSApi();
-        }
-      })
-    }
+    // if (Capacitor.getPlatform() != 'web') {
+    //   CapacitorEvent.addListener("OnScreenState", (result: any) => {
+    //     if (result?.value == true) {
+    //       this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
+    //       // this.websocketService.connect();
+    //       // this.JsApiCommonsubscriber.loadJSApi();
+    //     }
+    //   })
+    // }
   }
   VISIBLE_TRADE_APP: any = '';
   USER_DETAILS: any = [];
@@ -42,10 +63,10 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
   WHITELISTING: any = ['JPY', 'AUD', 'CNY'];
 
   ngOnInit(): void {
-    this.apiservice.LIST_OF_DATA = [];
-    this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
+    // this.apiservice.LIST_OF_DATA = [];
+    // this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
     // this.websocketService.connect();
-    this.JsApiCommonsubscriber.loadJSApi();
+    // this.JsApiCommonsubscriber.loadJSApi();
   }
 
 
@@ -76,7 +97,6 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
   onTabChanged(event: any) {
     console.log(event, "sdfsdfdsf")
     if (event?.name == "FX LIVE") {
-      this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
       // this.websocketService.connect();
     } else if (event?.name == "Forward") {
       // this.apiservice.StartWebSocket();

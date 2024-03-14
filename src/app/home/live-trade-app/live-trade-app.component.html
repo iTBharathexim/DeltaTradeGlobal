@@ -3,11 +3,14 @@
     [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
     <custom-mat-step MATSTEP_LABEL="FX LIVE" errorMessage="Please select Inward Remittance" [NextTrue]="true">
       <div class="marquee" *ngIf="this.apiservice.LIST_OF_DATA[0]?.quotes?.length!=0">
-        <span *ngIf="this.apiservice.LIST_OF_DATA[0]?.quotes[0]?.MarketStatus==true">Market hours closed, rate displayed may not be live&nbsp;</span>
+        <span *ngIf="this.apiservice.LIST_OF_DATA[0]?.quotes[0]?.MarketStatus==true">Market hours closed, rate displayed
+          may not be live&nbsp;</span>
       </div>
-      <custom-mat-accordion [Expanded]="item?.expended" (onChangeEvent)="Collepse($event,i,this.apiservice.LIST_OF_DATA[0]?.quotes)" [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
+      <custom-mat-accordion [Expanded]="item?.expended"
+        (onChangeEvent)="Collepse($event,i,this.apiservice.LIST_OF_DATA[0]?.quotes)"
+        [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
         *ngFor="let item of this.apiservice.LIST_OF_DATA[0]?.quotes;let i=index">
-        <p class="time" *ngIf="(i==0)">{{item?.time }}</p>
+        <p class="time" *ngIf="(i==0)">{{item?.TIMER_SOCKET }}</p>
         <custom-mat-expansion-panel>
           <div class="row-flex">
             <div class="currecny">
@@ -25,8 +28,8 @@
                 </thead>
                 <tbody>
                   <tr class="tr-controller">
-                    <td [ngClass]="item?.bidclassName" class="width-tr">{{this.setFloatFixed(item?.bid)}}</td>
-                    <td [ngClass]="item?.askclassName" class="width-tr">{{this.setFloatFixed(item?.ask)}}</td>
+                    <td [@HighClose]="item?.bidclassName" class="width-tr">{{this.setFloatFixed(item?.bid)}}</td>
+                    <td [@HighClose]="item?.askclassName" class="width-tr">{{this.setFloatFixed(item?.ask)}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -116,39 +119,43 @@
     </custom-mat-step>
     <custom-mat-step MATSTEP_LABEL="FORWARD" errorMessage="Please select Inward Remittance" [NextTrue]="true">
       <div class="marquee" *ngIf="this.apiservice.LIST_OF_DATA[0]?.quotes?.length!=0">
-        <span *ngIf="this.apiservice.LIST_OF_DATA[0]?.quotes[0]?.MarketStatus==true">Market hours closed, rate displayed may not be live&nbsp;</span>
+        <span *ngIf="this.apiservice.LIST_OF_DATA[0]?.quotes[0]?.MarketStatus==true">Market hours closed, rate displayed
+          may not be live&nbsp;</span>
       </div>
       <div class="forward">
-        <custom-mat-accordion [Expanded]="item?.expended" (onChangeEvent)="Collepse($event,i,this.apiservice.FORWARD_BID_ASK_DATA)" [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
-        *ngFor="let item of this.apiservice.FORWARD_BID_ASK_DATA;let i=index">
-        <p class="time" *ngIf="(i==0)">{{item?.time}}</p>
-        <custom-mat-expansion-panel>
-          <div class="row-flex">
-            <div class="currecny">
-              <img [src]="'../../assets/CountryFlag/'+item?.base_currency+'.png'" [alt]="item?.base_currency" srcset="">
-              <p style="display: flex;align-items: center;gap: 3px;font-weight: 100;font-size: 13px;">
-                {{item?.base_currency}}<span class="left-border"></span>{{item?.quote_currency}}</p>
+        <custom-mat-accordion [Expanded]="item?.expended"
+          (onChangeEvent)="Collepse($event,i,this.apiservice.FORWARD_BID_ASK_DATA)"
+          [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
+          *ngFor="let item of this.apiservice.FORWARD_BID_ASK_DATA;let i=index">
+          <p class="time" *ngIf="(i==0)">{{item?.time}}</p>
+          <custom-mat-expansion-panel>
+            <div class="row-flex">
+              <div class="currecny">
+                <img [src]="'../../assets/CountryFlag/'+item?.base_currency+'.png'" [alt]="item?.base_currency"
+                  srcset="">
+                <p style="display: flex;align-items: center;gap: 3px;font-weight: 100;font-size: 13px;">
+                  {{item?.base_currency}}<span class="left-border"></span>{{item?.quote_currency}}</p>
+              </div>
+              <label for="" class="lable-Request-Time">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="font-weight: 100;height: 20px;" class="width-tr"></th>
+                      <th style="font-weight: 100;height: 20px;" class="width-tr"></th>
+                    </tr>
+                  </thead>
+                </table>
+              </label>
             </div>
-            <label for="" class="lable-Request-Time">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="font-weight: 100;height: 20px;" class="width-tr"></th>
-                    <th style="font-weight: 100;height: 20px;" class="width-tr"></th>
-                  </tr>
-                </thead>
-              </table>
-            </label>
-          </div>
-        </custom-mat-expansion-panel>
-        <custom-mat-panel-description>
-          <div class="controller-panel-description">
-            <div class="col-12 card-parent-3">
-              <div class="row">
-                <p class="Bid-class">BID</p>
-                <table class="table">
-                  <tbody>
-                    <!-- <tr>
+          </custom-mat-expansion-panel>
+          <custom-mat-panel-description>
+            <div class="controller-panel-description">
+              <div class="col-12 card-parent-3">
+                <div class="row">
+                  <p class="Bid-class">BID</p>
+                  <table class="table">
+                    <tbody>
+                      <!-- <tr>
                       <th>1W</th>
                       <td>{{(item?.BID?.QUOTE_BID_1W)}}</td>
                     </tr>
@@ -160,55 +167,55 @@
                       <th>3W</th>
                       <td>{{(item?.BID?.QUOTE_BID_3W)}}</td>
                     </tr> -->
-                    <tr>
-                      <th>1M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_1M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>2M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_2M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>3M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_3M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>4M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_4M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>5M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_5M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>6M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_6M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>7M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_7M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>8M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_8M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>9M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_9M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>10M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_10M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>11M</th>
-                      <td>{{(item?.BID?.QUOTE_BID_11M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>1Y</th>
-                      <td>{{(item?.BID?.QUOTE_BID_1Y)}}</td>
-                    </tr>
-                    <!-- <tr>
+                      <tr>
+                        <th>1M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_1M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>2M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_2M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>3M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_3M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>4M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_4M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>5M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_5M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>6M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_6M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>7M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_7M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>8M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_8M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>9M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_9M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>10M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_10M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>11M</th>
+                        <td>{{(item?.BID?.QUOTE_BID_11M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>1Y</th>
+                        <td>{{(item?.BID?.QUOTE_BID_1Y)}}</td>
+                      </tr>
+                      <!-- <tr>
                       <th>BID 2Y</th>
                       <td>{{(item?.BID?.QUOTE_BID_2Y)}}</td>
                     </tr>
@@ -224,20 +231,20 @@
                       <th>BID 5Y</th>
                       <td>{{(item?.BID?.QUOTE_BID_5Y)}}</td>
                     </tr> -->
-                  </tbody>
-                </table>
-              </div>
-             
-              <div class="row">
-                <p class="Ask-class">ASK</p>
-                <table class="table">
-                  <!-- <thead>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="row">
+                  <p class="Ask-class">ASK</p>
+                  <table class="table">
+                    <!-- <thead>
                     <tr style="text-align: center;">
                       <th>ASK</th>
                     </tr>
                   </thead> -->
-                  <tbody>
-                    <!-- <tr>
+                    <tbody>
+                      <!-- <tr>
                       <th>ASK ON</th>
                       <td>{{(item?.ASK?.QUOTE_ASK_ON)}}</td>
                     </tr>
@@ -249,7 +256,7 @@
                       <th>ASK TN</th>
                       <td>{{(item?.ASK?.QUOTE_ASK_TN)}}</td>
                     </tr> -->
-                    <!-- <tr>
+                      <!-- <tr>
                       <th>1W</th>
                       <td>{{(item?.ASK?.QUOTE_ASK_1W)}}</td>
                     </tr>
@@ -261,55 +268,55 @@
                       <th>3W</th>
                       <td>{{(item?.ASK?.QUOTE_ASK_3W)}}</td>
                     </tr> -->
-                    <tr>
-                      <th>1M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_1M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>2M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_2M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>3M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_3M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>4M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_4M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>5M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_5M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>6M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_6M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>7M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_7M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>8M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_8M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>9M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_9M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>10M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_10M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>11M</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_11M)}}</td>
-                    </tr>
-                    <tr>
-                      <th>1Y</th>
-                      <td>{{(item?.ASK?.QUOTE_ASK_1Y)}}</td>
-                    </tr>
-                    <!-- <tr>
+                      <tr>
+                        <th>1M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_1M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>2M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_2M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>3M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_3M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>4M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_4M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>5M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_5M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>6M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_6M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>7M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_7M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>8M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_8M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>9M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_9M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>10M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_10M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>11M</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_11M)}}</td>
+                      </tr>
+                      <tr>
+                        <th>1Y</th>
+                        <td>{{(item?.ASK?.QUOTE_ASK_1Y)}}</td>
+                      </tr>
+                      <!-- <tr>
                       <th>ASK 2Y</th>
                       <td>{{(item?.ASK?.QUOTE_ASK_2Y)}}</td>
                     </tr>
@@ -325,22 +332,21 @@
                       <th>ASK 5Y</th>
                       <td>{{(item?.ASK?.QUOTE_ASK_5Y)}}</td>
                     </tr> -->
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
+
               </div>
-             
-            </div>
-             <!-- <div class="right-arrow" *ngIf="item.Next!=true" (click)="item.Next=true"><i class="fa fa-angle-double-down"
+              <!-- <div class="right-arrow" *ngIf="item.Next!=true" (click)="item.Next=true"><i class="fa fa-angle-double-down"
                 aria-hidden="true"></i>
             </div> -->
-            <div class="right-arrow"><i class="fa fa-angle-double-up"
-                aria-hidden="true"></i>
-            </div> 
-          </div>
-        </custom-mat-panel-description>
-      </custom-mat-accordion>
+              <div class="right-arrow"><i class="fa fa-angle-double-up" aria-hidden="true"></i>
+              </div>
+            </div>
+          </custom-mat-panel-description>
+        </custom-mat-accordion>
       </div>
-     
+
     </custom-mat-step>
     <custom-mat-step MATSTEP_LABEL="NEWS" errorMessage="Please select Inward Remittance" [NextTrue]="true">
       <div class="card-new-market" *ngFor="let item of this.apiservice.MARKET_NEWS_DATA">

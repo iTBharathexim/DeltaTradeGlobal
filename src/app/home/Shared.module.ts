@@ -49,7 +49,8 @@ import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
     NgApexchartsModule,
     CanvasJSAngularChartsModule,
     CanvasJSAngularStockChartsModule,
-    CalendarHeatmapModule
+    CalendarHeatmapModule,
+    BrowserAnimationsModule
   ],
   exports: [
     CommonModule,
@@ -74,7 +75,8 @@ import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
     NgApexchartsModule,
     CanvasJSAngularChartsModule,
     CanvasJSAngularStockChartsModule,
-    CalendarHeatmapModule
+    CalendarHeatmapModule,
+    BrowserAnimationsModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

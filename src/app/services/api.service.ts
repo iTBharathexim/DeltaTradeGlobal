@@ -406,6 +406,7 @@ export class ApiService {
   ]
   WHITELIST_URL_LIST: any = ["/Login", "/Registration", "/ResetPassword", "/OnboardingScreen"];
   API_AppConfig = AppConfig;
+  MARGIN_DATA:any=[];
   constructor(public http: HttpClient, private deviceInformationService: DeviceDetectorService,
     public router: Router,
     public websocket: WebsocketService,
@@ -417,6 +418,13 @@ export class ApiService {
 
   addUserData(data: any) {
     this.UserData = (data);
+  }
+
+  loadMargin(id) {
+    this.getFXMargin(id,{}).subscribe((res: any) => {
+      this.MARGIN_DATA = res?.FXMarginDetails;
+      console.log(res?.FXMarginDetails,"res?.FXMarginDetails")
+    })
   }
 
   UserLogout(callback: any, bool: any = false, addmore: any = {}) {

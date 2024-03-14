@@ -11,22 +11,6 @@ const config: CapacitorConfig = {
   },
   bundledWebRuntime: false,
   plugins: {
-    SplashScreen: {
-      launchShowDuration: 100,
-      launchAutoHide: true,
-      launchFadeOutDuration: 100,
-      backgroundColor: "#ffffffff",
-      androidSplashResourceName: "splash",
-      androidScaleType: "FIT_XY",
-      showSpinner: true,
-      androidSpinnerStyle: "large",
-      iosSpinnerStyle: "small",
-      spinnerColor: "#999999",
-      splashFullScreen: true,
-      splashImmersive: true,
-      layoutName: "launch_screen",
-      useDialog: true,
-    },
     GoogleAuth: {
       scopes: ["profile", "email"],
       serverClientId: "",

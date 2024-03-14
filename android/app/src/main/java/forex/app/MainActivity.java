@@ -1,6 +1,7 @@
 package forex.app;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,21 +12,20 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.UserManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Toast;
 import com.capacitorjs.plugins.app.AppPlugin;
 import com.getcapacitor.Bridge;
 import com.getcapacitor.BridgeActivity;
-import com.getcapacitor.JSObject;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -42,7 +42,7 @@ public class MainActivity extends BridgeActivity {
   private static final String TAG = "UdpPostActivity";
   private static String BASE_URL = "http://192.168.224.20:8082/v1/";
 //  private static String BASE_URL = "https://forexappapi.bharathexim.com/v1/";
-
+  public ArrayList<String> WHITE_LISTING_URL;
   private boolean doubleBackPressed = false;
   private static WebView webview;
 
@@ -50,6 +50,12 @@ public class MainActivity extends BridgeActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    WHITE_LISTING_URL= new ArrayList<String>();
+    WHITE_LISTING_URL.add("/Login");
+    WHITE_LISTING_URL.add("/Registration");
+    WHITE_LISTING_URL.add("/ResetPassword");
+    WHITE_LISTING_URL.add("/OnboardingScreen");
+
     IntentFilter intentfilter =new IntentFilter();
     intentfilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentfilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
@@ -58,6 +64,7 @@ public class MainActivity extends BridgeActivity {
     intentfilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentfilter.addAction(Intent.ACTION_PACKAGE_RESTARTED);
     registerReceiver(receiver,intentfilter);
+
     IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
     filter.addAction(Intent.ACTION_SCREEN_ON);
     BroadcastReceiver bre = new SCBroadcaster();
@@ -97,14 +104,18 @@ public class MainActivity extends BridgeActivity {
         }
       }
       case "ScreenOn" -> {
-        if (!Objects.equals(webview.getUrl(), "http://localhost/Login") && EventPlugin.getInstance().CounterTimer) {
+        if (!Objects.equals(webview.getUrl(), "http://localhost/Login") &&
+          !Objects.equals(webview.getUrl(), "http://localhost/OnboardingScreen") &&
+          !Objects.equals(webview.getUrl(), "http://localhost/ResetPassword") &&
+          !Objects.equals(webview.getUrl(), "http://localhost/Registration") &&
+          EventPlugin.getInstance().CounterTimer) {
           webview.clearCache(true);
           webview.clearHistory();
           webview.reload();
           webview.loadUrl("javascript:localStorage.clear()");
         }
 
-        if (!Objects.equals(webview.getUrl(), "http://localhost/Login")) {
+        if (Objects.equals(webview.getUrl(), "http://localhost/LiveTradeApp")) {
           EventPlugin.getInstance().timerResume();
           EventPlugin.getInstance().OnScreenState(true);
           Log.println(Log.ASSERT, "ScreenOn", "Url : " + webview.getUrl()+" : "+EventPlugin.getInstance().CounterTimer);
@@ -117,6 +128,19 @@ public class MainActivity extends BridgeActivity {
     }
   };
 
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    Log.println(Log.ASSERT,"onActivityResult","onActivityResult");
+    if (requestCode == 1234) {
+      if(resultCode == Activity.RESULT_OK){
+        //Deleted
+      }
+      if (resultCode == Activity.RESULT_CANCELED) {
+        //Dismissed
+      }
+    }
+  }//on
   @Override
   public void onDestroy() {
     unregisterReceiver(receiver);

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from 'src/app/services/api.service';
+import { ApiService } from '../../services/api.service';
 import { ToastrService } from 'ngx-toastr';
-import { FCmController } from 'src/app/Controller/FCM-Controllor';
+import { FCmController } from '../../Controller/FCM-Controllor';
 
 @Component({
   selector: 'app-fxmargin-details',
@@ -27,7 +27,6 @@ export class FXTriggerComponent implements OnInit {
       }
     });
     Array_to_Object['userId'] = this.apiUser.UserData?._id;
-    console.log(Array_to_Object, "Array_to_Object")
     this.apiUser.CreateFXTrigger(Array_to_Object).subscribe((res: any) => {
       if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
         this.fCmcontroller.getDeviceId().then((userId: any) => {

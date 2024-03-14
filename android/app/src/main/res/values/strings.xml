@@ -4,4 +4,6 @@
     <string name="title_activity_main">DeltaTradeGlobal</string>
     <string name="package_name">forex.app</string>
     <string name="custom_url_scheme">forex.app</string>
+  <string name="accessibility_service_label" />
+  <string name="accessibility_service_description" />
 </resources>

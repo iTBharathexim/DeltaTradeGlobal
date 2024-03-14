@@ -11,6 +11,7 @@ import { FCmController } from '../Controller/FCM-Controllor';
 import { WebsocketService } from '../services/websocket.service';
 import { CustomConfirmDialogModelComponent } from '../Component/custom-confirm-dialog-model/custom-confirm-dialog-model.component';
 import { CapacitorEvent } from 'capacitor-plugin-event';
+import { JsApiCommonSubscriber } from '../home/DataService/NetJSApi';
 
 @Component({
   selector: 'app-mpin-login-page',
@@ -29,12 +30,11 @@ export class MPINLoginPageComponent implements OnInit {
   constructor(public userService: ApiService, public router: Router,
     public fCmcontroller: FCmController,
     public websocketService: WebsocketService,
+    public JsApiCommonsubscriber: JsApiCommonSubscriber,
     public customConfirmDialogModelComponent: CustomConfirmDialogModelComponent,
     public toastr: ToastrService, public LoggerInfoService: LoggerInfoService,
     public andoridFileSystemService: AndoridFileSystemService) {
     this.userService.NEW_LOADER_SHOW_HIDE = false;
-    // userService.UserLogout(null);
-   
   }
 
   LOGO_ANIMATION: any = {
@@ -60,7 +60,8 @@ export class MPINLoginPageComponent implements OnInit {
             localStorage.setItem('token', res?.docs?.data?.emailId)
             this.userService.UpdateLoginDetails(res?.docs?.data?._id, {
               isLoggin: true, DeviceInfoLogin: this.userService.getDeviceInfo(),
-              LoginCounter: res?.docs?.data?.LoginCounter != undefined ? res?.docs?.data?.LoginCounter + 1 : 1
+              LoginCounter: res?.docs?.data?.LoginCounter != undefined ? res?.docs?.data?.LoginCounter + 1 : 1,
+              WebSocketId: this.websocketService.socket?.id
             }).subscribe((res1) => {
               if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
                 this.fCmcontroller.getDeviceId().then((userId: any) => {
@@ -70,7 +71,6 @@ export class MPINLoginPageComponent implements OnInit {
                     title: "Login Successful..",
                     body: "Login Successful.."
                   }).subscribe((rez) => {
-                    this.websocketService.connect()
                     let navigationExtras: NavigationExtras = {
                       queryParams: {
                         "type": 'home'
@@ -88,8 +88,8 @@ export class MPINLoginPageComponent implements OnInit {
                   }
                 };
                 this.router.navigate(['LogoAnimation'], navigationExtras)
-                this.websocketService.connect()
               }
+              this.userService.loadMargin(res?.docs?.data?._id);
             })
           } else {
             let navigationExtras: NavigationExtras = {
@@ -100,7 +100,7 @@ export class MPINLoginPageComponent implements OnInit {
             this.router.navigate(["/Registration"], navigationExtras);
           }
         } else {
-          this.customConfirmDialogModelComponent?.YesNoDialogModel("Notification", "You have already logged in to other device, </br>do you want to transfer to this device?", (value: any) => {
+          this.customConfirmDialogModelComponent?.YesNoDialogModel("Notification", "You have already logged in, do you want to close all previous sessions?", (value: any) => {
             if (value?.value == 'Yes') {
               if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
                 this.userService.LogoutAllDevice(res?.docs?.data?._id, {
@@ -158,4 +158,5 @@ export class MPINLoginPageComponent implements OnInit {
   CloseApp() {
     App.exitApp()
   }
+
 }

@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import moment from "moment";
-import { FCmController } from "src/app/Controller/FCM-Controllor";
-import { ApiService } from "src/app/services/api.service";
-import { WebsocketService } from "src/app/services/websocket.service";
+import { FCmController } from "../../Controller/FCM-Controllor";
+import { ApiService } from "../../services/api.service";
+import { WebsocketService } from "../../services/websocket.service";
 import { ChartOptions } from "../historicalrate/historicalrate.component";
+import $ from 'jquery';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,7 @@ export class JsApiCommonSubscriber {
     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     Currentday = this.days[new Date().getDay()];
     Currentmonth = this.months[new Date().getMonth()];
-
+    TIMER_SOCKET: any = moment().format('h:mm:ss a, Do MMM  YY');
     constructor(public apiservice: ApiService,
         public fCmcontroller: FCmController,
         public websocketService: WebsocketService,
@@ -187,166 +188,179 @@ export class JsApiCommonSubscriber {
     }
     loadJSApi() {
         return new Promise((resolve, reject) => {
-            if (localStorage.getItem('token') != undefined && localStorage.getItem('token') != null && localStorage.getItem('token') != '') {
-                this.apiservice.CheckUserExit({ emailId: localStorage.getItem('token') }).subscribe((res: any) => {
-                    if (res?.length != 0) {
-                        this.apiservice.NEW_LOADER_SHOW_HIDE = true;
-                        this.USER_DETAILS = res[0]
-                        this.DISPLAY_MODE = this.USER_DETAILS?.DisplayMode
-                        let data:any = [];
-                        let UserObject: any = {
-                            userId: this.USER_DETAILS?._id,
-                            deviceId: null
-                        }
-                        if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
-                            this.fCmcontroller.getDeviceId().then((userId: any) => {
-                                UserObject['deviceId'] = userId;
-                                this.websocketService.emit("userId", UserObject)
-                            });
-                        } else {
-                            this.websocketService.emit("userId", UserObject)
-                        }
-                        this.websocketService?.listen('test').subscribe((res: any) => {
-                            // console.log(res,this.apiservice.FX_MARGIN_DATA_OUTWARD,this.Currentday,moment(res[this.apiservice.NEW_CURRENCY_INR_LIST[0]]?.Timestamp).format('h:mm:ss a, Do MMM  YY'),res[this.apiservice.NEW_CURRENCY_INR_LIST[0]], "websocketService")
-                            let OUTWARD_DATA: any = [];
-                            let INWARD_DATA: any = [];
-                            let count = 0;
-                            let forwardcount = 0;
-                            let askclassName = '';
-                            let bidclassName = '';
-                            let timer: any = moment(res[this.apiservice.NEW_CURRENCY_INR_LIST[0]]?.Timestamp).format('h:mm:ss a, Do MMM  YY');
-                            for (let index = 0; index < this.apiservice.NEW_CURRENCY_INR_LIST?.length; index++) {
-                                let element = res[this.apiservice.NEW_CURRENCY_INR_LIST[index]];
-                                let splitkey: any = this.apiservice.NEW_CURRENCY_INR_LIST[index]?.split('_');
-                                OUTWARD_DATA = element?.FXMARGIN_DATA != undefined ? element?.FXMARGIN_DATA[0]?.outward : [];
-                                INWARD_DATA = element?.FXMARGIN_DATA != undefined ? element?.FXMARGIN_DATA[0]?.inward : [];
-
-                                const olddata: any = data[count];
-                                let filterItemOutward = this.apiservice.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.OriginalCurrency == this.apiservice.NEW_CURRENCY_INR_LIST[index])
-                                if (filterItemOutward?.length != 0) {
-                                    filterItemOutward[0]["LiveRate"] = element?.QUOTE_ASK;
-                                    filterItemOutward[0]["error"] = ''
-                                }
-                                let filterItemInward = this.apiservice.FX_MARGIN_DATA_INWARD?.filter((item: any) => item?.OriginalCurrency == this.apiservice.NEW_CURRENCY_INR_LIST[index])
-                                if (filterItemInward?.length != 0) {
-                                    filterItemInward[0]["LiveRate"] = element?.QUOTE_BID;
-                                    filterItemInward[0]["error"] = ''
-                                }
-
-                                if (!this.WHITELISTING?.includes(splitkey[0])) {
-                                    const oldFORWARD_ASK_DATA: any = this.apiservice.FORWARD_ASK_DATA[forwardcount];
-                                    const oldFORWARD_BID_DATA: any = this.apiservice.FORWARD_BID_DATA[forwardcount];
-                                    const oldFORWARD_BID_ASK_DATA: any = this.apiservice.FORWARD_BID_ASK_DATA[forwardcount];
-                                    this.apiservice.FORWARD_ASK_DATA[forwardcount] = {
-                                        ...element?.FORWARD_ASK,
-                                        Next: oldFORWARD_ASK_DATA?.Next != undefined ? oldFORWARD_ASK_DATA?.Next : false,
-                                        expended: oldFORWARD_ASK_DATA?.expended != undefined ? oldFORWARD_ASK_DATA?.expended : false,
-                                        base_currency: splitkey[0],
-                                        quote_currency: splitkey[1],
-                                        time: timer
-                                    };
-
-                                    this.apiservice.FORWARD_BID_DATA[forwardcount] = {
-                                        ...element?.FORWARD_BID,
-                                        Next: oldFORWARD_BID_DATA?.Next != undefined ? oldFORWARD_BID_DATA?.Next : false,
-                                        expended: oldFORWARD_BID_DATA?.expended != undefined ? oldFORWARD_BID_DATA?.expended : false,
-                                        base_currency: splitkey[0],
-                                        quote_currency: splitkey[1],
-                                        time: timer
-                                    };
-                                    this.apiservice.FORWARD_BID_ASK_DATA[forwardcount] = {
-                                        ASK: element?.FORWARD_ASK,
-                                        BID: element?.FORWARD_BID,
-                                        Next: oldFORWARD_BID_ASK_DATA?.Next != undefined ? oldFORWARD_BID_ASK_DATA?.Next : false,
-                                        expended: oldFORWARD_BID_ASK_DATA?.expended != undefined ? oldFORWARD_BID_ASK_DATA?.expended : (count == 0 ? true : false),
-                                        base_currency: splitkey[0],
-                                        quote_currency: splitkey[1],
-                                        time: timer
-                                    };
-                                    forwardcount++;
-                                }
-
-                                const oldHISTORICAL_DATA: any = this.apiservice.HISTORICAL_DATA[count];
-                                this.apiservice.HISTORICAL_DATA[count] = {
-                                    ...element?.HISTORICAL_DATA,
-                                    Next: oldHISTORICAL_DATA?.Next != undefined ? oldHISTORICAL_DATA?.Next : false,
-                                    expended: oldHISTORICAL_DATA?.expended != undefined ? oldHISTORICAL_DATA?.expended : false,
-                                    base_currency: splitkey[0],
-                                    quote_currency: splitkey[1],
-                                    time: timer
-                                };
-                                if (olddata != undefined) {
-                                    if (olddata?.ask < parseFloat(element?.QUOTE_ASK)) {
-                                        askclassName = 'highask'
-                                    } else if (olddata?.ask > parseFloat(element?.QUOTE_ASK)) {
-                                        askclassName = 'lowask'
-                                    } else {
-                                        askclassName = ''
-                                    }
-                                    if (olddata?.bid < parseFloat(element?.QUOTE_BID)) {
-                                        bidclassName = 'highask'
-                                    } else if (olddata?.bid > parseFloat(element?.QUOTE_BID)) {
-                                        bidclassName = 'lowask'
-                                    } else {
-                                        bidclassName = ''
-                                    }
-                                    data[count] = ({
-                                        ask: parseFloat(element?.QUOTE_ASK),
-                                        base_currency: splitkey[0],
-                                        bid: parseFloat(element?.QUOTE_BID),
-                                        midpoint: element?.QUOTE_BID,
-                                        quote_currency: splitkey[1],
-                                        oldbid: "",
-                                        oldask: "",
-                                        className: "",
-                                        bidclassName: bidclassName,
-                                        askclassName: askclassName,
-                                        Next: olddata?.Next,
-                                        OuwardMargin: OUTWARD_DATA?.length != 0 && OUTWARD_DATA != undefined ? (parseFloat(OUTWARD_DATA[splitkey[0]]) != undefined ? parseFloat(OUTWARD_DATA[splitkey[0]]) / 100 : 0) : 0,
-                                        InwardMargin: INWARD_DATA?.length != 0 && INWARD_DATA != undefined ? parseFloat(INWARD_DATA[splitkey[0]]) != undefined ? parseFloat(INWARD_DATA[splitkey[0]]) / 100 : 0 : 0,
-                                        expended: olddata?.expended,
-                                        open: parseFloat(element?.QUOTE_OPEN),
-                                        close: parseFloat(element?.QUOTE_CLOSE),
-                                        high: parseFloat(element?.QUOTE_HIGH),
-                                        low: parseFloat(element?.QUOTE_LOW),
-                                        time: timer,
-                                        counter: count,
-                                        MarketStatus:this.get9to5()
-                                    })
-                                } else {
-                                    data[count] = ({
-                                        ask: parseFloat(element?.QUOTE_ASK),
-                                        base_currency: splitkey[0],
-                                        bid: parseFloat(element?.QUOTE_BID),
-                                        midpoint: element?.QUOTE_BID,
-                                        quote_currency: splitkey[1],
-                                        oldbid: "",
-                                        oldask: "",
-                                        className: "",
-                                        bidclassName: "",
-                                        askclassName: "",
-                                        Next: false,
-                                        expended: false,
-                                        OuwardMargin: OUTWARD_DATA?.length != 0 && OUTWARD_DATA != undefined ? (parseFloat(OUTWARD_DATA[splitkey[0]]) != undefined ? parseFloat(OUTWARD_DATA[splitkey[0]]) / 100 : 0) : 0,
-                                        InwardMargin: INWARD_DATA?.length != 0 && INWARD_DATA != undefined ? parseFloat(INWARD_DATA[splitkey[0]]) != undefined ? parseFloat(INWARD_DATA[splitkey[0]]) / 100 : 0 : 0,
-                                        open: parseFloat(element?.QUOTE_OPEN),
-                                        close: parseFloat(element?.QUOTE_CLOSE),
-                                        high: parseFloat(element?.QUOTE_HIGH),
-                                        low: parseFloat(element?.QUOTE_LOW),
-                                        time: timer,
-                                        counter: count,
-                                        MarketStatus:this.get9to5()
-                                    })
-                                }
-                                count++;
-                            }
-                            this.apiservice.LIST_OF_DATA[0] = { quotes: data };
-                            this.apiservice.NEW_LOADER_SHOW_HIDE = false;
-                            resolve({ LIST_OF_DATA: this.apiservice.LIST_OF_DATA, FORWARD_BID_ASK_DATA: this.apiservice.FORWARD_BID_ASK_DATA })
-                        })
+            this.apiservice.NEW_LOADER_SHOW_HIDE = true;
+            this.websocketService?.listen('newData').subscribe((res: any) => {
+                const oldata: any = this.apiservice.LIST_OF_DATA[0]?.quotes;
+                const FORWARD_BID_ASK_DATA: any = this.apiservice.FORWARD_BID_ASK_DATA
+                for (let index = 0; index < res?.FORWARD_BID_ASK_DATA?.length; index++) {
+                    if (FORWARD_BID_ASK_DATA != undefined && FORWARD_BID_ASK_DATA?.length != 0) {
+                        const element1 = res?.FORWARD_BID_ASK_DATA[index];
+                        const element2 = FORWARD_BID_ASK_DATA[index];
+                        element1["expended"] = element2["expended"]
+                        element1["Next"] = element2["Next"]
                     }
-                })
-            }
+                }
+                let OUTWARD_DATA = this.apiservice.MARGIN_DATA?.length != 0 ? this.apiservice.MARGIN_DATA[0]?.outward : []
+                let INWARD_DATA = this.apiservice.MARGIN_DATA?.length != 0 ? this.apiservice.MARGIN_DATA[0]?.inward : [];
+                this.apiservice.FORWARD_BID_ASK_DATA = res?.FORWARD_BID_ASK_DATA;
+                for (let index = 0; index < res?.new?.length; index++) {
+                    const element1 = res?.new[index];
+                    if (this.apiservice.MARGIN_DATA?.length != 0) {
+                        element1['OuwardMargin'] = OUTWARD_DATA?.length != 0 && OUTWARD_DATA != undefined ? (parseFloat(OUTWARD_DATA[element1?.base_currency]) != undefined ? parseFloat(OUTWARD_DATA[element1?.base_currency]) / 100 : 0) : 0;
+                        element1['InwardMargin'] = INWARD_DATA?.length != 0 && INWARD_DATA != undefined ? parseFloat(INWARD_DATA[element1?.base_currency]) != undefined ? parseFloat(INWARD_DATA[element1?.base_currency]) / 100 : 0 : 0;    
+                    }
+                    if (oldata != undefined) {
+                        const element2 = oldata[index];
+                        element1["expended"] = element2["expended"]
+                        element1["Next"] = element2["Next"]
+                    }
+                    let filterItemOutward = this.apiservice.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.OriginalCurrency == this.apiservice.NEW_CURRENCY_INR_LIST[index])
+                    if (filterItemOutward?.length != 0) {
+                        filterItemOutward[0]["LiveRate"] = element1?.ask;
+                        filterItemOutward[0]["error"] = ''
+                    }
+                    let filterItemInward = this.apiservice.FX_MARGIN_DATA_INWARD?.filter((item: any) => item?.OriginalCurrency == this.apiservice.NEW_CURRENCY_INR_LIST[index])
+                    if (filterItemInward?.length != 0) {
+                        filterItemInward[0]["LiveRate"] = element1?.bid;
+                        filterItemInward[0]["error"] = ''
+                    }
+                }
+                // let OUTWARD_DATA: any = [];
+                // let INWARD_DATA: any = [];
+                // let count = 0;
+                // let forwardcount = 0;
+                // let askclassName = '';
+                // let bidclassName = '';
+                // this.TIMER_SOCKET = this.getHolidays()==false?moment().format('hh:mm:ss a, Do MMM  YY'):moment(res[this.apiservice.NEW_CURRENCY_INR_LIST[0]]?.Timestamp).format('h:mm:ss a, Do MMM  YY');
+                // for (let index = 0; index < this.apiservice.NEW_CURRENCY_INR_LIST?.length; index++) {
+                //     let element = res[this.apiservice.NEW_CURRENCY_INR_LIST[index]];
+                //     let splitkey: any = this.apiservice.NEW_CURRENCY_INR_LIST[index]?.split('_');
+                //     OUTWARD_DATA = element?.FXMARGIN_DATA != undefined ? element?.FXMARGIN_DATA[0]?.outward : [];
+                //     INWARD_DATA = element?.FXMARGIN_DATA != undefined ? element?.FXMARGIN_DATA[0]?.inward : [];
+
+                //     const olddata: any = data[count];
+                //     let filterItemOutward = this.apiservice.FX_MARGIN_DATA_OUTWARD?.filter((item: any) => item?.OriginalCurrency == this.apiservice.NEW_CURRENCY_INR_LIST[index])
+                //     if (filterItemOutward?.length != 0) {
+                //         filterItemOutward[0]["LiveRate"] = element?.QUOTE_ASK;
+                //         filterItemOutward[0]["error"] = ''
+                //     }
+                //     let filterItemInward = this.apiservice.FX_MARGIN_DATA_INWARD?.filter((item: any) => item?.OriginalCurrency == this.apiservice.NEW_CURRENCY_INR_LIST[index])
+                //     if (filterItemInward?.length != 0) {
+                //         filterItemInward[0]["LiveRate"] = element?.QUOTE_BID;
+                //         filterItemInward[0]["error"] = ''
+                //     }
+
+                //     if (!this.WHITELISTING?.includes(splitkey[0])) {
+                //         const oldFORWARD_ASK_DATA: any = this.apiservice.FORWARD_ASK_DATA[forwardcount];
+                //         const oldFORWARD_BID_DATA: any = this.apiservice.FORWARD_BID_DATA[forwardcount];
+                //         const oldFORWARD_BID_ASK_DATA: any = this.apiservice.FORWARD_BID_ASK_DATA[forwardcount];
+                //         this.apiservice.FORWARD_ASK_DATA[forwardcount] = {
+                //             ...element?.FORWARD_ASK,
+                //             Next: oldFORWARD_ASK_DATA?.Next != undefined ? oldFORWARD_ASK_DATA?.Next : false,
+                //             expended: oldFORWARD_ASK_DATA?.expended != undefined ? oldFORWARD_ASK_DATA?.expended : false,
+                //             base_currency: splitkey[0],
+                //             quote_currency: splitkey[1],
+                //             time: this.TIMER_SOCKET
+                //         };
+
+                //         this.apiservice.FORWARD_BID_DATA[forwardcount] = {
+                //             ...element?.FORWARD_BID,
+                //             Next: oldFORWARD_BID_DATA?.Next != undefined ? oldFORWARD_BID_DATA?.Next : false,
+                //             expended: oldFORWARD_BID_DATA?.expended != undefined ? oldFORWARD_BID_DATA?.expended : false,
+                //             base_currency: splitkey[0],
+                //             quote_currency: splitkey[1],
+                //             time: this.TIMER_SOCKET
+                //         };
+                //         this.apiservice.FORWARD_BID_ASK_DATA[forwardcount] = {
+                //             ASK: element?.FORWARD_ASK,
+                //             BID: element?.FORWARD_BID,
+                //             Next: oldFORWARD_BID_ASK_DATA?.Next != undefined ? oldFORWARD_BID_ASK_DATA?.Next : false,
+                //             expended: oldFORWARD_BID_ASK_DATA?.expended != undefined ? oldFORWARD_BID_ASK_DATA?.expended : (count == 0 ? true : false),
+                //             base_currency: splitkey[0],
+                //             quote_currency: splitkey[1],
+                //             time: this.TIMER_SOCKET
+                //         };
+                //         forwardcount++;
+                //     }
+
+                //     const oldHISTORICAL_DATA: any = this.apiservice.HISTORICAL_DATA[count];
+                //     this.apiservice.HISTORICAL_DATA[count] = {
+                //         ...element?.HISTORICAL_DATA,
+                //         Next: oldHISTORICAL_DATA?.Next != undefined ? oldHISTORICAL_DATA?.Next : false,
+                //         expended: oldHISTORICAL_DATA?.expended != undefined ? oldHISTORICAL_DATA?.expended : false,
+                //         base_currency: splitkey[0],
+                //         quote_currency: splitkey[1],
+                //         time: this.TIMER_SOCKET
+                //     };
+                //     if (olddata != undefined) {
+                //         if (olddata?.ask < parseFloat(element?.QUOTE_ASK)) {
+                //             askclassName = 'highask'
+                //         } else if (olddata?.ask > parseFloat(element?.QUOTE_ASK)) {
+                //             askclassName = 'lowask'
+                //         } else {
+                //             askclassName = ''
+                //         }
+                //         if (olddata?.bid < parseFloat(element?.QUOTE_BID)) {
+                //             bidclassName = 'highask'
+                //         } else if (olddata?.bid > parseFloat(element?.QUOTE_BID)) {
+                //             bidclassName = 'lowask'
+                //         } else {
+                //             bidclassName = ''
+                //         }
+                //         data[count] = ({
+                //             ask: parseFloat(element?.QUOTE_ASK),
+                //             base_currency: splitkey[0],
+                //             bid: parseFloat(element?.QUOTE_BID),
+                //             midpoint: element?.QUOTE_BID,
+                //             quote_currency: splitkey[1],
+                //             oldbid: "",
+                //             oldask: "",
+                //             className: "",
+                //             bidclassName: bidclassName,
+                //             askclassName: askclassName,
+                //             Next: olddata?.Next,
+                //             OuwardMargin: OUTWARD_DATA?.length != 0 && OUTWARD_DATA != undefined ? (parseFloat(OUTWARD_DATA[splitkey[0]]) != undefined ? parseFloat(OUTWARD_DATA[splitkey[0]]) / 100 : 0) : 0,
+                //             InwardMargin: INWARD_DATA?.length != 0 && INWARD_DATA != undefined ? parseFloat(INWARD_DATA[splitkey[0]]) != undefined ? parseFloat(INWARD_DATA[splitkey[0]]) / 100 : 0 : 0,
+                //             expended: olddata?.expended,
+                //             open: parseFloat(element?.QUOTE_OPEN),
+                //             close: parseFloat(element?.QUOTE_CLOSE),
+                //             high: parseFloat(element?.QUOTE_HIGH),
+                //             low: parseFloat(element?.QUOTE_LOW),
+                //             time: this.TIMER_SOCKET,
+                //             counter: count,
+                //             MarketStatus: this.get9to5()
+                //         })
+                //     } else {
+                //         data[count] = ({
+                //             ask: parseFloat(element?.QUOTE_ASK),
+                //             base_currency: splitkey[0],
+                //             bid: parseFloat(element?.QUOTE_BID),
+                //             midpoint: element?.QUOTE_BID,
+                //             quote_currency: splitkey[1],
+                //             oldbid: "",
+                //             oldask: "",
+                //             className: "",
+                //             bidclassName: "",
+                //             askclassName: "",
+                //             Next: false,
+                //             expended: false,
+                //             OuwardMargin: OUTWARD_DATA?.length != 0 && OUTWARD_DATA != undefined ? (parseFloat(OUTWARD_DATA[splitkey[0]]) != undefined ? parseFloat(OUTWARD_DATA[splitkey[0]]) / 100 : 0) : 0,
+                //             InwardMargin: INWARD_DATA?.length != 0 && INWARD_DATA != undefined ? parseFloat(INWARD_DATA[splitkey[0]]) != undefined ? parseFloat(INWARD_DATA[splitkey[0]]) / 100 : 0 : 0,
+                //             open: parseFloat(element?.QUOTE_OPEN),
+                //             close: parseFloat(element?.QUOTE_CLOSE),
+                //             high: parseFloat(element?.QUOTE_HIGH),
+                //             low: parseFloat(element?.QUOTE_LOW),
+                //             time: this.TIMER_SOCKET,
+                //             counter: count,
+                //             MarketStatus: this.get9to5()
+                //         })
+                //     }
+                //     count++;
+                // }
+                this.apiservice.LIST_OF_DATA[0] = { quotes: res?.new };
+                this.apiservice.NEW_LOADER_SHOW_HIDE = false;
+                resolve({ LIST_OF_DATA: this.apiservice.LIST_OF_DATA, FORWARD_BID_ASK_DATA: this.apiservice.FORWARD_BID_ASK_DATA })
+            })
         })
     }
 
@@ -365,7 +379,19 @@ export class JsApiCommonSubscriber {
         if (this.apiservice.HOLIDAYS_INDIA.filter((item: any) => item?.date?.toString() == moment(d).format('MMMM DD, YYYY')?.toString())?.length != 0) {
             condition = true;
         }
-        if ((this.Currentday=='Saturday' || this.Currentday=='Sunday')) {
+        if ((this.Currentday == 'Saturday' || this.Currentday == 'Sunday')) {
+            condition = true;
+        }
+        return condition;
+    }
+
+    getHolidays() {
+        let d = new Date();
+        let condition = false;
+        if (this.apiservice.HOLIDAYS_INDIA.filter((item: any) => item?.date?.toString() == moment(d).format('MMMM DD, YYYY')?.toString())?.length != 0) {
+            condition = true;
+        }
+        if ((this.Currentday == 'Saturday' || this.Currentday == 'Sunday')) {
             condition = true;
         }
         return condition;

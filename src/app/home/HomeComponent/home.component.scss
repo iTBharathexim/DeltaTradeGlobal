@@ -71,7 +71,7 @@
 }
 
 .controller {
-    background: linear-gradient(50deg, #f0a2cd, #8cc1cd);
+    background: white;
     color: #fff;
     width: 100vw;
     margin: auto;
@@ -93,7 +93,7 @@
     display: flex;
     border-bottom: 2px solid #b6b6b6;
     position: absolute;
-    top: 50px;
+    top: 0px;
 }
 
 .body {
@@ -105,7 +105,7 @@
     margin: -4px auto auto;
     height: 82vh;
     position: absolute;
-    top: 103px;
+    top: 55px;
 }
 
 .mat-tab-group {
@@ -346,6 +346,10 @@
     background-size: 80% 80%;
     margin: -13px auto auto;
     left: -10px;
+    top: 15px;
+}
+
+.controller.ios::before {
     top: 65px;
 }
 
@@ -747,8 +751,20 @@ label {
     overflow: auto;
 }
 
-body{
+body {
     width: 100vw;
     height: 100vh;
     background-color: white;
+}
+
+.ios-screen {
+    top: 50px;
+}
+
+.controller.ios .body {
+    top: 103px;
+}
+
+.nav-bar.ios-screen {
+    box-shadow: 1px -8px 9px 2px #f3eded;
 }

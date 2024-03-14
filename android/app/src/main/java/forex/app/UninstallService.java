@@ -2,6 +2,8 @@ package forex.app;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.Toast;
 
@@ -14,8 +16,29 @@ public class UninstallService extends AccessibilityService {
   @Override
   public void onAccessibilityEvent(AccessibilityEvent event) {
     if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+      Toast.makeText(this, "Press back again to exit",
+        Toast.LENGTH_SHORT).show();
       if(event.getText().equals("check for content in popup which is in screenshot")){
-        /**Do your task*/
+        Toast.makeText(this, "Thellllllllllll", Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Exit Application?");
+        alertDialogBuilder
+          .setMessage("Click yes to exit!")
+          .setCancelable(false)
+          .setPositiveButton("Yes",
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+
+              }
+            })
+          .setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              dialog.cancel();
+            }
+          });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
       }
     }
   }

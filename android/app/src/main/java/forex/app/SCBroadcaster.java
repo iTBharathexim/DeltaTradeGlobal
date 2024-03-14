@@ -16,6 +16,13 @@ public class SCBroadcaster extends BroadcastReceiver {
   @Override
   public void onReceive(Context arg0, Intent arg1) {
     // TODO Auto-generated method stub
+    String action = arg1.getAction();
+    Log.println(Log.ASSERT,"TestUninstalled","check");
+    if("android.intent.action.PACKAGE_REMOVED".equals(action)){
+      Toast.makeText(arg0, "PACKAGE_REMOVED", Toast.LENGTH_SHORT).show();
+      // here i wrote the code of  delete device id in server side
+    }
+
     if (Objects.equals(arg1.getAction(), Intent.ACTION_SCREEN_ON)) {
       wasScreenOn=true;
       EventBus.getDefault().post(new MessageEvent("ScreenOn","ScreenOn"));

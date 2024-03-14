@@ -1,7 +1,7 @@
 <div>
-  <div class="controller" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
+  <div class="controller" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark','ios': this.USER_DETAILS?.DeviceInfoLogin?.osVersion=='ios'}"
     [style]="this.DISPLAY_MODE=='Light'?'--src:url(../../assets/images/logo-transparent-svg.svg)':'--src:url(../../assets/images/logo_transparent_svg_Light.svg)'">
-    <div class="nav-bar" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}">
+    <div class="nav-bar" [ngClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark','ios-screen': this.USER_DETAILS?.DeviceInfoLogin?.osVersion=='ios'}">
       <!-- <h5 style="position: absolute;
       font-size: 16px;
       right: 90px;

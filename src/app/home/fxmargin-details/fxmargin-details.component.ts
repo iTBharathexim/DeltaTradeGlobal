@@ -80,6 +80,7 @@ export class FXMarginDetailsComponent implements OnInit {
     this.apiUser.CreateFXMargin(Array_to_Object).subscribe((res: any) => {
       this.toastor.success("Added Sucessfully...");
       this.loadoutwardData('outward');
+      this.apiUser.loadMargin(this.apiUser.UserData?._id);
     })
   }
 
@@ -96,6 +97,7 @@ export class FXMarginDetailsComponent implements OnInit {
     this.apiUser.MarginUpdate(Array_to_Object, this.apiUser.UserData?._id).subscribe((res: any) => {
       this.toastor.success("Modified successfully...");
       this.loadoutwardData('outward');
+      this.apiUser.loadMargin(this.apiUser.UserData?._id);
     })
   }
 

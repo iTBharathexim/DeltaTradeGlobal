@@ -145,9 +145,11 @@
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transform-origin: 0 0;
-    margin: auto;
     display: flex;
-    margin-left: 130px;
+    margin: auto;
+    width: 100px;
+    align-items: center;
+    justify-content: center;
 }
 
 .ldio-3ei8be0dxe2 div {

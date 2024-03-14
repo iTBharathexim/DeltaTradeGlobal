@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Router } from '@angular/router';
 declare var $: any;
 import { App } from '@capacitor/app';
-import { WebsocketService } from 'src/app/services/websocket.service';
+import { WebsocketService } from '../../services/websocket.service';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +19,9 @@ export class HomeComponent implements OnInit {
   targetElement: any;
   constructor(public apiservice: ApiService, public router: Router, public ref: ElementRef,
     public websocketService: WebsocketService) {
-    websocketService.connect();
+      setTimeout(() => {
+        this.apiservice.LOADER_SHOW_HIDE = false
+      },3000);
   }
   VISIBLE_TRADE_APP: any = '';
   USER_DETAILS: any = [];
@@ -28,14 +30,12 @@ export class HomeComponent implements OnInit {
   @ViewChild("SUBSCRIPTION_DETAILS_PANEL") SUBSCRIPTION_DETAILS_PANEL: any;
 
   ngOnInit(): void {
-    this.addULheight();
     $(window).on('resize', () => {
       this.addULheight()
     });
-
     setTimeout(() => {
-      this.apiservice.LOADER_SHOW_HIDE = false
-    }, 3000);
+      this.addULheight();
+    }, 100);
     if (localStorage.getItem('token') != undefined && localStorage.getItem('token') != null && localStorage.getItem('token') != '') {
       this.apiservice.CheckUserExit({ emailId: localStorage.getItem('token') }).subscribe((res: any) => {
         if (res?.length != 0) {
@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
           if (last_Order_Id_Status_TRUE != undefined && last_Order_Id_Status_TRUE != null) {
             this.SUBSCRIPTION_DETAILS = Object.assign(last_Order_Id_Status_TRUE, res[0])
           }
-          console.log(this.USER_DETAILS?.FreeTrailPeroidEndDate,"USER_DETAILS");
+          console.log(this.USER_DETAILS, "USER_DETAILS");
           this.DISPLAY_MODE = this.USER_DETAILS?.DisplayMode
           let CompareDates = res[0]?.SubcriptionExpired;
           if (CompareDates == true) {
@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit {
     this.apiservice.UpdateLoginDetails(this.USER_DETAILS?._id, { isLoggin: false, lastactivetime: 0 }).subscribe((res) => {
       localStorage.removeItem('token');
       this.router.navigate(['/Login'])
-      this.websocketService.disconnect();
+      // this.websocketService.disconnect();
       window?.clearInterval(this.apiservice.TIME_INTERVAL);
     })
   }
@@ -131,13 +131,19 @@ export class HomeComponent implements OnInit {
     let elem1: any = document.querySelector(".controller");
     if (elem1 != undefined && elem1 != null) {
       let rect = elem1.getBoundingClientRect();
-      $('.body').css({ 'height': (parseInt(rect?.height) - 51) + 'px', 'width': (parseInt(rect?.width) + .5) + 'px' })
+      if (this.USER_DETAILS?.DeviceInfoLogin?.osVersion == 'ios') {
+        $('.body').css({ 'height': (parseInt(rect?.height) - 100) + 'px', 'width': (parseInt(rect?.width) + .5) + 'px' })
+      } else {
+        $('.body').css({ 'height': (parseInt(rect?.height) - 51) + 'px', 'width': (parseInt(rect?.width) + .5) + 'px' })
+      }
     }
 
     let elem: any = document.querySelector(".controller .body");
     if (elem != undefined && elem != null) {
       let rect = elem.getBoundingClientRect();
+      $('.custom-mat-horizontal-stepper-wrapper custom-mat-step').css({ 'height': (parseInt(rect?.height) - 60) + 'px' })
       $('.navigation__links').css({ 'height': (parseInt(rect?.height) + 1) + 'px', 'width': (parseInt(rect?.width) + .5) + 'px' })
+      $('.nav-height-controller').css({ 'height': (parseInt(rect?.height) - 60) + 'px' })
     }
   }
 

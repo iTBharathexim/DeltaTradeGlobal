@@ -505,34 +505,6 @@ label {
     display: none !important;
 }
 
-.lowbid {
-    background-color: #f65d5d;
-    padding: 5px;
-    color: white;
-    border-radius: 5px;
-}
-
-.highbid {
-    background-color: #4cf140;
-    padding: 5px;
-    color: white;
-    border-radius: 5px;
-}
-
-.lowask {
-    background-color: #f65d5d;
-    padding: 5px;
-    color: white;
-    border-radius: 5px;
-}
-
-.highask {
-    background-color: #4cf140;
-    padding: 5px;
-    color: white;
-    border-radius: 5px;
-}
-
 .tr-controller td {
     padding: 5px;
     padding-left: 0;
@@ -867,4 +839,100 @@ label {
     font-family: Gravitas One, Helvetica, Arial, sans-serif;
     font-weight: 600;
     color: #ff2507;
+}
+
+
+
+.lowbid {
+    padding: 5px;
+    color: black;
+    border-radius: 5px;
+    // background-color: #f65d5d;
+    // color: white;
+    animation-name: LowValue;
+    animation-delay: .1s;
+    animation-duration: .1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    // -webkit-animation: LowValue .4s normal forwards;
+    // -moz-animation: LowValue .4s normal forwards;
+    // -ms-animation: LowValue .4s normal forwards;
+    // -o-animation: LowValue .4s normal forwards;
+    // animation: LowValue .4s normal forwards;
+}
+
+.highbid {
+    padding: 5px;
+    color: black;
+    border-radius: 5px;
+    // background-color: #4cf140;
+    // color: white;
+    // -webkit-animation: HighValue .4s normal forwards;
+    // -moz-animation: HighValue .4s normal forwards;
+    // -ms-animation: HighValue .4s normal forwards;
+    // -o-animation: HighValue .4s normal forwards;
+    // animation: HighValue .4s normal forwards;'
+    animation-name: HighValue;
+    animation-delay: .1s;
+    animation-duration: .1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+
+.lowask {
+    padding: 5px;
+    color: black;
+    border-radius: 5px;
+    // background-color: #f65d5d;
+    // color: white;
+    animation-name: LowValue;
+    animation-delay: .1s;
+    animation-duration: .1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    // -webkit-animation: LowValue .4s normal forwards;
+    // -moz-animation: LowValue .4s normal forwards;
+    // -ms-animation: LowValue .4s normal forwards;
+    // -o-animation: LowValue .4s normal forwards;
+    // animation: LowValue .4s normal forwards;
+}
+
+.highask {
+    padding: 5px;
+    color: black;
+    border-radius: 5px;
+    // background-color: #4cf140;
+    // color: white;
+    animation-name: HighValue;
+    animation-delay: .1s;
+    animation-duration: .1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    // -webkit-animation: HighValue .4s infinite forwards;
+    // -moz-animation: HighValue .4s infinite forwards;
+    // -ms-animation: HighValue .4s infinite forwards;
+    // -o-animation: HighValue .4s infinite forwards;
+    // animation: HighValue .4s infinite forwards;
+}
+
+@keyframes HighValue {
+    0% {
+        background-color: #4cf140;
+        color: white;
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+@keyframes LowValue {
+    0% {
+        background-color: #f65d5d;
+        color: white;
+    }
+
+    100% {
+        background-color: transparent;
+    }
 }
