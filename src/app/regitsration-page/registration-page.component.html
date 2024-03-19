@@ -187,6 +187,11 @@
                                                                 [ngClass]="{'disabled':userForm4.controls?.couponCodeName?.errors==null?false:true}"
                                                                 (click)="onFormCouponCodeValidation()">Verify</button>
                                                 </div>
+                                                <ng-container *ngIf="userForm4.controls?.couponCodeName?.errors">
+                                                        <p style="color: black;" *ngIf="userForm4.controls?.couponCodeName?.errors?.range">
+                                                                Kindly enter 6-digit offer code
+                                                        </p>
+                                                </ng-container>
                                                 <p *ngIf="CouponData?.notfound==true"
                                                         style="color: red;margin-left: 10px;">Coupon code not
                                                         valid..</p>

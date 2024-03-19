@@ -22,6 +22,7 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { CanvasJSAngularStockChartsModule } from '@canvasjs/angular-stockcharts';
 import { MobileValidatorDirective } from '../Controller/mobile-validator.directive';
 import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -50,11 +51,13 @@ import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
     CanvasJSAngularChartsModule,
     CanvasJSAngularStockChartsModule,
     CalendarHeatmapModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatSnackBarModule
   ],
   exports: [
     CommonModule,
     FormsModule,
+    MatSnackBarModule,
     ReactiveFormsModule,
     MatTabsModule,
     BrowserAnimationsModule,

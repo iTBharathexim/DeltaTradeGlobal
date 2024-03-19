@@ -18,20 +18,20 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
       state('open', style({
         backgroundColor: '#f65d5d',
         color: "white",
-        BorderRadius: "10px",
+        Borderradius: "10px",
         padding: "5px"
       })),
       state('closed', style({
         backgroundColor: '#4cf140',
         color: "white",
-        BorderRadius: "10px",
+        Borderradius: "10px",
         padding: "5px"
       })),
       transition('* => closed', [
-        animate('0.4s')
+        animate('0.1s')
       ]),
       transition('* => open', [
-        animate('0.4s')
+        animate('0.1s')
       ]),
     ]),
   ],
@@ -45,8 +45,6 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
     public websocketService: WebsocketService,
     public JsApiCommonsubscriber: JsApiCommonSubscriber,
     public router: Router) {
-    this.apiservice.LIST_OF_DATA = [];
-    this.apiservice.LIST_OF_DATA = this.apiservice.DEFAULT_LIST_OF_DATA;
     // if (Capacitor.getPlatform() != 'web') {
     //   CapacitorEvent.addListener("OnScreenState", (result: any) => {
     //     if (result?.value == true) {
@@ -91,11 +89,9 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes, "sadasfdsfdf")
   }
 
   onTabChanged(event: any) {
-    console.log(event, "sdfsdfdsf")
     if (event?.name == "FX LIVE") {
       // this.websocketService.connect();
     } else if (event?.name == "Forward") {
@@ -103,11 +99,17 @@ export class LiveTradeAppComponent implements OnInit, OnChanges, OnDestroy {
     } else if (event?.name == "NEWS") {
       // this.websocketService.disconnect();
       this.apiservice.getMarketNews().subscribe((res: any) => {
-        console.log(res, "getMarketNews");
         this.apiservice.MARKET_NEWS_DATA = res?.data;
       })
     }
-    console.log(event, "onTabChanged")
+  }
+
+  ApiForwardCall(event, item: any, index, FORWARD_BID_ASK_DATA) {
+    if (event == true) {
+      this.apiservice.getForwardData({ CurrencyName: item?.Original_Currency }).subscribe((res:any) => {
+        FORWARD_BID_ASK_DATA[index] = Object.assign(FORWARD_BID_ASK_DATA[index],res.data);
+      })
+    }
   }
 
   getCurrentTimeMoment(date: any) {

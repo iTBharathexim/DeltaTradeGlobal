@@ -31,10 +31,10 @@ export class RegistrationPageComponent implements OnInit {
     firstName: new FormControl(),
   });
   userForm4: any = new FormGroup({
-    couponCodeName: new FormControl(null, [Validators.required]),
+    couponCodeName: new FormControl(null, [Validators.required, MaxMinValidationService.setMaxValue(6,6)]),
   });
   isLinear = false;
-  MOBILE_EMAIL_VALIDATION:boolean=false;
+  MOBILE_EMAIL_VALIDATION: boolean = false;
 
   constructor(public userService: ApiService,
     public router: Router,
@@ -48,7 +48,7 @@ export class RegistrationPageComponent implements OnInit {
       }
     });
     if (localStorage.getItem('token') != undefined) {
-      this.userForm.controls['email'].setValue(localStorage.getItem('token'))
+      this.userForm.controls['emailId'].setValue(localStorage.getItem('token'))
       this.userService.CheckUserExit({ emailId: localStorage.getItem('token') }).subscribe((res: any) => {
         this.userService.UpdateLoginDetails(res[0]?._id, { isLoggin: false }).subscribe((res) => {
           localStorage.removeItem('token');
@@ -72,7 +72,7 @@ export class RegistrationPageComponent implements OnInit {
       this.CouponCodeValidation = false;
       this.EMAIL_VALIDATION = false;
       this.SEND_OTP_EMAIL = false;
-      this.MOBILE_EMAIL_VALIDATION=true;
+      this.MOBILE_EMAIL_VALIDATION = true;
     }
   }
 
@@ -128,14 +128,14 @@ export class RegistrationPageComponent implements OnInit {
   onFormCouponCodeValidation() {
     this.userService.CouponCodeValidation(this.userForm4.value).subscribe((res: any) => {
       this.CouponData = res
-      if (res?.status==true) {
+      if (res?.status == true) {
         this.userService.CheckUserExit({ emailId: this.userForm.value?.emailId }).subscribe((res: any) => {
           this.userService.UpdateLoginDetails(res[0]?._id, {
             DeviceInfoRegistartion: this.userService.getDeviceInfo(),
-            CouponVerified: true, FreeTrailPeroid: true, 
+            CouponVerified: true, FreeTrailPeroid: true,
             FreeTrailPeroidStratDate: moment().format('dddd, MMMM DD, YYYY h:mm A'),
-            FreeTrailPeroidEndDate: moment(this.addDays(new Date(),this.CouponData?.data[0]?.TrailDays)).format('dddd, MMMM DD, YYYY h:mm A'),
-            ExpiredTimeStamp:moment(this.addDays(new Date(),this.CouponData?.data[0]?.TrailDays)).unix()
+            FreeTrailPeroidEndDate: moment(this.addDays(new Date(), this.CouponData?.data[0]?.TrailDays)).format('dddd, MMMM DD, YYYY h:mm A'),
+            ExpiredTimeStamp: moment(this.addDays(new Date(), this.CouponData?.data[0]?.TrailDays)).unix()
           }).subscribe((res1: any) => {
             if (res1?.status) {
             } else {
@@ -159,7 +159,7 @@ export class RegistrationPageComponent implements OnInit {
     console.log(this.userForm3, this.addDays(new Date(), this.CouponData?.data[0]?.TrailDate), this.CouponData, "onFormUpdateCouponCode")
     if (this.userForm4?.status != "INVALID") {
       if (this.CouponData?.status == true) {
-       
+
       } else {
         this.toastr.error("Your coupon code is not valid...")
       }
@@ -200,7 +200,7 @@ export class RegistrationPageComponent implements OnInit {
             this.userForm.value.role = "TradeApp"
             this.userService.Registration(this.userForm.value).subscribe((res1: any) => {
               if (res1?.status) {
-                this.userService.SendOtpEmail({ emailId: this.userForm.value?.emailId,subject:"OTP for Registration" }).subscribe((res1: any) => {
+                this.userService.SendOtpEmail({ emailId: this.userForm.value?.emailId, subject: "OTP for Registration" }).subscribe((res1: any) => {
                   if (res1?.status) {
                     this.SEND_OTP_EMAIL = true;
                     this.toastr.success("OTP sent to your mail id");
@@ -220,37 +220,37 @@ export class RegistrationPageComponent implements OnInit {
             this.CouponCodeValidation = false;
             this.EMAIL_VALIDATION = false;
             this.MOBILE_VALIDATION = false;
-            this.MOBILE_EMAIL_VALIDATION=false;
-            if (res[0]?.emailIdVerified==true) {
+            this.MOBILE_EMAIL_VALIDATION = false;
+            if (res[0]?.emailIdVerified == true) {
               this.MOBILE_VALIDATION = false;
               this.MPIN_SHOW = false
               this.USER_DETAILS = false
               this.CouponCodeValidation = false;
               this.EMAIL_VALIDATION = false;
-              this.MOBILE_EMAIL_VALIDATION=true;
+              this.MOBILE_EMAIL_VALIDATION = true;
               if (res[0]?.MobileOTPVerified == true) {
                 this.MOBILE_VALIDATION = false;
                 this.SEND_OTP_EMAIL = false;
                 this.MPIN_SHOW = false
                 this.USER_DETAILS = false
                 this.EMAIL_VALIDATION = false;
-                this.MOBILE_EMAIL_VALIDATION=true;
+                this.MOBILE_EMAIL_VALIDATION = true;
                 if (res[0]?.MPIN != undefined) {
-                  this.MOBILE_EMAIL_VALIDATION=true;
+                  this.MOBILE_EMAIL_VALIDATION = true;
                   this.MOBILE_VALIDATION = false;
                   this.SEND_OTP_EMAIL = false;
                   this.MPIN_SHOW = false
                   this.USER_DETAILS = false
                   this.EMAIL_VALIDATION = false;
                   if (res[0]?.companyName != undefined) {
-                    this.MOBILE_EMAIL_VALIDATION=true;
+                    this.MOBILE_EMAIL_VALIDATION = true;
                     this.MOBILE_VALIDATION = false;
                     this.SEND_OTP_EMAIL = false;
                     this.MPIN_SHOW = false
                     this.USER_DETAILS = false
                     this.EMAIL_VALIDATION = false;
                     if (res[0]?.CouponVerified == true) {
-                      this.MOBILE_EMAIL_VALIDATION=true;
+                      this.MOBILE_EMAIL_VALIDATION = true;
                       this.SEND_OTP_EMAIL = false;
                       this.MPIN_SHOW = false
                       this.USER_DETAILS = false
@@ -258,7 +258,7 @@ export class RegistrationPageComponent implements OnInit {
                       this.EMAIL_VALIDATION = false;
                       this.router.navigate(['/Login'])
                     } else {
-                      this.MOBILE_EMAIL_VALIDATION=true;
+                      this.MOBILE_EMAIL_VALIDATION = true;
                       this.MOBILE_VALIDATION = false;
                       this.SEND_OTP_EMAIL = false;
                       this.MPIN_SHOW = false
@@ -267,7 +267,7 @@ export class RegistrationPageComponent implements OnInit {
                       this.EMAIL_VALIDATION = true;
                     }
                   } else {
-                    this.MOBILE_EMAIL_VALIDATION=true;
+                    this.MOBILE_EMAIL_VALIDATION = true;
                     this.MOBILE_VALIDATION = false;
                     this.SEND_OTP_EMAIL = false;
                     this.MPIN_SHOW = false
@@ -276,7 +276,7 @@ export class RegistrationPageComponent implements OnInit {
                     this.EMAIL_VALIDATION = true;
                   }
                 } else {
-                  this.MOBILE_EMAIL_VALIDATION=true;
+                  this.MOBILE_EMAIL_VALIDATION = true;
                   this.SEND_OTP_EMAIL = false;
                   this.CouponCodeValidation = false
                   this.USER_DETAILS = false;
@@ -290,16 +290,16 @@ export class RegistrationPageComponent implements OnInit {
                 this.MPIN_SHOW = false;
                 this.EMAIL_VALIDATION = true;
                 this.MOBILE_VALIDATION = true;
-                this.MOBILE_EMAIL_VALIDATION=false;
+                this.MOBILE_EMAIL_VALIDATION = false;
               }
             } else {
-              this.MOBILE_EMAIL_VALIDATION=false;
+              this.MOBILE_EMAIL_VALIDATION = false;
               this.MOBILE_VALIDATION = false;
               this.MPIN_SHOW = false
               this.CouponCodeValidation = false
               this.USER_DETAILS = false;
               this.EMAIL_VALIDATION = false;
-              this.userService.SendOtpEmail({ emailId: this.userForm.value?.emailId ,subject:"OTP for Registration" }).subscribe((res1: any) => {
+              this.userService.SendOtpEmail({ emailId: this.userForm.value?.emailId, subject: "OTP for Registration" }).subscribe((res1: any) => {
                 if (res1?.status) {
                   this.SEND_OTP_EMAIL = true;
                   this.toastr.success("OTP sent to your mail id");
@@ -333,9 +333,9 @@ export class RegistrationPageComponent implements OnInit {
           this.userService.UpdateLoginDetails(res[0]?._id, { emailIdVerified: true }).subscribe((res1: any) => {
             if (res1?.status) {
               this.VERIFY_OTP_EMAIL = true;
-              this.MOBILE_VALIDATION=true;
+              this.MOBILE_VALIDATION = true;
             } else {
-              this.MOBILE_VALIDATION=false;
+              this.MOBILE_VALIDATION = false;
               this.toastr.success(res1?.msg);
             }
           })
@@ -384,8 +384,8 @@ export class RegistrationPageComponent implements OnInit {
           this.userService.UpdateLoginDetails(res[0]?._id, { MobileOTPVerified: true }).subscribe((res1: any) => {
             if (res1?.status) {
               this.VERIFY_OTP_MOBILE = true;
-              if (this.VERIFY_OTP_EMAIL==false) {
-                this.VERIFY_OTP_EMAIL=true;
+              if (this.VERIFY_OTP_EMAIL == false) {
+                this.VERIFY_OTP_EMAIL = true;
               }
             } else {
               this.toastr.success(res1?.msg);
@@ -409,12 +409,12 @@ export class RegistrationPageComponent implements OnInit {
     TermsofService_PANEL?.displayShow
   }
 
-  VIEW_SBSCRIPTION_PANEL:boolean=false;
-  addToken(){
-    localStorage.setItem('token',this.userForm.value?.emailId);
-    this.VIEW_SBSCRIPTION_PANEL=false;
+  VIEW_SBSCRIPTION_PANEL: boolean = false;
+  addToken() {
+    localStorage.setItem('token', this.userForm.value?.emailId);
+    this.VIEW_SBSCRIPTION_PANEL = false;
     setTimeout(() => {
-      this.VIEW_SBSCRIPTION_PANEL=true;
+      this.VIEW_SBSCRIPTION_PANEL = true;
     }, 300);
   }
 

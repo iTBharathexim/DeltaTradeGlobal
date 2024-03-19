@@ -936,3 +936,26 @@ label {
         background-color: transparent;
     }
 }
+
+.time-2 {
+    color: #000;
+    margin: auto 0 auto auto;
+    text-align: end;
+    padding-right: 20px;
+    font-size: 11px;
+    position: absolute;
+    bottom: 0px;
+    left: 7px;
+}
+
+.time-3 {
+    color: #000;
+    margin: auto 0 auto auto;
+    width: 50%;
+    text-align: left;
+    padding-right: 20px;
+    font-size: 12px;
+    position: absolute;
+    top: 7px;
+    right: 40px;
+}

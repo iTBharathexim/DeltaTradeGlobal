@@ -28,6 +28,7 @@
     border-radius: 5px;
     outline: none;
     border-color: #1444eb;
+    position: relative;
 }
 
 .card-body select {
@@ -39,14 +40,17 @@
 }
 
 .card-parent-2 {
-    gap: 5px;
     color: #000;
     font-size: 15px;
     font-weight: 300;
     font-family: monospace;
-    width: 100%;
-    height: 130px;
+    width: 98%;
+    height: 160px;
     display: flex;
+    margin-top: 10px;
+    box-shadow: 0 0 8px 6px #e4e4e4;
+    border-radius: 5px;
+    padding: 5px;
 }
 
 .card-parent-2 .table {
@@ -58,5 +62,67 @@
 }
 
 .card-parent-2 .table tr th {
-    font-weight: 100;
+    font-weight: 500;
+    text-align: left;
+}
+
+.search-cal {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    box-shadow: 0px 0px 12px 2px #e8e8e8;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.blue-snackbar {
+    background: #2196F3;
+}
+
+::ng-deep .mat-snack-bar-container {
+    color: white !important;
+    background: red !important;
+    box-shadow: 0 3px 5px -1px #0003, 0 6px 10px #00000024, 0 1px 18px #0000001f;
+}
+
+
+
+@-webkit-keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.marquee {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+.marquee span {
+    text-transform: uppercase;
+    will-change: transform;
+    transform: translateX(-100%);
+    white-space: nowrap;
+    animation: marquee 8s linear infinite;
+    font-size: 12px;
+    font-family: Gravitas One, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    color: #ff2507;
 }

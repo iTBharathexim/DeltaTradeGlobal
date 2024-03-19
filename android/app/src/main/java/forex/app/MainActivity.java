@@ -156,13 +156,17 @@ public class MainActivity extends BridgeActivity {
   public void onPause() {
     super.onPause();
     Log.println(Log.ASSERT,"wasScreenOn","onPause");
-    EventPlugin.getInstance().OnScreenState(false);
+    if(EventPlugin.getInstance()!=null){
+      EventPlugin.getInstance().OnScreenState(false);
+    }
   }
 
   public void onResume() {
     super.onResume();
-    EventBus.getDefault().post(new MessageEvent("ScreenOn","ScreenOn"));
-    Log.println(Log.ASSERT,"wasScreenOn","onResume");
+    if(EventPlugin.getInstance()!=null) {
+      EventBus.getDefault().post(new MessageEvent("ScreenOn", "ScreenOn"));
+      Log.println(Log.ASSERT, "wasScreenOn", "onResume");
+    }
   }
 
   @Override

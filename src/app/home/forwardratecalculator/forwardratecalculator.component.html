@@ -1,55 +1,46 @@
 <app-home (ModeChanges)="this.DISPLAY_MODE=$event">
     <div class="parent">
-          <p style="color: #4f4f4f;
-          position: absolute;
-          height: 100vh;
-          width: 100vw;
-          background-color: #27272747;
-          text-align: center;
-          display: flex;
-          align-items: center;
-          justify-content: center;">Coming soon...</p>
         <div class="card">
             <div class="header"><label for="">FORWARD RATE CALCULATOR</label></div>
             <div class="card-body">
+                <div class="marquee" *ngIf="this.netJSApi.FORWARD_CALCULATOR?.MarketStatus!=undefined">
+                    <span *ngIf="this.netJSApi.FORWARD_CALCULATOR?.MarketStatus==true">Market hours closed, rate
+                        displayed
+                        may not be live&nbsp;</span>
+                </div>
                 <p class="current-date">{{this.CURREENT_DATE}}</p>
                 <table>
                     <tbody>
                         <tr>
                             <td>Currency pair</td>
                             <td>
-                                <Select>
-                                    <option [value]="item" *ngFor="let item of apiUser.CURRENCY_INR_LIST;let i=index">
-                                        {{item}}</option>
+                                <Select #CURRENCY_INR_LIST>
+                                    <option [value]="item?.value"
+                                        *ngFor="let item of this.netJSApi.CURRENCY_INR_LIST;let i=index">
+                                        {{item?.name}}</option>
                                 </Select>
                             </td>
                             <td></td>
                         </tr>
                     </tbody>
                 </table>
-                <!-- <table>
-                    <tbody>
-                        <tr>
-                            <td>Notation</td>
-                            <td>
-                                <Select>
-                                    <option [value]="item" *ngFor="let item of apiUser.CURRENCY_LIST;let i=index">
-                                        {{item}}</option>
-                                </Select>
-                            </td>
-                            <td><input type="text" style="width: 80px;"></td>
-                        </tr>
-                    </tbody>
-                </table> -->
                 <table>
                     <tbody>
                         <tr>
                             <td>Start Date</td>
                             <td>End Date</td>
+                            <td></td>
                         </tr>
                         <tr>
-                            <td><input type="date" name="" id=""></td>
-                            <td><input type="date" name="" id=""></td>
+                            <td><input type="date" [min]="this.today" name="" id="" [max]="this.MAX_DATE_TODAY"
+                                    (change)="startdatefun(startdate,startdate?.value)" #startdate></td>
+                            <td><input type="date" [value]="this.startDate" [min]="netJSApi.lastDate"
+                                    [max]="this.netJSApi.lastDate2" name="" id=""
+                                    (change)="SelectStartEnddate(CURRENCY_INR_LIST?.value,startdate?.value,enddate.value,enddate)"
+                                    #enddate></td>
+                            <td><button class="search-cal" [disabled]="this.CHECK_BUTTON_ENABLED"
+                                    (click)="SelectStartEnddate2(CURRENCY_INR_LIST?.value,startdate?.value,enddate.value)">Search</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -63,20 +54,19 @@
                         <tbody>
                             <tr>
                                 <th>Spot</th>
-                                <td></td>
+                                <td>{{this.netJSApi.FORWARD_CALCULATOR?.bid?.spot}}</td>
                             </tr>
                             <tr>
                                 <th>Forward Premium</th>
-                                <td>0</td>
+                                <td>{{this.netJSApi.FORWARD_CALCULATOR?.bid?.finalValue}}</td>
                             </tr>
                             <tr>
                                 <th>outright</th>
-                                <td></td>
+                                <td>{{this.netJSApi.FORWARD_CALCULATOR?.bid?.outright}}</td>
                             </tr>
                             <tr>
-                                <th>Premium %</th>
-                                <td>
-                                </td>
+                                <th>Premium</th>
+                                <td>{{this.netJSApi.FORWARD_CALCULATOR?.bid?.Premium}} %</td>
                             </tr>
                         </tbody>
                     </table>
@@ -89,20 +79,19 @@
                         <tbody>
                             <tr>
                                 <th>Spot</th>
-                                <td></td>
+                                <td>{{this.netJSApi.FORWARD_CALCULATOR?.ask?.spot}}</td>
                             </tr>
                             <tr>
                                 <th>Forward Premium</th>
-                                <td>0</td>
+                                <td>{{this.netJSApi.FORWARD_CALCULATOR?.ask?.finalValue}}</td>
                             </tr>
                             <tr>
                                 <th>outright</th>
-                                <td></td>
+                                <td>{{this.netJSApi.FORWARD_CALCULATOR?.ask?.outright}}</td>
                             </tr>
                             <tr>
-                                <th>Premium %</th>
-                                <td>
-                                </td>
+                                <th>Premium</th>
+                                <td>{{this.netJSApi.FORWARD_CALCULATOR?.ask?.Premium}} %</td>
                             </tr>
                         </tbody>
                     </table>
