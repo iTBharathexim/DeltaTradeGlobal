@@ -31,7 +31,6 @@ import { AndoridFileSystemService } from './Controller/AndoridFileSystem';
 import { WebsocketService } from './services/websocket.service';
 import { InactivityService } from './Controller/InactivityService';
 import { UserIdleService } from './Controller/user-idle-manager/user-idle/user-idle.servies';
-import { NgApexchartsModule } from 'ng-apexcharts';
 import { JsApiCommonSubscriber } from './home/DataService/NetJSApi';
 const environmentConfig: any = AppConfig.logger;
 

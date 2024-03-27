@@ -8,8 +8,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.UserManager;
@@ -17,6 +20,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 import com.capacitorjs.plugins.app.AppPlugin;
 import com.getcapacitor.Bridge;
@@ -34,7 +38,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.RunnableScheduledFuture;
+
 import io.capacitor.plugins.event.EventPlugin;
 
 public class MainActivity extends BridgeActivity {
@@ -70,7 +77,7 @@ public class MainActivity extends BridgeActivity {
     BroadcastReceiver bre = new SCBroadcaster();
     registerReceiver(bre, filter);
 
-    webview = Bridge.getWebview();;
+    webview = Bridge.getWebview();
     webview.getSettings().setJavaScriptEnabled(true);
     registerPlugin(AppPlugin.class);
     registerPlugin(EventPlugin.class);
@@ -84,18 +91,27 @@ public class MainActivity extends BridgeActivity {
     });
   }
 
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+  }
+
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(MessageEvent event) {
     switch (event.getKey()) {
       case "SessionLogoutAllDevice" -> {
-        webview.clearCache(true);
-        webview.clearHistory();
-        webview.reload();
-        webview.loadUrl("javascript:localStorage.clear()");
-        Log.println(Log.ASSERT, "SessionLogoutAllDevice", "Url : " + event.getMessage());
+        if (!Objects.equals(webview.getUrl(), "http://localhost/Login") &&
+          !Objects.equals(webview.getUrl(), "http://localhost/OnboardingScreen")) {
+          webview.clearCache(true);
+          webview.clearHistory();
+          webview.reload();
+          webview.loadUrl("javascript:localStorage.clear()");
+          Log.println(Log.ASSERT, "SessionLogoutAllDevice", "Url : " + event.getMessage());
+        }
       }
       case "TouchApp" -> {
-        if (!Objects.equals(webview.getUrl(), "http://localhost/Login")) {
+        if (!Objects.equals(webview.getUrl(), "http://localhost/Login") &&
+          !Objects.equals(webview.getUrl(), "http://localhost/OnboardingScreen")) {
           EventPlugin.getInstance().SessionTimerStop();
           EventPlugin.getInstance().TimerStart(EventPlugin.getInstance().DEFAULT_VALUE_TIMER);
           Log.println(Log.ASSERT, "SessionLogoutAllDevice", "Url : " + webview.getUrl());
@@ -119,8 +135,6 @@ public class MainActivity extends BridgeActivity {
           EventPlugin.getInstance().timerResume();
           EventPlugin.getInstance().OnScreenState(true);
           Log.println(Log.ASSERT, "ScreenOn", "Url : " + webview.getUrl()+" : "+EventPlugin.getInstance().CounterTimer);
-         }else{
-           EventPlugin.getInstance().SessionTimerStop();
          }
        }
         default -> {
@@ -145,7 +159,6 @@ public class MainActivity extends BridgeActivity {
   public void onDestroy() {
     unregisterReceiver(receiver);
     super.onDestroy();
-    Log.v("onDestroy:", "App Destroy");
   }
 
   @Override
@@ -155,7 +168,6 @@ public class MainActivity extends BridgeActivity {
 
   public void onPause() {
     super.onPause();
-    Log.println(Log.ASSERT,"wasScreenOn","onPause");
     if(EventPlugin.getInstance()!=null){
       EventPlugin.getInstance().OnScreenState(false);
     }
@@ -176,12 +188,6 @@ public class MainActivity extends BridgeActivity {
 
   static void setStaticWebView(String url) {
     webview.loadUrl(url);
-  }
-
-  @Override
-  public void onSaveInstanceState(Bundle outState) {
-     super.onSaveInstanceState(outState);
-    Log.v(TAG, "Saved instance state"+outState.toString());
   }
 
   @Override
@@ -207,7 +213,6 @@ public class MainActivity extends BridgeActivity {
 
   public void SessionLogoutAllDevice() {
     Log.println(Log.ASSERT, "SessionLogoutAllMain", "SessionLogoutAllDevice : "+webview.getUrl());
-//    webview.loadUrl("https://localhost/");
   }
 
   // on below line creating a class to post the data.

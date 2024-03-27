@@ -83,35 +83,46 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-   
+
     if (Capacitor.getPlatform() != 'web') {
       PushNotificationsController.LoadPushNotifications();
-      CapacitorEvent.register().then((res) => { });
-      CapacitorEvent.addListener('onUserLogout', (result: any) => {
-        this.userService.UserLogout(() => {
-          this.Customidle?.logout();
-          this.Customidle.idleTimerLeft = null;
-          this.router?.navigate(['/Login']);
-          this.websocketService.disconnect()
-          location.reload();
-        }, false, { lastactivetime: 0 });
-      });
-      CapacitorEvent.addListener('OnTimerCountDown', (result: any) => {
-        this.userService.COUNT_DOWN = msToTime(parseInt(result?.value));
-        let splitIdeTime: any = this.userService.COUNT_DOWN?.split(":")
-        if (splitIdeTime?.length != 0) {
-          if (splitIdeTime[1] == "00") {
-            let count = parseInt(splitIdeTime[2]);
-            this.userService.counter = count;
-            if (count <= 30 && count > 0) {
-              this.userService.SHOW_SESSION = true
-            }
-            if (count == 0) {
-              this.userService.SHOW_SESSION = false;
+      CapacitorEvent.register().then((res:any) => {
+        if (res?.value=="false") {
+          this.router?.navigate(['/OnboardingScreen']);
+        }
+        CapacitorEvent.addListener('onUserLogout', (result: any) => {
+          this.userService.UserLogout(() => {
+            this.Customidle?.logout();
+            this.Customidle.idleTimerLeft = null;
+            this.router?.navigate(['/Login']);
+            this.websocketService.disconnect()
+            location.reload();
+          }, false, { lastactivetime: 0 });
+        });
+        CapacitorEvent.addListener('onBoardingScreen', (result: any) => {
+          alert(JSON.stringify(result) + "dsfsfsdfdsf")
+        })
+        CapacitorEvent.addListener('OnTimerCountDown', (result: any) => {
+          this.userService.COUNT_DOWN = msToTime(parseInt(result?.value));
+          let splitIdeTime: any = this.userService.COUNT_DOWN?.split(":")
+          if (splitIdeTime?.length != 0) {
+            if (splitIdeTime[1] == "00") {
+              let count = parseInt(splitIdeTime[2]);
+              this.userService.counter = count;
+              if (count <= 30 && count > 0) {
+                this.userService.SHOW_SESSION = true
+              }
+              if (count == 0) {
+                this.userService.SHOW_SESSION = false;
+                this.userService.UserLogout(() => {
+                  this.Customidle?.logout();
+                }, false, { lastactivetime: 0 });
+              }
             }
           }
-        }
-      })
+        })
+      });
+
       function msToTime(duration) {
         var milliseconds = Math.floor((duration % 1000) / 100);
         var seconds: any = Math.floor((duration / 1000) % 60);

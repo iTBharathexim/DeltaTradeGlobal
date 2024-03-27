@@ -41,6 +41,7 @@ export class JsApiCommonSubscriber {
     };
 
     NEW_FORWARD_DATA: any = [];
+    SystemTime: any = moment().format('MMMM Do YYYY, h:mm:ss a');
 
     constructor(public apiservice: ApiService,
         public fCmcontroller: FCmController,
@@ -212,7 +213,7 @@ export class JsApiCommonSubscriber {
             this.apiservice.NEW_LOADER_SHOW_HIDE = true;
             this.websocketService?.listen('CurrencyInfo').subscribe((res: any) => {
                 this.CURRENCY_INR_LIST = [];
-                this.NEW_FORWARD_DATA=[];
+                this.NEW_FORWARD_DATA = [];
                 res?.NEW_CURRENCY_INR_LIST?.forEach(element1 => {
                     if (!res?.FORWARD_CALCULATOR_WHITE_LISTING?.includes(element1)) {
                         let splitcurrency = element1?.split("_");
@@ -241,6 +242,8 @@ export class JsApiCommonSubscriber {
             });
             this.websocketService?.listen('newData').subscribe((res: any) => {
                 clearTimeout(CLEAR_TIMER);
+                this.SystemTime = moment().format('hh:mm:ss a, MMMM Do YYYY');
+                console.log(this.SystemTime,"SystemTime")
                 this.FORWARD_CALCULATOR['MarketStatus'] = res?.new[0]?.MarketStatus;
                 const oldata: any = this.apiservice.LIST_OF_DATA?.length != 0 ? this.apiservice.LIST_OF_DATA : undefined;
                 this.apiservice.LIST_OF_DATA = res?.new;

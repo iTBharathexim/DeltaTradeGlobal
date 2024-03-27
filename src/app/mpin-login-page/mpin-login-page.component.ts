@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -12,6 +12,7 @@ import { WebsocketService } from '../services/websocket.service';
 import { CustomConfirmDialogModelComponent } from '../Component/custom-confirm-dialog-model/custom-confirm-dialog-model.component';
 import { CapacitorEvent } from 'capacitor-plugin-event';
 import { JsApiCommonSubscriber } from '../home/DataService/NetJSApi';
+import { MaxMinValidationService } from '../Controller/MaxMinValidationService';
 
 @Component({
   selector: 'app-mpin-login-page',
@@ -19,9 +20,9 @@ import { JsApiCommonSubscriber } from '../home/DataService/NetJSApi';
   styleUrls: ['./mpin-login-page.component.scss']
 })
 export class MPINLoginPageComponent implements OnInit {
-  userForm: any = new FormGroup({
+  userForm: FormGroup = new FormGroup({
     email: new FormControl(localStorage.getItem('token')),
-    MPIN: new FormControl()
+    MPIN: new FormControl(null,[Validators.required, MaxMinValidationService.setMaxValue(6, 6)])
   });
   CURREENT_DATE: string = moment().format('YYYY-MM-DD')
   errorShow: any = ''
@@ -47,23 +48,33 @@ export class MPINLoginPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
+      CapacitorEvent.getUserLoginInfo().then((res:any) => {
+        this.userForm.controls.email.setValue(res?.emailId);
+      });
+    }
+  }
+
+  logincheck(event:any){
+    if (event?.value?.length==6 && this.userForm.controls?.email?.errors==null) {
+      this.onFormSubmit();
+    }
   }
 
   onFormSubmit() {
     this.userService.LoginMPIN(this.userForm.value).subscribe((res: any) => {
-      this.LoggerInfoService.showInfo();
       if (res?.docs?.error == undefined) {
         clearInterval(this.TIMER)
-        localStorage.setItem('token', res?.docs?.data?.emailId)
         if (res?.docs?.data?.isLoggin == false) {
           if (res?.docs?.data?.CouponVerified == true && res?.docs?.data?.emailIdVerified == true) {
-            localStorage.setItem('token', res?.docs?.data?.emailId)
             this.userService.UpdateLoginDetails(res?.docs?.data?._id, {
               isLoggin: true, DeviceInfoLogin: this.userService.getDeviceInfo(),
               LoginCounter: res?.docs?.data?.LoginCounter != undefined ? res?.docs?.data?.LoginCounter + 1 : 1,
               WebSocketId: this.websocketService.socket?.id
             }).subscribe((res1) => {
+              localStorage.setItem('token', res?.docs?.data?.emailId)
               if (this.fCmcontroller.getPlatform()?.toString() != 'web') {
+                CapacitorEvent.setUserLoginInfo({ emailId: res?.docs?.data?.emailId }).then((res) => { });
                 this.fCmcontroller.getDeviceId().then((userId: any) => {
                   this.userService.UpdateDeviceId(res?.docs?.data?.emailId, userId).subscribe((res) => { })
                   this.userService.PushNotification({

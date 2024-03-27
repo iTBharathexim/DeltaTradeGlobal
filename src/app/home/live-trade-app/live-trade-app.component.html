@@ -10,6 +10,9 @@
         (onChangeEvent)="Collepse($event,i,this.apiservice.LIST_OF_DATA)"
         [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
         *ngFor="let item of this.apiservice.LIST_OF_DATA;let i=index">
+        <p class="time" *ngIf="(i==0) && item?.SystemTime==false">{{item?.TIMER_SOCKET}}</p>
+        <p class="time" *ngIf="(i==0) && item?.SystemTime==true">{{this.JsApiCommonsubscriber.SystemTime}}</p>
+
         <custom-mat-expansion-panel>
           <div class="row-flex">
             <div class="currecny">
@@ -17,7 +20,7 @@
               <p style="display: flex;align-items: center;gap: 3px;font-weight: 100;font-size: 13px;">
                 {{item?.base_currency}}<span class="left-border"></span>{{item?.quote_currency}}</p>
             </div>
-            <p class="time-2">{{item?.TIMER_SOCKET }}</p>
+            <!-- <p class="time-2">{{item?.TIMER_SOCKET }}</p> -->
             <label for="" class="lable-Request-Time">
               <table>
                 <thead>
@@ -127,7 +130,9 @@
           (onChangeEvent)="Collepse($event,i,this.JsApiCommonsubscriber.NEW_FORWARD_DATA);ApiForwardCall($event,item,i,this.JsApiCommonsubscriber.NEW_FORWARD_DATA)"
           [addClass]="{'Light':this.DISPLAY_MODE=='Light','black':this.DISPLAY_MODE=='Dark'}"
           *ngFor="let item of this.JsApiCommonsubscriber.NEW_FORWARD_DATA;let i=index">
-          <!-- <p class="time" *ngIf="(i==0)">{{item?.time}}</p> -->
+          <p class="time" *ngIf="(i==0) && item?.SystemTime==false">{{item?.time}}</p>
+          <p class="time" *ngIf="(i==0) && item?.SystemTime==true">{{this.JsApiCommonsubscriber.SystemTime}}</p>
+
           <custom-mat-expansion-panel>
             <div class="row-flex">
               <div class="currecny">
@@ -136,7 +141,7 @@
                 <p style="display: flex;align-items: center;gap: 3px;font-weight: 100;font-size: 13px;">
                   {{item?.base_currency}}<span class="left-border"></span>{{item?.quote_currency}}</p>
               </div>
-              <p class="time-3">{{item?.time }}</p>
+              <!-- <p class="time-3">{{item?.time }}</p> -->
               <label for="" class="lable-Request-Time">
                 <table>
                   <thead>

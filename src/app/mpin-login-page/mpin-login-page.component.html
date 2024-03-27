@@ -19,8 +19,15 @@
                                 <label>Email</label>
                         </div>
                         <div class="field">
-                                <input type="password" formControlName="MPIN" required>
+                                <input type="password" formControlName="MPIN" (keyup)="logincheck($event.target)" required>
                                 <label>MPIN</label>
+                                <p style="position: absolute;
+                                left: 15px;
+                                font-size: 12px;
+                                color: red;
+                                top: 0px;" *ngIf="this.userForm.controls?.MPIN?.errors!=null && userForm.controls?.MPIN?.errors?.range">
+                                     Kindly enter 6-digit MPIN
+                                </p>
                         </div>
                         <div class="forgot-pass">
                                 <a routerLink="/ResetPassword">Forgot Password?</a>

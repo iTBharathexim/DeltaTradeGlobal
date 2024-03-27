@@ -24,7 +24,7 @@ import { HolidaysComponent } from './home/holidays/holidays.component';
 import { OnboardingScreenComponent } from './home/onboarding-screen/onboarding-screen.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'OnboardingScreen', pathMatch: 'full' },
+  { path: '', redirectTo: 'Login', pathMatch: 'full' },
   { path: 'Login', component: MPINLoginPageComponent },
   { path: 'MPIN-Login', component: MPINLoginPageComponent },
   { path: 'Registration', component: RegistrationPageComponent },
